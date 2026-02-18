@@ -4,8 +4,18 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getProducts } from '@/lib/products';
-import { Product } from '@/lib/types';
+import { Product, Category } from '@/lib/types';
 import { formatPrice, getImageUrl } from '@/lib/utils';
+
+const CATEGORIES: Category[] = [
+  'aretes',
+  'collares',
+  'pulseras',
+  'anillos',
+  'sets',
+  'piercings/earcuffs',
+  'accesorios',
+];
 
 export default function AdminPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -20,6 +30,7 @@ export default function AdminPage() {
     price: '',
     quantity: '',
     images: '',
+    category: 'accesorios' as Category,
   });
 
   const handleEdit = (product: Product) => {
@@ -30,6 +41,7 @@ export default function AdminPage() {
       price: product.price.toString(),
       quantity: product.quantity.toString(),
       images: product.images.join(', '),
+      category: product.category,
     });
   };
 
@@ -44,6 +56,7 @@ export default function AdminPage() {
         price: '',
         quantity: '',
         images: '',
+        category: 'accesorios',
       });
       }
     }
@@ -66,6 +79,7 @@ export default function AdminPage() {
                 images: formData.images
                   ? formData.images.split(',').map((s) => s.trim()).filter(Boolean)
                   : [],
+                category: formData.category,
               }
             : p
         )
@@ -82,7 +96,7 @@ export default function AdminPage() {
         images: formData.images
           ? formData.images.split(',').map((s) => s.trim()).filter(Boolean)
           : [],
-        category: 'accesorios', // Default category
+        category: formData.category,
       };
       setProducts([...products, newProduct]);
     }
@@ -93,6 +107,7 @@ export default function AdminPage() {
         price: '',
         quantity: '',
         images: '',
+        category: 'accesorios',
       });
   };
 
@@ -104,6 +119,7 @@ export default function AdminPage() {
         price: '',
         quantity: '',
         images: '',
+        category: 'accesorios',
       });
   };
 
@@ -204,6 +220,24 @@ export default function AdminPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Categoría
+                </label>
+                <select
+                  required
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value as Category })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                >
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Imágenes (separadas por comas, ej: "1, 1-1, 1-2")
                 </label>
                 <input
@@ -266,6 +300,11 @@ export default function AdminPage() {
                       <p className="text-sm text-gray-600 line-clamp-1">
                         {product.description}
                       </p>
+                      <div className="flex items-center gap-2 mt-1 mb-2">
+                        <span className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded capitalize">
+                          {product.category}
+                        </span>
+                      </div>
                       <div className="flex justify-between items-center mt-2">
                         <span className="text-lg font-bold text-gray-900">
                           {formatPrice(product.price)}

@@ -1,11 +1,13 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import Link from "next/link";
-import ProductCard from "@/components/ProductCard";
 import { getProducts } from "@/lib/products";
 import { Category } from "@/lib/types";
+import { sortProductsById, calculatePagination } from "@/lib/catalog";
+import { useCatalogFilters } from "@/lib/hooks/useCatalogFilters";
+import { CatalogNavbar } from "@/components/catalog/CatalogNavbar";
+import { FiltersSection } from "@/components/catalog/FiltersSection";
+import { ProductsGrid } from "@/components/catalog/ProductsGrid";
 
 const CATEGORIES: Category[] = [
   "aretes",
@@ -18,117 +20,66 @@ const CATEGORIES: Category[] = [
 ];
 
 export default function CatalogContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-
   const allProducts = getProducts();
-  const PRODUCTS_PER_PAGE = 20;
-
-  // Get selected categories from URL
-  const selectedCategories = useMemo(() => {
-    const categoriesParam = searchParams.get("categorias");
-    if (!categoriesParam) return [];
-    return categoriesParam
-      .split(",")
-      .filter((cat): cat is Category => CATEGORIES.includes(cat as Category));
-  }, [searchParams]);
-
-  // Get current page from URL
-  const currentPage = useMemo(() => {
-    const page = searchParams.get("pagina");
-    return page ? Math.max(1, parseInt(page, 10)) : 1;
-  }, [searchParams]);
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
-    let filtered = allProducts;
+    const filtered = allProducts;
+    const sorted = sortProductsById(filtered);
+    return sorted;
+  }, [allProducts]);
 
-    // Apply category filter
-    if (selectedCategories.length > 0) {
-      filtered = filtered.filter((product) =>
-        selectedCategories.includes(product.category),
-      );
-    }
+  // Get URL filters and pagination
+  const {
+    selectedCategories,
+    currentPage,
+    totalPages,
+    validPage,
+    isAllSelected,
+    updateURL,
+  } = useCatalogFilters(filteredProducts.length, CATEGORIES);
 
-    // Sort by ID (numeric, descending - mayor a menor)
-    filtered = [...filtered].sort((a, b) => {
-      const idA = parseInt(a.id, 10);
-      const idB = parseInt(b.id, 10);
-      return idB - idA; // Descending order
-    });
+  // Apply category filter
+  const categoryFilteredProducts = useMemo(() => {
+    if (selectedCategories.length === 0) return filteredProducts;
+    return filteredProducts.filter((product) =>
+      selectedCategories.includes(product.category),
+    );
+  }, [filteredProducts, selectedCategories]);
 
-    return filtered;
-  }, [allProducts, selectedCategories]);
-
-  // Calculate pagination values
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
-  const validPage = Math.min(currentPage, Math.max(1, totalPages));
-  const startIndex = (validPage - 1) * PRODUCTS_PER_PAGE;
-  const endIndex = startIndex + PRODUCTS_PER_PAGE;
-  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+  // Get paginated products
+  const { validPage: displayPage, startIndex, endIndex } = calculatePagination(
+    categoryFilteredProducts.length,
+    currentPage,
+  );
+  const paginatedProducts = categoryFilteredProducts.slice(startIndex, endIndex);
 
   // Handle category toggle
-  const toggleCategory = (category: Category) => {
+  const handleToggleCategory = (category: Category) => {
     const newCategories = selectedCategories.includes(category)
       ? selectedCategories.filter((c) => c !== category)
       : [...selectedCategories, category];
 
-    const params = new URLSearchParams(searchParams.toString());
-    if (newCategories.length === 0) {
-      params.delete("categorias");
-    } else {
-      params.set("categorias", newCategories.join(","));
-    }
-    // Reset to page 1 when filters change
-    params.delete("pagina");
-
-    router.push(`/catalogo?${params.toString()}`);
+    const categoriesParam = newCategories.length === 0 ? undefined : newCategories.join(",");
+    updateURL({ categorias: categoriesParam, pagina: undefined });
   };
 
-  // Handle "Todos" toggle
-  const selectAll = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("categorias");
-    params.delete("pagina");
-    router.push(`/catalogo?${params.toString()}`);
+  // Handle select all
+  const handleSelectAll = () => {
+    updateURL({ categorias: undefined, pagina: undefined });
   };
 
   // Handle page change
-  const goToPage = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (page === 1) {
-      params.delete("pagina");
-    } else {
-      params.set("pagina", page.toString());
-    }
-    router.push(`/catalogo?${params.toString()}`);
+  const handlePageChange = (page: number) => {
+    const pagina = page === 1 ? undefined : page.toString();
+    updateURL({ pagina });
   };
-
-  const isAllSelected = selectedCategories.length === 0;
 
   return (
     <>
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold text-gray-900">
-              Calio Jewelry
-            </Link>
-            <div className="space-x-6">
-              <Link href="/" className="text-gray-700 hover:text-gray-900">
-                Inicio
-              </Link>
-              <Link href="/catalogo" className="text-gray-900 font-semibold">
-                Catálogo
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <CatalogNavbar />
 
-      {/* Catalog Content */}
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Nuestra Colección
@@ -138,127 +89,24 @@ export default function CatalogContent() {
         </p>
 
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Filters Sidebar */}
-          <aside className="w-full md:w-64 md:flex-shrink-0">
-            {/* Mobile Toggle Button */}
-            <button
-              onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-              className="md:hidden w-full bg-white rounded-lg shadow-md p-4 mb-4 text-left font-semibold text-gray-900 flex justify-between items-center"
-            >
-              <span>Filtros</span>
-              <span className="text-xl">
-                {isFiltersOpen ? "−" : "+"}
-              </span>
-            </button>
+          <FiltersSection
+            categories={CATEGORIES}
+            selectedCategories={selectedCategories}
+            isAllSelected={isAllSelected}
+            isOpen={isFiltersOpen}
+            onToggleOpen={() => setIsFiltersOpen(!isFiltersOpen)}
+            onSelectAll={handleSelectAll}
+            onToggleCategory={handleToggleCategory}
+          />
 
-            {/* Filters Content */}
-            <div
-              className={`${
-                isFiltersOpen ? "block" : "hidden"
-              } md:block bg-white rounded-lg shadow-md p-6 md:sticky md:top-4`}
-            >
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Categorías
-              </h2>
-              <div className="space-y-3">
-                {/* Todos option */}
-                <label className="flex items-center cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={isAllSelected}
-                    onChange={selectAll}
-                    className="w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2"
-                  />
-                  <span className="ml-3 text-gray-700 group-hover:text-gray-900 font-medium uppercase">
-                    Todos
-                  </span>
-                </label>
-
-                <div className="border-t border-gray-200 my-3"></div>
-
-                {/* Category options */}
-                {CATEGORIES.map((category) => {
-                  const isChecked = selectedCategories.includes(category);
-                  return (
-                    <label
-                      key={category}
-                      className="flex items-center cursor-pointer group"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => toggleCategory(category)}
-                        className="w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2"
-                      />
-                      <span className="ml-3 text-gray-700 group-hover:text-gray-900 uppercase">
-                        {category}
-                      </span>
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
-          </aside>
-
-          {/* Products Grid */}
           <div className="flex-1">
-            {filteredProducts.length > 0 ? (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                  {paginatedProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
-
-                {/* Pagination */}
-                <div className="flex items-center justify-center gap-2 mt-12">
-                  <button
-                    onClick={() => goToPage(validPage - 1)}
-                    disabled={validPage === 1}
-                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    ← Anterior
-                  </button>
-
-                  <div className="flex gap-1">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (page) => (
-                        <button
-                          key={page}
-                          onClick={() => goToPage(page)}
-                          className={`px-3 py-2 rounded-lg ${
-                            page === validPage
-                              ? "bg-gray-900 text-white"
-                              : "border border-gray-300 text-gray-700 hover:bg-gray-50"
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      ),
-                    )}
-                  </div>
-
-                  <button
-                    onClick={() => goToPage(validPage + 1)}
-                    disabled={validPage === totalPages}
-                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Siguiente →
-                  </button>
-                </div>
-
-                <div className="text-center text-gray-600 text-sm mt-4">
-                  Página {validPage} de {totalPages} ({filteredProducts.length}{" "}
-                  productos)
-                </div>
-              </>
-            ) : (
-              <div className="bg-white rounded-lg shadow-md p-12 text-center">
-                <p className="text-gray-600 text-lg">
-                  No se encontraron productos con los filtros seleccionados.
-                </p>
-              </div>
-            )}
+            <ProductsGrid
+              products={paginatedProducts}
+              totalProducts={categoryFilteredProducts.length}
+              currentPage={displayPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
       </div>
