@@ -62,17 +62,6 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
               </p>
             </div>
 
-            <div className="border-t border-b border-gray-200 py-6">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-lg font-semibold text-gray-700">
-                  Disponibilidad:
-                </span>
-                <span className={`text-lg font-semibold ${product.quantity > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {product.quantity > 0 ? `${product.quantity} en stock` : 'Agotado'}
-                </span>
-              </div>
-            </div>
-
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">
                 Descripción
