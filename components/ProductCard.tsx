@@ -33,9 +33,6 @@ export default function ProductCard({ product }: ProductCardProps) {
             <span className="text-2xl font-bold text-gray-900">
               {formatPrice(product.price)}
             </span>
-            <span className="text-sm text-gray-500">
-              {product.quantity} en stock
-            </span>
           </div>
         </div>
       </div>
