@@ -1,4 +1,11 @@
-export type Category = 'aretes' | 'collares' | 'anillos' | 'pulseras' | 'accesorios' | 'sets' | 'earcuffs';
+export type Category =
+  | "aretes"
+  | "collares"
+  | "anillos"
+  | "pulseras"
+  | "accesorios"
+  | "sets"
+  | "piercings/earcuffs";
 
 export interface Product {
   id: string;
@@ -9,4 +16,3 @@ export interface Product {
   images: string[];
   category: Category;
 }
-

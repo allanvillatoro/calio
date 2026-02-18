@@ -8,13 +8,13 @@ import { getProducts } from "@/lib/products";
 import { Category } from "@/lib/types";
 
 const CATEGORIES: Category[] = [
-  "accesorios",
-  "anillos",
   "aretes",
   "collares",
-  "earcuffs",
   "pulseras",
+  "anillos",
   "sets",
+  "piercings/earcuffs",
+  "accesorios",
 ];
 
 export default function CatalogContent() {
@@ -152,7 +152,7 @@ export default function CatalogContent() {
                     onChange={selectAll}
                     className="w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2"
                   />
-                  <span className="ml-3 text-gray-700 group-hover:text-gray-900 font-medium">
+                  <span className="ml-3 text-gray-700 group-hover:text-gray-900 font-medium uppercase">
                     Todos
                   </span>
                 </label>
@@ -173,7 +173,7 @@ export default function CatalogContent() {
                         onChange={() => toggleCategory(category)}
                         className="w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2"
                       />
-                      <span className="ml-3 text-gray-700 group-hover:text-gray-900 capitalize">
+                      <span className="ml-3 text-gray-700 group-hover:text-gray-900 uppercase">
                         {category}
                       </span>
                     </label>
