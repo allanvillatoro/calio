@@ -22,6 +22,7 @@ export default function CatalogContent() {
   const router = useRouter();
 
   const allProducts = getProducts();
+  const PRODUCTS_PER_PAGE = 20;
 
   // Get selected categories from URL
   const selectedCategories = useMemo(() => {
@@ -30,6 +31,12 @@ export default function CatalogContent() {
     return categoriesParam
       .split(",")
       .filter((cat): cat is Category => CATEGORIES.includes(cat as Category));
+  }, [searchParams]);
+
+  // Get current page from URL
+  const currentPage = useMemo(() => {
+    const page = searchParams.get("pagina");
+    return page ? Math.max(1, parseInt(page, 10)) : 1;
   }, [searchParams]);
 
   // Filter and sort products
@@ -53,6 +60,13 @@ export default function CatalogContent() {
     return filtered;
   }, [allProducts, selectedCategories]);
 
+  // Calculate pagination values
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const validPage = Math.min(currentPage, Math.max(1, totalPages));
+  const startIndex = (validPage - 1) * PRODUCTS_PER_PAGE;
+  const endIndex = startIndex + PRODUCTS_PER_PAGE;
+  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
   // Handle category toggle
   const toggleCategory = (category: Category) => {
     const newCategories = selectedCategories.includes(category)
@@ -65,6 +79,8 @@ export default function CatalogContent() {
     } else {
       params.set("categorias", newCategories.join(","));
     }
+    // Reset to page 1 when filters change
+    params.delete("pagina");
 
     router.push(`/catalogo?${params.toString()}`);
   };
@@ -73,6 +89,18 @@ export default function CatalogContent() {
   const selectAll = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("categorias");
+    params.delete("pagina");
+    router.push(`/catalogo?${params.toString()}`);
+  };
+
+  // Handle page change
+  const goToPage = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (page === 1) {
+      params.delete("pagina");
+    } else {
+      params.set("pagina", page.toString());
+    }
     router.push(`/catalogo?${params.toString()}`);
   };
 
@@ -158,11 +186,55 @@ export default function CatalogContent() {
           {/* Products Grid */}
           <div className="flex-1">
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                  {paginatedProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                <div className="flex items-center justify-center gap-2 mt-12">
+                  <button
+                    onClick={() => goToPage(validPage - 1)}
+                    disabled={validPage === 1}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    ← Anterior
+                  </button>
+
+                  <div className="flex gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <button
+                          key={page}
+                          onClick={() => goToPage(page)}
+                          className={`px-3 py-2 rounded-lg ${
+                            page === validPage
+                              ? "bg-gray-900 text-white"
+                              : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ),
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => goToPage(validPage + 1)}
+                    disabled={validPage === totalPages}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Siguiente →
+                  </button>
+                </div>
+
+                <div className="text-center text-gray-600 text-sm mt-4">
+                  Página {validPage} de {totalPages} ({filteredProducts.length}{" "}
+                  productos)
+                </div>
+              </>
             ) : (
               <div className="bg-white rounded-lg shadow-md p-12 text-center">
                 <p className="text-gray-600 text-lg">
