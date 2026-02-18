@@ -46,6 +46,14 @@
     "price": 3899.99,
     "image": "https://res.cloudinary.com/dggrup7kw/image/upload/v1771394672/Joyeria_odcfv4.jpg",
     "quantity": 7
+  },
+  {
+    "id": "7",
+    "name": "Chunky hoops",
+    "description": "Chunky hoops de oro rosa de 18k con diamantes redondos de 5mm. Peso total en quilates: 3.5 quilates. Longitud ajustable.",
+    "price": 699.99,
+    "image": "https://res.cloudinary.com/dggrup7kw/image/upload/v1771395118/Calio-Joya-2_s5kq1x.jpg",
+    "quantity": 2
   }
 ]
 
