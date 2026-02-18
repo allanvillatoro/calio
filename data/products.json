@@ -1,57 +1,119 @@
 [
   {
-    "id": "1",
-    "name": "Anillo de Compromiso con Diamante",
-    "description": "Hermoso anillo solitario con diamante de 1.5 quilates, montado en oro blanco de 18k. Perfecto para compromisos y ocasiones especiales.",
-    "price": 599,
-    "quantity": 5,
-    "images": ["1_gcemcp.jpg", "cld-sample-4.jpg", "cld-sample-5.jpg"],
-    "category": "anillos"
-  },
-  {
-    "id": "2",
-    "name": "Collar de Perlas",
-    "description": "Elegante collar de perlas cultivadas de 7mm, 18 pulgadas de longitud. Pieza clásica y atemporal que complementa cualquier atuendo.",
+    "id": 1,
+    "name": "Chunky hoops dorados",
+    "description": "Aretes en acero inoxidable en dorado, 2cm ",
     "price": 300,
-    "quantity": 8,
-    "images": ["main-sample.png"],
-    "category": "collares"
-  },
-  {
-    "id": "3",
-    "name": "Pulsera de Tenis en Oro",
-    "description": "Deslumbrante pulsera de tenis en oro amarillo de 14k con diamantes redondos de 5mm. Peso total en quilates: 3.5 quilates. Longitud ajustable.",
-    "price": 250,
-    "quantity": 3,
-    "images": ["cld-sample.jpg"],
-    "category": "pulseras"
-  },
-  {
-    "id": "4",
-    "name": "Aretes de Zafiro",
-    "description": "Exquisitos aretes de zafiro azul, 2 quilates cada uno, montados en platino. Zafiros naturales con excelente claridad y color.",
-    "price": 450,
-    "quantity": 6,
-    "images": ["cld-sample-3.jpg"],
+    "quantity": 4,
+    "images": [
+      "1.1_eeivce.jpg",
+      "1.2_nbmskr.jpg"
+    ],
     "category": "aretes"
   },
   {
-    "id": "5",
-    "name": "Dije de Esmeralda",
-    "description": "Vibrante dije de esmeralda con piedra central de 2.5 quilates, rodeado de diamantes, en cadena de oro de 18k. Longitud de cadena: 20 pulgadas.",
-    "price": 400,
-    "quantity": 4,
-    "images": ["cld-sample-5.jpg"],
-    "category": "accesorios"
+    "id": 2,
+    "name": "Chunky hoops plateados",
+    "description": "Aretes en acero inoxidable en plateado, 2cm ",
+    "price": 300,
+    "quantity": 1,
+    "images": [
+      "2.1_rzqhxj.jpg",
+      "2.2_e0ojiw.jpg"
+    ],
+    "category": "aretes"
   },
   {
-    "id": "6",
-    "name": "Anillo de Rubí",
-    "description": "Deslumbrante anillo de rubí con piedra central de 1.8 quilates, acentuado con diamantes, montado en oro rosa de 18k. Talla ajustable.",
-    "price": 250,
-    "quantity": 7,
-    "images": ["cld-sample-4.jpg"],
-    "category": "anillos"
+    "id": 3,
+    "name": "Worm chunky hoops dorados",
+    "description": "Aretes en acero inoxidable en dorado, 2cm ",
+    "price": 300,
+    "quantity": 3,
+    "images": [
+      "3.1_vsepwx.jpg",
+      "3.2_mgm9kc.jpg"
+    ],
+    "category": "aretes"
+  },
+  {
+    "id": 4,
+    "name": "Worm chunky hoops plateados",
+    "description": "Aretes en acero inoxidable en plateado, 2cm ",
+    "price": 300,
+    "quantity": 1,
+    "images": [
+      "4.1_rykqjw.jpg"
+    ],
+    "category": "aretes"
+  },
+  {
+    "id": 5,
+    "name": "Extra chunky hoops dorados",
+    "description": "Aretes en acero inoxidable en dorado, 4cm ",
+    "price": 320,
+    "quantity": 3,
+    "images": [
+      "5.1_z0na9s.jpg",
+      "5.2_ut3gvx.jpg"
+    ],
+    "category": "aretes"
+  },
+  {
+    "id": 6,
+    "name": "Media lunas doradas",
+    "description": "Aretes en acero inoxidable en dorado",
+    "price": 300,
+    "quantity": 1,
+    "images": [
+      "6.1_tqkerd.jpg",
+      "6.2_t6hhaj.jpg"
+    ],
+    "category": "aretes"
+  },
+  {
+    "id": 7,
+    "name": "Media lunas plateadas",
+    "description": "Aretes en acero inoxidable en dorado, 2cm ",
+    "price": 300,
+    "quantity": 3,
+    "images": [
+      "7.1_io7eyx.jpg"
+    ],
+    "category": "aretes"
+  },
+  {
+    "id": 8,
+    "name": "Aretes Sophia",
+    "description": "Aretes en acero inoxidable en dorado, 4cm ",
+    "price": 320,
+    "quantity": 2,
+    "images": [
+      "8.1_fzcm8c.jpg",
+      "8.2_wsh5xv.jpg"
+    ],
+    "category": "aretes"
+  },
+  {
+    "id": 9,
+    "name": "Chunky gotas",
+    "description": "Aretes en acero inoxidable en dorado",
+    "price": 290,
+    "quantity": 9,
+    "images": [
+      "9.1_oavidu.jpg"
+    ],
+    "category": "aretes"
+  },
+  {
+    "id": 10,
+    "name": "Aretes Ana",
+    "description": "Aretes en acero inoxidable en dorado",
+    "price": 300,
+    "quantity": 2,
+    "images": [
+      "10.1_knmy0y.jpg",
+      "110.2_bzvdsx.jpg"
+    ],
+    "category": "aretes"
   }
 ]
-
