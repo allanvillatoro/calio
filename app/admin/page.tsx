@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getProducts } from '@/lib/products';
 import { Product } from '@/lib/types';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, getImageUrl } from '@/lib/utils';
 
 export default function AdminPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -18,8 +18,8 @@ export default function AdminPage() {
     name: '',
     description: '',
     price: '',
-    image: '',
     quantity: '',
+    images: '',
   });
 
   const handleEdit = (product: Product) => {
@@ -28,8 +28,8 @@ export default function AdminPage() {
       name: product.name,
       description: product.description,
       price: product.price.toString(),
-      image: product.image,
       quantity: product.quantity.toString(),
+      images: product.images.join(', '),
     });
   };
 
@@ -38,13 +38,13 @@ export default function AdminPage() {
       setProducts(products.filter((p) => p.id !== id));
       if (editingProduct?.id === id) {
         setEditingProduct(null);
-        setFormData({
-          name: '',
-          description: '',
-          price: '',
-          image: '',
-          quantity: '',
-        });
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        quantity: '',
+        images: '',
+      });
       }
     }
   };
@@ -62,8 +62,10 @@ export default function AdminPage() {
                 name: formData.name,
                 description: formData.description,
                 price: parseFloat(formData.price),
-                image: formData.image,
                 quantity: parseInt(formData.quantity),
+                images: formData.images
+                  ? formData.images.split(',').map((s) => s.trim()).filter(Boolean)
+                  : [],
               }
             : p
         )
@@ -76,30 +78,33 @@ export default function AdminPage() {
         name: formData.name,
         description: formData.description,
         price: parseFloat(formData.price),
-        image: formData.image,
         quantity: parseInt(formData.quantity),
+        images: formData.images
+          ? formData.images.split(',').map((s) => s.trim()).filter(Boolean)
+          : [],
+        category: 'accesorios', // Default category
       };
       setProducts([...products, newProduct]);
     }
 
-    setFormData({
-      name: '',
-      description: '',
-      price: '',
-      image: '',
-      quantity: '',
-    });
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        quantity: '',
+        images: '',
+      });
   };
 
   const handleCancel = () => {
     setEditingProduct(null);
-    setFormData({
-      name: '',
-      description: '',
-      price: '',
-      image: '',
-      quantity: '',
-    });
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        quantity: '',
+        images: '',
+      });
   };
 
   return (
@@ -115,7 +120,7 @@ export default function AdminPage() {
               <Link href="/" className="text-gray-700 hover:text-gray-900">
                 Inicio
               </Link>
-              <Link href="/catalog" className="text-gray-700 hover:text-gray-900">
+              <Link href="/catalogo" className="text-gray-700 hover:text-gray-900">
                 Catálogo
               </Link>
               <span className="text-gray-900 font-semibold">Admin</span>
@@ -199,15 +204,19 @@ export default function AdminPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  URL de Imagen
+                  Imágenes (separadas por comas, ej: "1, 1-1, 1-2")
                 </label>
                 <input
-                  type="url"
+                  type="text"
                   required
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                  value={formData.images}
+                  onChange={(e) => setFormData({ ...formData, images: e.target.value })}
+                  placeholder="Ej: 1, 1-1, 1-2"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  Ingresa todos los nombres de archivo de las imágenes separados por comas (incluyendo la extensión, ej: "1_rfgqdg.jpg, cld-sample-4.jpg"). El primer nombre será la imagen principal.
+                </p>
               </div>
 
               <div className="flex gap-4 pt-4">
@@ -244,7 +253,7 @@ export default function AdminPage() {
                   <div className="flex gap-4">
                     <div className="relative w-20 h-20 flex-shrink-0">
                       <Image
-                        src={product.image}
+                        src={getImageUrl(product.images[0])}
                         alt={product.name}
                         fill
                         className="object-cover rounded"

@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { getProductById } from '@/lib/products';
 import { notFound } from 'next/navigation';
 import { formatPrice } from '@/lib/utils';
+import ImageCarousel from '@/components/ImageCarousel';
 
 interface ProductDetailPageProps {
   params: {
@@ -30,7 +30,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
               <Link href="/" className="text-gray-700 hover:text-gray-900">
                 Inicio
               </Link>
-              <Link href="/catalog" className="text-gray-700 hover:text-gray-900">
+              <Link href="/catalogo" className="text-gray-700 hover:text-gray-900">
                 Catálogo
               </Link>
             </div>
@@ -41,23 +41,15 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
       {/* Product Detail */}
       <div className="container mx-auto px-4 py-12">
         <Link
-          href="/catalog"
+          href="/catalogo"
           className="text-gray-600 hover:text-gray-900 mb-6 inline-block"
         >
           ← Volver al Catálogo
         </Link>
 
         <div className="grid md:grid-cols-2 gap-12">
-          {/* Product Image */}
-          <div className="relative w-full h-96 md:h-[600px] bg-white rounded-lg overflow-hidden shadow-lg">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
+          {/* Product Image Carousel */}
+          <ImageCarousel images={product.images} />
 
           {/* Product Info */}
           <div className="space-y-6">

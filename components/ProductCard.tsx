@@ -1,23 +1,25 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '@/lib/types';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, getImageUrl } from '@/lib/utils';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const mainImage = product.images[0];
+  
   return (
     <Link href={`/products/${product.id}`}>
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
         <div className="relative w-full h-64">
           <Image
-            src={product.image}
+            src={getImageUrl(mainImage)}
             alt={product.name}
             fill
             className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         </div>
         <div className="p-4">
