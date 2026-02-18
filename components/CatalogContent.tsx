@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { getProducts } from "@/lib/products";
@@ -20,6 +20,7 @@ const CATEGORIES: Category[] = [
 export default function CatalogContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const allProducts = getProducts();
   const PRODUCTS_PER_PAGE = 20;
@@ -136,10 +137,26 @@ export default function CatalogContent() {
           Descubre nuestra exquisita selección de joyería artesanal
         </p>
 
-        <div className="flex gap-8">
+        <div className="flex flex-col md:flex-row gap-8">
           {/* Filters Sidebar */}
-          <aside className="w-64 flex-shrink-0">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
+          <aside className="w-full md:w-64 md:flex-shrink-0">
+            {/* Mobile Toggle Button */}
+            <button
+              onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+              className="md:hidden w-full bg-white rounded-lg shadow-md p-4 mb-4 text-left font-semibold text-gray-900 flex justify-between items-center"
+            >
+              <span>Filtros</span>
+              <span className="text-xl">
+                {isFiltersOpen ? "−" : "+"}
+              </span>
+            </button>
+
+            {/* Filters Content */}
+            <div
+              className={`${
+                isFiltersOpen ? "block" : "hidden"
+              } md:block bg-white rounded-lg shadow-md p-6 md:sticky md:top-4`}
+            >
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 Categorías
               </h2>
