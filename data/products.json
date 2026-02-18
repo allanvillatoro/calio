@@ -1,0 +1,51 @@
+[
+  {
+    "id": "1",
+    "name": "Anillo de Compromiso con Diamante",
+    "description": "Hermoso anillo solitario con diamante de 1.5 quilates, montado en oro blanco de 18k. Perfecto para compromisos y ocasiones especiales.",
+    "price": 5999.99,
+    "image": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=800&fit=crop",
+    "quantity": 5
+  },
+  {
+    "id": "2",
+    "name": "Collar de Perlas",
+    "description": "Elegante collar de perlas cultivadas de 7mm, 18 pulgadas de longitud. Pieza clásica y atemporal que complementa cualquier atuendo.",
+    "price": 1299.99,
+    "image": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=800&fit=crop",
+    "quantity": 8
+  },
+  {
+    "id": "3",
+    "name": "Pulsera de Tenis en Oro",
+    "description": "Deslumbrante pulsera de tenis en oro amarillo de 14k con diamantes redondos de 5mm. Peso total en quilates: 3.5 quilates. Longitud ajustable.",
+    "price": 8999.99,
+    "image": "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=800&fit=crop",
+    "quantity": 3
+  },
+  {
+    "id": "4",
+    "name": "Aretes de Zafiro",
+    "description": "Exquisitos aretes de zafiro azul, 2 quilates cada uno, montados en platino. Zafiros naturales con excelente claridad y color.",
+    "price": 3499.99,
+    "image": "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=800&h=800&fit=crop",
+    "quantity": 6
+  },
+  {
+    "id": "5",
+    "name": "Dije de Esmeralda",
+    "description": "Vibrante dije de esmeralda con piedra central de 2.5 quilates, rodeado de diamantes, en cadena de oro de 18k. Longitud de cadena: 20 pulgadas.",
+    "price": 4599.99,
+    "image": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&h=800&fit=crop",
+    "quantity": 4
+  },
+  {
+    "id": "6",
+    "name": "Anillo de Rubí",
+    "description": "Deslumbrante anillo de rubí con piedra central de 1.8 quilates, acentuado con diamantes, montado en oro rosa de 18k. Talla ajustable.",
+    "price": 3899.99,
+    "image": "https://res.cloudinary.com/dggrup7kw/image/upload/v1771393527/PXL_20250322_214019711_pv5pir.jpg",
+    "quantity": 7
+  }
+]
+
