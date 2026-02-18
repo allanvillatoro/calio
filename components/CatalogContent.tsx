@@ -8,13 +8,13 @@ import { getProducts } from "@/lib/products";
 import { Category } from "@/lib/types";
 
 const CATEGORIES: Category[] = [
+  "accesorios",
+  "anillos",
   "aretes",
   "collares",
-  "anillos",
-  "pulseras",
-  "accesorios",
-  "sets",
   "earcuffs",
+  "pulseras",
+  "sets",
 ];
 
 export default function CatalogContent() {
