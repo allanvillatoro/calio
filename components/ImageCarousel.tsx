@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { getImageUrl } from '@/lib/utils';
+import { useState } from "react";
+import Image from "next/image";
+import { getImageUrl } from "@/lib/utils";
 
 interface ImageCarouselProps {
   images: string[];
@@ -15,14 +15,14 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
   const allImages = images.map((filename) => getImageUrl(filename));
 
   const goToPrevious = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? allImages.length - 1 : prevIndex - 1
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? allImages.length - 1 : prevIndex - 1,
     );
   };
 
   const goToNext = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
+    setCurrentIndex((prevIndex) =>
+      prevIndex === allImages.length - 1 ? 0 : prevIndex + 1,
     );
   };
 
@@ -41,7 +41,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
           className="object-cover"
           priority={currentIndex === 0}
         />
-        
+
         {/* Navigation Arrows - Only show if more than one image */}
         {allImages.length > 1 && (
           <>
@@ -96,8 +96,8 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
               onClick={() => goToSlide(index)}
               className={`relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
                 currentIndex === index
-                  ? 'border-gray-900 ring-2 ring-gray-900 ring-offset-2'
-                  : 'border-gray-200 hover:border-gray-400'
+                  ? "border-gray-900 ring-2 ring-gray-900 ring-offset-2"
+                  : "border-gray-200 hover:border-gray-400"
               }`}
               aria-label={`Ver imagen ${index + 1}`}
             >

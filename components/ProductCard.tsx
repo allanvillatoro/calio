@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import { Product } from '@/lib/types';
-import { formatPrice, getImageUrl } from '@/lib/utils';
+import Link from "next/link";
+import Image from "next/image";
+import { Product } from "@/lib/types";
+import { formatPrice, getImageUrl } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
@@ -9,7 +9,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const mainImage = product.images[0];
-  
+
   return (
     <Link href={`/products/${product.id}`}>
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
@@ -42,4 +42,3 @@ export default function ProductCard({ product }: ProductCardProps) {
     </Link>
   );
 }
-
