@@ -5,10 +5,7 @@
     "description": "Aretes en acero inoxidable en dorado, 2cm ",
     "price": 300,
     "quantity": 4,
-    "images": [
-      "1.1_eeivce.jpg",
-      "1.2_nbmskr.jpg"
-    ],
+    "images": ["1.1_eeivce.jpg", "1.2_nbmskr.jpg"],
     "category": "aretes"
   },
   {
@@ -17,10 +14,7 @@
     "description": "Aretes en acero inoxidable en plateado, 2cm ",
     "price": 300,
     "quantity": 1,
-    "images": [
-      "2.1_rzqhxj.jpg",
-      "2.2_e0ojiw.jpg"
-    ],
+    "images": ["2.1_rzqhxj.jpg", "2.2_e0ojiw.jpg"],
     "category": "aretes"
   },
   {
@@ -29,10 +23,7 @@
     "description": "Aretes en acero inoxidable en dorado, 2cm ",
     "price": 300,
     "quantity": 3,
-    "images": [
-      "3.1_vsepwx.jpg",
-      "3.2_mgm9kc.jpg"
-    ],
+    "images": ["3.1_vsepwx.jpg", "3.2_mgm9kc.jpg"],
     "category": "aretes"
   },
   {
@@ -41,9 +32,7 @@
     "description": "Aretes en acero inoxidable en plateado, 2cm ",
     "price": 300,
     "quantity": 1,
-    "images": [
-      "4.1_rykqjw.jpg"
-    ],
+    "images": ["4.1_suww6c.jpg"],
     "category": "aretes"
   },
   {
@@ -52,10 +41,7 @@
     "description": "Aretes en acero inoxidable en dorado, 4cm ",
     "price": 320,
     "quantity": 3,
-    "images": [
-      "5.1_z0na9s.jpg",
-      "5.2_ut3gvx.jpg"
-    ],
+    "images": ["5.1_z0na9s.jpg", "5.2_ut3gvx.webp"],
     "category": "aretes"
   },
   {
@@ -64,10 +50,7 @@
     "description": "Aretes en acero inoxidable en dorado",
     "price": 300,
     "quantity": 1,
-    "images": [
-      "6.1_tqkerd.jpg",
-      "6.2_t6hhaj.jpg"
-    ],
+    "images": ["6.1_tqkerd.jpg", "6.2_t6hhaj.jpg"],
     "category": "aretes"
   },
   {
@@ -76,9 +59,7 @@
     "description": "Aretes en acero inoxidable en dorado, 2cm ",
     "price": 300,
     "quantity": 3,
-    "images": [
-      "7.1_io7eyx.jpg"
-    ],
+    "images": ["7.1_io7eyx.jpg"],
     "category": "aretes"
   },
   {
@@ -87,10 +68,7 @@
     "description": "Aretes en acero inoxidable en dorado, 4cm ",
     "price": 320,
     "quantity": 2,
-    "images": [
-      "8.1_fzcm8c.jpg",
-      "8.2_wsh5xv.jpg"
-    ],
+    "images": ["8.1_fzcm8c.jpg", "8.2_wsh5xv.jpg"],
     "category": "aretes"
   },
   {
@@ -99,9 +77,7 @@
     "description": "Aretes en acero inoxidable en dorado",
     "price": 290,
     "quantity": 9,
-    "images": [
-      "9.1_oavidu.jpg"
-    ],
+    "images": ["9.1_oavidu.jpg"],
     "category": "aretes"
   },
   {
@@ -110,10 +86,7 @@
     "description": "Aretes en acero inoxidable en dorado",
     "price": 300,
     "quantity": 2,
-    "images": [
-      "10.1_knmy0y.jpg",
-      "110.2_bzvdsx.jpg"
-    ],
+    "images": ["10.1_knmy0y.jpg", "110.2_bzvdsx.jpg"],
     "category": "aretes"
   }
 ]
