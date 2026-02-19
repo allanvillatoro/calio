@@ -1,8 +1,9 @@
-import Link from 'next/link';
-import { getProductById } from '@/lib/products';
-import { notFound } from 'next/navigation';
-import { formatPrice } from '@/lib/utils';
-import ImageCarousel from '@/components/ImageCarousel';
+import Link from "next/link";
+import { getProductById } from "@/lib/products";
+import { notFound } from "next/navigation";
+import { formatPrice } from "@/lib/utils";
+import { FaWhatsapp } from "react-icons/fa";
+import ImageCarousel from "@/components/ImageCarousel";
 
 interface ProductDetailPageProps {
   params: {
@@ -12,10 +13,13 @@ interface ProductDetailPageProps {
 
 export default function ProductDetailPage({ params }: ProductDetailPageProps) {
   const product = getProductById(params.id);
-
   if (!product) {
     notFound();
   }
+  const productUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/productos/${product.id}`;
+  const phoneNumber = process.env.CONTACT_PHONE || "";
+  const message = `Hola, quiero solicitar este producto: ${product.name} - ${productUrl}`;
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -24,14 +28,17 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="text-2xl font-bold text-gray-900">
-              Calio Jewelry
+              CALIO Joyería
             </Link>
             <div className="space-x-6">
               <Link href="/" className="text-gray-700 hover:text-gray-900">
                 Inicio
               </Link>
-              <Link href="/catalogo" className="text-gray-700 hover:text-gray-900">
-                Catálogo
+              <Link
+                href="/catalogo"
+                className="text-gray-700 hover:text-gray-900"
+              >
+                Colección
               </Link>
             </div>
           </div>
@@ -44,7 +51,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
           href="/catalogo"
           className="text-gray-600 hover:text-gray-900 mb-6 inline-block"
         >
-          ← Volver al Catálogo
+          ← Volver al Colección
         </Link>
 
         <div className="grid md:grid-cols-2 gap-12">
@@ -72,16 +79,21 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
             </div>
 
             <div className="pt-6">
-              <button
-                disabled={product.quantity === 0}
-                className={`w-full py-4 px-6 rounded-lg text-lg font-semibold transition-colors ${
-                  product.quantity > 0
-                    ? 'bg-gray-900 text-white hover:bg-gray-800'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                {product.quantity > 0 ? 'Agregar al Carrito' : 'Agotado'}
-              </button>
+              {product.quantity > 0 ? (
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-lg text-lg font-semibold transition-colors bg-green-600 text-white hover:bg-green-700"
+                >
+                  <FaWhatsapp className="w-6 h-6" />
+                  Solicitar por WhatsApp
+                </a>
+              ) : (
+                <div className="w-full py-4 px-6 rounded-lg text-lg font-semibold bg-gray-300 text-gray-500 text-center">
+                  Agotado
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -89,4 +101,3 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
     </div>
   );
 }
-
