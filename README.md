@@ -1,4 +1,4 @@
-# Calio Jewelry
+# CALIO Joyería
 
 A modern jewelry e-commerce application built with Next.js, TypeScript, and Tailwind CSS.
 
