@@ -41,7 +41,10 @@ export function Footer() {
 
           {/* Copyright */}
           <p className="text-center text-gray-600">
-            © 2026 CALIO Joyería. Todos los derechos reservados.
+            <span className="block">
+              © 2026 CALIO Joyería. Todos los derechos reservados.
+            </span>
+            <span className="block">San Pedro Sula, Honduras</span>
           </p>
         </div>
       </div>

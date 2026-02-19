@@ -78,8 +78,11 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
                 {product.name}
               </h1>
-              <p className="text-3xl font-bold text-gray-900 mb-6">
+              <p className="text-3xl font-bold text-gray-900 mb-1">
                 {formatPrice(product.price)}
+              </p>
+              <p className="text-gray-600 leading-relaxed">
+                Envío local o nacional por un costo adicional
               </p>
             </div>
 
