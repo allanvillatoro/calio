@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Calio Jewelry",
-  description: "Exquisita colección de joyería artesanal",
+  title: "CALIO Joyería",
+  description: "Joyas para sentirte bien",
 };
 
 export default function RootLayout({

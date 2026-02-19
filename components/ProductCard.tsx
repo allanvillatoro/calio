@@ -11,7 +11,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const mainImage = product.images[0];
 
   return (
-    <Link href={`/products/${product.id}`}>
+    <Link href={`/productos/${product.id}`}>
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
         <div className="relative w-full h-64">
           <Image

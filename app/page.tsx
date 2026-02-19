@@ -6,13 +6,13 @@ export default function Home() {
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Calio Jewelry</h1>
+          <h1 className="text-2xl font-bold text-gray-900">CALIO Joyería</h1>
           <div className="space-x-6">
             <Link href="/" className="text-gray-700 hover:text-gray-900">
               Inicio
             </Link>
             <Link href="/catalogo" className="text-gray-700 hover:text-gray-900">
-              Catálogo
+              Colección
             </Link>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 border-t border-gray-200">
         <p className="text-center text-gray-600">
-          © 2026 Calio Jewelry. Todos los derechos reservados.
+          © 2026 CALIO Joyería. Todos los derechos reservados.
         </p>
       </footer>
     </div>

@@ -130,14 +130,14 @@ export default function AdminPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <Link href="/" className="text-2xl font-bold text-gray-900">
-              Calio Jewelry
+              CALIO Joyería
             </Link>
             <div className="space-x-6">
               <Link href="/" className="text-gray-700 hover:text-gray-900">
                 Inicio
               </Link>
               <Link href="/catalogo" className="text-gray-700 hover:text-gray-900">
-                Catálogo
+                Colección
               </Link>
               <span className="text-gray-900 font-semibold">Admin</span>
             </div>
