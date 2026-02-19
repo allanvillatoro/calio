@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getProductById } from "@/lib/products";
 import { notFound } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
@@ -8,6 +9,41 @@ import ImageCarousel from "@/components/ImageCarousel";
 interface ProductDetailPageProps {
   params: {
     id: string;
+  };
+}
+
+export function generateMetadata({ params }: ProductDetailPageProps): Metadata {
+  const product = getProductById(params.id);
+
+  if (!product) {
+    return {
+      title: "Producto no encontrado | CALIO",
+    };
+  }
+
+  const productUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://caliojoyeria.com"}/productos/${product.id}`;
+
+  return {
+    title: `${product.name} | CALIO Joyería`,
+    description: product.description,
+    keywords: `${product.name}, ${product.category}, joyas, joyería`,
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      type: "website",
+      url: productUrl,
+      images: [
+        {
+          url: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/w_1200,h_630/${product.images[0] || "default.jpg"}`,
+          width: 1200,
+          height: 630,
+          alt: product.name,
+        },
+      ],
+    },
+    alternates: {
+      canonical: productUrl,
+    },
   };
 }
 
