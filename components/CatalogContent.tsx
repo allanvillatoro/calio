@@ -5,7 +5,6 @@ import { getProducts } from "@/lib/products";
 import { Category } from "@/lib/types";
 import { sortProductsById, calculatePagination } from "@/lib/catalog";
 import { useCatalogFilters } from "@/lib/hooks/useCatalogFilters";
-import { CatalogNavbar } from "@/components/catalog/CatalogNavbar";
 import { FiltersSection } from "@/components/catalog/FiltersSection";
 import { ProductsGrid } from "@/components/catalog/ProductsGrid";
 
@@ -49,11 +48,15 @@ export default function CatalogContent() {
   }, [filteredProducts, selectedCategories]);
 
   // Get paginated products
-  const { validPage: displayPage, startIndex, endIndex } = calculatePagination(
-    categoryFilteredProducts.length,
-    currentPage,
+  const {
+    validPage: displayPage,
+    startIndex,
+    endIndex,
+  } = calculatePagination(categoryFilteredProducts.length, currentPage);
+  const paginatedProducts = categoryFilteredProducts.slice(
+    startIndex,
+    endIndex,
   );
-  const paginatedProducts = categoryFilteredProducts.slice(startIndex, endIndex);
 
   // Handle category toggle
   const handleToggleCategory = (category: Category) => {
@@ -61,7 +64,8 @@ export default function CatalogContent() {
       ? selectedCategories.filter((c) => c !== category)
       : [...selectedCategories, category];
 
-    const categoriesParam = newCategories.length === 0 ? undefined : newCategories.join(",");
+    const categoriesParam =
+      newCategories.length === 0 ? undefined : newCategories.join(",");
     updateURL({ categorias: categoriesParam, pagina: undefined });
   };
 
@@ -78,8 +82,6 @@ export default function CatalogContent() {
 
   return (
     <>
-      <CatalogNavbar />
-
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col md:flex-row gap-8">
           <FiltersSection

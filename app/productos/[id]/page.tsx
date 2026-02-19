@@ -23,28 +23,6 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold text-gray-900">
-              CALIO Joyería
-            </Link>
-            <div className="space-x-6">
-              <Link href="/" className="text-gray-700 hover:text-gray-900">
-                Inicio
-              </Link>
-              <Link
-                href="/catalogo"
-                className="text-gray-700 hover:text-gray-900"
-              >
-                Colección
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Product Detail */}
       <div className="container mx-auto px-4 py-12">
         <Link

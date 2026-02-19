@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { getProducts } from '@/lib/products';
-import { Product, Category } from '@/lib/types';
-import { formatPrice, getImageUrl } from '@/lib/utils';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { getProducts } from "@/lib/products";
+import { Product, Category } from "@/lib/types";
+import { formatPrice, getImageUrl } from "@/lib/utils";
 
 const CATEGORIES: Category[] = [
-  'aretes',
-  'collares',
-  'pulseras',
-  'anillos',
-  'sets',
-  'piercings/earcuffs',
-  'accesorios',
+  "aretes",
+  "collares",
+  "pulseras",
+  "anillos",
+  "sets",
+  "piercings/earcuffs",
+  "accesorios",
 ];
 
 export default function AdminPage() {
@@ -25,12 +25,12 @@ export default function AdminPage() {
   }, []);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    quantity: '',
-    images: '',
-    category: 'accesorios' as Category,
+    name: "",
+    description: "",
+    price: "",
+    quantity: "",
+    images: "",
+    category: "accesorios" as Category,
   });
 
   const handleEdit = (product: Product) => {
@@ -40,31 +40,31 @@ export default function AdminPage() {
       description: product.description,
       price: product.price.toString(),
       quantity: product.quantity.toString(),
-      images: product.images.join(', '),
+      images: product.images.join(", "),
       category: product.category,
     });
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+    if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
       setProducts(products.filter((p) => p.id !== id));
       if (editingProduct?.id === id) {
         setEditingProduct(null);
-      setFormData({
-        name: '',
-        description: '',
-        price: '',
-        quantity: '',
-        images: '',
-        category: 'accesorios',
-      });
+        setFormData({
+          name: "",
+          description: "",
+          price: "",
+          quantity: "",
+          images: "",
+          category: "accesorios",
+        });
       }
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (editingProduct) {
       // Update existing product
       setProducts(
@@ -77,12 +77,15 @@ export default function AdminPage() {
                 price: parseFloat(formData.price),
                 quantity: parseInt(formData.quantity),
                 images: formData.images
-                  ? formData.images.split(',').map((s) => s.trim()).filter(Boolean)
+                  ? formData.images
+                      .split(",")
+                      .map((s) => s.trim())
+                      .filter(Boolean)
                   : [],
                 category: formData.category,
               }
-            : p
-        )
+            : p,
+        ),
       );
       setEditingProduct(null);
     } else {
@@ -94,63 +97,58 @@ export default function AdminPage() {
         price: parseFloat(formData.price),
         quantity: parseInt(formData.quantity),
         images: formData.images
-          ? formData.images.split(',').map((s) => s.trim()).filter(Boolean)
+          ? formData.images
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
           : [],
         category: formData.category,
       };
       setProducts([...products, newProduct]);
     }
 
-      setFormData({
-        name: '',
-        description: '',
-        price: '',
-        quantity: '',
-        images: '',
-        category: 'accesorios',
-      });
+    setFormData({
+      name: "",
+      description: "",
+      price: "",
+      quantity: "",
+      images: "",
+      category: "accesorios",
+    });
   };
 
   const handleCancel = () => {
     setEditingProduct(null);
-      setFormData({
-        name: '',
-        description: '',
-        price: '',
-        quantity: '',
-        images: '',
-        category: 'accesorios',
-      });
+    setFormData({
+      name: "",
+      description: "",
+      price: "",
+      quantity: "",
+      images: "",
+      category: "accesorios",
+    });
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold text-gray-900">
-              CALIO Joyería
-            </Link>
-            <div className="space-x-6">
-              <Link href="/" className="text-gray-700 hover:text-gray-900">
-                Inicio
-              </Link>
-              <Link href="/catalogo" className="text-gray-700 hover:text-gray-900">
-                Colección
-              </Link>
-              <span className="text-gray-900 font-semibold">Admin</span>
-            </div>
-          </div>
+      <div className="border-b border-gray-200 bg-white">
+        <div className="container mx-auto px-4 py-2">
+          <span className="text-gray-900 font-semibold">Admin</span>
         </div>
-      </nav>
+      </div>
 
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Panel de Administración</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          Panel de Administración
+        </h1>
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
           <p className="text-sm text-yellow-800">
-            <strong>Nota:</strong> Este panel es solo para visualización. Para agregar, editar o eliminar productos, 
-            edita el archivo <code className="bg-yellow-100 px-1 rounded">data/products.json</code> y vuelve a desplegar la aplicación.
+            <strong>Nota:</strong> Este panel es solo para visualización. Para
+            agregar, editar o eliminar productos, edita el archivo{" "}
+            <code className="bg-yellow-100 px-1 rounded">
+              data/products.json
+            </code>{" "}
+            y vuelve a desplegar la aplicación.
           </p>
         </div>
 
@@ -158,7 +156,7 @@ export default function AdminPage() {
           {/* Product Form */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-              {editingProduct ? 'Editar Producto' : 'Agregar Nuevo Producto'}
+              {editingProduct ? "Editar Producto" : "Agregar Nuevo Producto"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -169,7 +167,9 @@ export default function AdminPage() {
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
               </div>
@@ -181,7 +181,9 @@ export default function AdminPage() {
                 <textarea
                   required
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   rows={4}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
@@ -198,7 +200,9 @@ export default function AdminPage() {
                     min="0"
                     step="0.01"
                     value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, price: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                   />
                 </div>
@@ -212,7 +216,9 @@ export default function AdminPage() {
                     required
                     min="0"
                     value={formData.quantity}
-                    onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, quantity: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                   />
                 </div>
@@ -225,7 +231,12 @@ export default function AdminPage() {
                 <select
                   required
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value as Category })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      category: e.target.value as Category,
+                    })
+                  }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 >
                   {CATEGORIES.map((cat) => (
@@ -244,12 +255,16 @@ export default function AdminPage() {
                   type="text"
                   required
                   value={formData.images}
-                  onChange={(e) => setFormData({ ...formData, images: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, images: e.target.value })
+                  }
                   placeholder="Ej: 1, 1-1, 1-2"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
                 <p className="mt-1 text-xs text-gray-500">
-                  Ingresa todos los nombres de archivo de las imágenes separados por comas (incluyendo la extensión, ej: "1_rfgqdg.jpg, cld-sample-4.jpg"). El primer nombre será la imagen principal.
+                  Ingresa todos los nombres de archivo de las imágenes separados
+                  por comas (incluyendo la extensión, ej: "1_rfgqdg.jpg,
+                  cld-sample-4.jpg"). El primer nombre será la imagen principal.
                 </p>
               </div>
 
@@ -258,7 +273,7 @@ export default function AdminPage() {
                   type="submit"
                   className="flex-1 bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
                 >
-                  {editingProduct ? 'Actualizar Producto' : 'Agregar Producto'}
+                  {editingProduct ? "Actualizar Producto" : "Agregar Producto"}
                 </button>
                 {editingProduct && (
                   <button
@@ -338,4 +353,3 @@ export default function AdminPage() {
     </div>
   );
 }
-

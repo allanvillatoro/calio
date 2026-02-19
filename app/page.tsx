@@ -1,33 +1,19 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Navigation */}
-      <nav className="container mx-auto px-4 py-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">CALIO Joyería</h1>
-          <div className="space-x-6">
-            <Link href="/" className="text-gray-700 hover:text-gray-900">
-              Inicio
-            </Link>
-            <Link href="/catalogo" className="text-gray-700 hover:text-gray-900">
-              Colección
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-5xl font-bold text-gray-900 mb-6">
-            Elegancia Atemporal,<br />
+            Elegancia Atemporal,
+            <br />
             Hecha con Cuidado
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Descubre nuestra exquisita colección de joyería artesanal, 
-            donde cada pieza cuenta una historia de belleza y sofisticación.
+            Descubre nuestra exquisita colección de joyería artesanal, donde
+            cada pieza cuenta una historia de belleza y sofisticación.
           </p>
           <Link
             href="/catalogo"
@@ -74,4 +60,3 @@ export default function Home() {
     </div>
   );
 }
-
