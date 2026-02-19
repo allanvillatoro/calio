@@ -29,7 +29,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
           href="/catalogo"
           className="text-gray-600 hover:text-gray-900 mb-6 inline-block"
         >
-          ← Volver al Colección
+          ← Volver a Colección
         </Link>
 
         <div className="grid md:grid-cols-2 gap-12">
