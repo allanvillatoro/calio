@@ -7,13 +7,10 @@ export default function Home() {
       <section className="container mx-auto px-4 py-20">
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-5xl font-bold text-gray-900 mb-6">
-            Elegancia Atemporal,
-            <br />
-            Hecha con Cuidado
+            Everything is silver & gold
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Descubre nuestra exquisita colección de joyería artesanal, donde
-            cada pieza cuenta una historia de belleza y sofisticación.
+            La joyería es una extensión de lo que somos. Una herramienta para contar nuestra historia.
           </p>
           <Link
             href="/catalogo"
@@ -25,31 +22,6 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="text-center">
-            <div className="text-4xl mb-4">💎</div>
-            <h3 className="text-xl font-semibold mb-2">Calidad Premium</h3>
-            <p className="text-gray-600">
-              Solo los mejores materiales y gemas en cada pieza
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl mb-4">✨</div>
-            <h3 className="text-xl font-semibold mb-2">Artesanal</h3>
-            <p className="text-gray-600">
-              Cada pieza es cuidadosamente elaborada por artesanos expertos
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl mb-4">🎁</div>
-            <h3 className="text-xl font-semibold mb-2">Regalo Perfecto</h3>
-            <p className="text-gray-600">
-              Encuentra la pieza perfecta para tus seres queridos
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="container mx-auto px-4 py-8 border-t border-gray-200">
