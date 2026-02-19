@@ -69,6 +69,3 @@ Products are stored in `data/products.json`. To add, edit, or remove products:
 3. Edit `data/products.json` and paste the URLs
 4. Commit and push changes
 5. Vercel will automatically redeploy
-
-For detailed step-by-step instructions, see `DEPLOYMENT.md`.
-
