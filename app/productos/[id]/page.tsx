@@ -34,7 +34,7 @@ export function generateMetadata({ params }: ProductDetailPageProps): Metadata {
       url: productUrl,
       images: [
         {
-          url: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/w_1200,h_630/${product.images[0] || "default.jpg"}`,
+          url: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_1200,h_630/${product.images[0] || "default.jpg"}`,
           width: 1200,
           height: 630,
           alt: product.name,
