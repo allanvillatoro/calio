@@ -57,8 +57,6 @@ calio/
 - ✅ Landing page
 - ✅ Admin panel (visualization only)
 - 📝 Products stored in `data/products.json`
-- 📝 See `DEPLOYMENT.md` for deployment instructions
-- 📝 See `VERCEL_SETUP.md` for Vercel configuration
 
 ## How to Update Products
 
