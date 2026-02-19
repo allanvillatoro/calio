@@ -40,6 +40,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
           fill
           className="object-cover"
           priority={currentIndex === 0}
+          sizes="(max-width: 768px) 100vw, 50vw"
         />
 
         {/* Navigation Arrows - Only show if more than one image */}
@@ -106,6 +107,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
                 alt={`Miniatura ${index + 1}`}
                 fill
                 className="object-cover"
+                sizes="100px"
               />
             </button>
           ))}
