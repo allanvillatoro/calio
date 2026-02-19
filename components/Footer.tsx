@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 import Link from "next/link";
-import { FaInstagram, FaTiktok } from "react-icons/fa";
+import { FaInstagram, FaTiktok, FaFacebook } from "react-icons/fa";
 
 export function Footer() {
   return (
@@ -27,6 +27,15 @@ export function Footer() {
               aria-label="TikTok"
             >
               <FaTiktok className="w-6 h-6" />
+            </a>
+            <a
+              href="https://facebook.com/caliojoyeria"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-blue-600 transition-colors"
+              aria-label="Facebook"
+            >
+              <FaFacebook className="w-6 h-6" />
             </a>
           </div>
 
