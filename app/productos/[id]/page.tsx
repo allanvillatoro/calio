@@ -1,10 +1,10 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { getProductById } from "@/lib/products";
 import { notFound } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
 import { FaWhatsapp } from "react-icons/fa";
 import ImageCarousel from "@/components/ImageCarousel";
+import BackButton from "@/components/BackButton";
 
 interface ProductDetailPageProps {
   params: {
@@ -61,13 +61,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
     <div className="min-h-screen bg-gray-50">
       {/* Product Detail */}
       <div className="container mx-auto px-4 py-12">
-        <Link
-          href="/catalogo"
-          className="text-gray-600 hover:text-gray-900 mb-6 inline-block"
-        >
-          ← Volver a Colección
-        </Link>
-
+        <BackButton/>
         <div className="grid md:grid-cols-2 gap-12">
           {/* Product Image Carousel */}
           <ImageCarousel images={product.images} />
