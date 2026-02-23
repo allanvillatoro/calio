@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import CategoryCarousel from "@/components/CategoryCarousel";
 
 export const metadata: Metadata = {
   title: "CALIO - Joyería Fina de Diseño en San Pedro Sula, Honduras",
@@ -57,36 +58,7 @@ export default function Home() {
       </section>
 
       {/* ================= QUÉ OFRECEMOS ================= */}
-      <section className="container mx-auto px-6 py-24">
-        <h2 className="serif-title text-3xl md:text-4xl text-center mb-16">
-          Explora nuestras piezas
-        </h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-10">
-          {[
-            { name: "Aretes", slug: "aretes" },
-            { name: "Collares", slug: "collares" },
-            { name: "Pulseras", slug: "pulseras" },
-            { name: "Anillos", slug: "anillos" },
-            { name: "Sets", slug: "sets" },
-            { name: "Piercings/Cuffs", slug: "piercings-cuffs" },
-          ].map((item) => (
-            <Link
-              key={item.slug}
-              href={`/catalogo?categorias=${item.slug}`}
-              className="group block"
-            >
-              <div className="bg-gray-200 aspect-square flex items-center justify-center text-sm tracking-wide transition-all duration-500 group-hover:scale-[1.03] group-hover:shadow-xl">
-                Imagen 600x600
-              </div>
-
-              <p className="mt-4 text-center font-medium tracking-wide transition-all duration-300 group-hover:tracking-widest">
-                {item.name}
-              </p>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <CategoryCarousel />
 
       {/* ================= PERSONALIZACIÓN ================= */}
       <section id="personalizacion" className="bg-black text-white py-28">
@@ -186,16 +158,13 @@ export default function Home() {
 
         <div className="space-y-5 text-lg">
           <p className="transition-all duration-300 hover:tracking-widest">
-            Entregas locales
+            Envíos a toda Honduras por un costo adicional
           </p>
           <p className="transition-all duration-300 hover:tracking-widest">
-            Envíos a todo el país
+            Pagos por transferencia con diferentes bancos
           </p>
           <p className="transition-all duration-300 hover:tracking-widest">
-            Pagos por transferencia bancaria
-          </p>
-          <p className="transition-all duration-300 hover:tracking-widest">
-            Tiempos estimados de entrega
+            Tiempos estimados de entrega de 24 horas para San Pedro Sula, 1-2 días hábiles para el resto del país
           </p>
         </div>
       </section>
