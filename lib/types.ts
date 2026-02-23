@@ -5,7 +5,7 @@ export type Category =
   | "pulseras"
   | "accesorios"
   | "sets"
-  | "piercings/earcuffs";
+  | "piercings-cuffs";
 
 export interface Product {
   id: string;

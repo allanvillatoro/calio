@@ -1,6 +1,3 @@
-"use client";
-
-import Link from "next/link";
 import { FaInstagram, FaTiktok, FaFacebook } from "react-icons/fa";
 
 export function Footer() {

@@ -10,30 +10,195 @@ export const metadata: Metadata = {
     description: "Joyas para sentirte bien - Honduras",
   },
 };
-
 export default function Home() {
+  const phoneNumber = process.env.CONTACT_PHONE || "";
+  const message = `Hola, quiero un grabado láser personalizado`;
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
   return (
-    <div className="bg-gradient-to-b from-gray-50 to-white">
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="text-center max-w-3xl mx-auto">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+    <div className="bg-white text-black">
+      {/* ================= HERO ================= */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src="https://placehold.co/1600x900"
+            alt="Hero background"
+            className="w-full h-full object-cover scale-105 animate-[fadeIn_1.2s_ease-out]"
+          />
+          <div className="absolute inset-0 bg-black/60"></div>
+        </div>
+
+        <div className="relative container mx-auto px-6 py-32 text-center text-white">
+          <h1 className="serif-title text-4xl md:text-6xl font-semibold tracking-wide mb-6 opacity-0 animate-[fadeUp_1s_ease-out_0.3s_forwards]">
             Everything is silver & gold
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            La joyería es una extensión de lo que somos. Una herramienta para
-            contar nuestra historia.
+
+          <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed opacity-0 animate-[fadeUp_1s_ease-out_0.6s_forwards]">
+            La joyería es una extensión de lo que somos. Cada pieza cuenta una
+            historia, la tuya.
           </p>
-          <Link
-            href="/catalogo"
-            className="inline-block bg-gray-900 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-800 transition-colors"
-          >
-            Explorar Colección
-          </Link>
+
+          <div className="flex flex-col sm:flex-row justify-center gap-4 opacity-0 animate-[fadeUp_1s_ease-out_0.9s_forwards]">
+            <Link
+              href="/catalogo"
+              className="bg-white text-black px-8 py-3 font-semibold tracking-wide hover:scale-105 transition-all duration-300"
+            >
+              Explorar Colección
+            </Link>
+
+            <a
+              href="#personalizacion"
+              className="border border-white px-8 py-3 font-semibold tracking-wide hover:bg-white hover:text-black hover:scale-105 transition-all duration-300"
+            >
+              Personaliza tu joya
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* ================= QUÉ OFRECEMOS ================= */}
+      <section className="container mx-auto px-6 py-24">
+        <h2 className="serif-title text-3xl md:text-4xl text-center mb-16">
+          Explora nuestras piezas
+        </h2>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-10">
+          {[
+            { name: "Aretes", slug: "aretes" },
+            { name: "Collares", slug: "collares" },
+            { name: "Pulseras", slug: "pulseras" },
+            { name: "Anillos", slug: "anillos" },
+            { name: "Sets", slug: "sets" },
+            { name: "Piercings/Cuffs", slug: "piercings-cuffs" },
+          ].map((item) => (
+            <Link
+              key={item.slug}
+              href={`/catalogo?categorias=${item.slug}`}
+              className="group block"
+            >
+              <div className="bg-gray-200 aspect-square flex items-center justify-center text-sm tracking-wide transition-all duration-500 group-hover:scale-[1.03] group-hover:shadow-xl">
+                Imagen 600x600
+              </div>
+
+              <p className="mt-4 text-center font-medium tracking-wide transition-all duration-300 group-hover:tracking-widest">
+                {item.name}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ================= PERSONALIZACIÓN ================= */}
+      <section id="personalizacion" className="bg-black text-white py-28">
+        <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+          <div className="bg-gray-800 aspect-[4/5] flex items-center justify-center text-sm transition-all duration-700 hover:scale-105">
+            Imagen grabado láser 600x800
+          </div>
+
+          <div>
+            <h2 className="serif-title text-3xl md:text-4xl mb-6">
+              Personaliza tu joya con grabado láser
+            </h2>
+
+            <p className="text-lg leading-relaxed mb-10 text-gray-300">
+              Convierte una pieza en un recuerdo eterno. Grabamos nombres,
+              fechas, frases o incluso la silueta de tu mascota. Perfecto para
+              regalar o guardar un momento especial.
+            </p>
+
+            <Link
+              href={whatsappUrl}
+              className="inline-block bg-white text-black px-8 py-3 font-semibold tracking-wide hover:scale-105 transition-all duration-300"
+            >
+              Quiero personalizar
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= TESTIMONIOS ================= */}
+      <section className="py-28 bg-gray-50">
+        <div className="container mx-auto px-6 text-center max-w-4xl">
+          <h2 className="text-4xl md:text-5xl font-serif mb-16 tracking-tight">
+            Lo que dicen nuestros clientes
+          </h2>
+
+          {/* Testimonio principal */}
+          <div className="mb-20">
+            <p className="text-2xl md:text-3xl italic font-light leading-relaxed mb-6">
+              “Mandé a grabar la silueta de mi perro y quedó hermoso.”
+            </p>
+            <p className="font-semibold tracking-wide">— María G.</p>
+          </div>
+
+          {/* Testimonios secundarios */}
+          <div className="grid md:grid-cols-2 gap-10 text-left">
+            <div className="border-l-2 border-black pl-6">
+              <p className="italic mb-3">
+                “La calidad es increíble, no se oxida y se ve elegante.”
+              </p>
+              <p className="font-medium text-sm">— Daniela R.</p>
+            </div>
+
+            <div className="border-l-2 border-black pl-6">
+              <p className="italic mb-3">
+                “El regalo perfecto para una fecha especial.”
+              </p>
+              <p className="font-medium text-sm">— Sofía L.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= CÓMO COMPRAR ================= */}
+      <section className="bg-gray-50 py-28">
+        <div className="container mx-auto px-6">
+          <h2 className="serif-title text-3xl md:text-4xl text-center mb-20">
+            Cómo comprar
+          </h2>
+
+          <div className="grid md:grid-cols-4 gap-12 text-center">
+            {[
+              "Elige tu pieza",
+              "Escríbenos por WhatsApp",
+              "Confirmamos diseño y pago",
+              "Recibe tu pedido en casa",
+            ].map((step, index) => (
+              <div
+                key={index}
+                className="transition-all duration-500 hover:-translate-y-2"
+              >
+                <div className="text-5xl font-semibold mb-6 serif-title">
+                  0{index + 1}
+                </div>
+                <p className="font-medium tracking-wide">{step}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= ENVÍOS ================= */}
+      <section className="container mx-auto px-6 py-28 text-center">
+        <h2 className="serif-title text-3xl md:text-4xl mb-12">
+          Envíos locales y nacionales
+        </h2>
+
+        <div className="space-y-5 text-lg">
+          <p className="transition-all duration-300 hover:tracking-widest">
+            Entregas locales
+          </p>
+          <p className="transition-all duration-300 hover:tracking-widest">
+            Envíos a todo el país
+          </p>
+          <p className="transition-all duration-300 hover:tracking-widest">
+            Pagos por transferencia bancaria
+          </p>
+          <p className="transition-all duration-300 hover:tracking-widest">
+            Tiempos estimados de entrega
+          </p>
+        </div>
+      </section>
     </div>
   );
 }

@@ -13,7 +13,7 @@ const CATEGORIES: Category[] = [
   "pulseras",
   "anillos",
   "sets",
-  "piercings/earcuffs",
+  "piercings-cuffs",
   "accesorios",
 ];
 
