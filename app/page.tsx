@@ -44,7 +44,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 opacity-0 animate-[fadeUp_1s_ease-out_0.9s_forwards]">
             <Link
-              href="/catalogo"
+              href="/catalogo?categorias=new+in"
               className="bg-white text-black px-8 py-3 font-semibold tracking-wide hover:scale-105 transition-all duration-300"
             >
               Explorar Colección

@@ -1,4 +1,5 @@
 export type Category =
+  | "new in"
   | "aretes"
   | "collares"
   | "anillos"

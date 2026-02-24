@@ -5,21 +5,22 @@ import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 
 const categories = [
-  { name: "Aretes", slug: "aretes", link: "/images/categorias/aretes.jpeg" },
+  { name: "NEW IN", slug: "new+in", link: "/images/categorias/new in.jpeg" },
+  { name: "ARETES", slug: "aretes", link: "/images/categorias/aretes.jpeg" },
   {
-    name: "Collares",
+    name: "COLLARES",
     slug: "collares",
     link: "/images/categorias/collares.jpeg",
   },
   {
-    name: "Pulseras",
+    name: "PULSERAS",
     slug: "pulseras",
     link: "/images/categorias/pulseras.jpeg",
   },
-  { name: "Anillos", slug: "anillos", link: "/images/categorias/anillos.jpeg" },
-  { name: "Sets", slug: "sets", link: "/images/categorias/sets.jpeg" },
+  { name: "ANILLOS", slug: "anillos", link: "/images/categorias/anillos.jpeg" },
+  { name: "SETS", slug: "sets", link: "/images/categorias/sets.jpeg" },
   {
-    name: "Piercings/Cuffs",
+    name: "PIERCINGS & CUFFS",
     slug: "piercings-cuffs",
     link: "/images/categorias/piercings.jpeg",
   },

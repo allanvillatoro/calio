@@ -8,6 +8,7 @@ import { Product, Category } from "@/lib/types";
 import { formatPrice, getImageUrl } from "@/lib/utils";
 
 const CATEGORIES: Category[] = [
+  "new in",
   "aretes",
   "collares",
   "pulseras",

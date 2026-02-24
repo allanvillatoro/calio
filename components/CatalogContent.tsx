@@ -9,6 +9,7 @@ import { FiltersSection } from "@/components/catalog/FiltersSection";
 import { ProductsGrid } from "@/components/catalog/ProductsGrid";
 
 const CATEGORIES: Category[] = [
+  "new in",
   "aretes",
   "collares",
   "pulseras",

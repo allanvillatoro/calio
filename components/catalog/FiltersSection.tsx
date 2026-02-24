@@ -73,16 +73,6 @@ export function FiltersSection({
       >
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Categorías</h2>
         <div className="space-y-3">
-          {/* Todos option */}
-          <CategoryCheckbox
-            category="Todos"
-            checked={isAllSelected}
-            onChange={onSelectAll}
-            isSectionLabel
-          />
-
-          <div className="border-t border-gray-200 my-3"></div>
-
           {/* Category options */}
           {categories.map((category) => (
             <CategoryCheckbox

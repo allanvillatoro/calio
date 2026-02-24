@@ -33,7 +33,7 @@ export function Navbar() {
               Inicio
             </Link>
             <Link
-              href="/catalogo"
+              href="/catalogo?categorias=new+in"
               className={`${
                 isCollection
                   ? "text-gray-900 font-semibold"
