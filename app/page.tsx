@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import CategoryCarousel from "@/components/CategoryCarousel";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "CALIO - Joyería Fina de Diseño en San Pedro Sula, Honduras",
@@ -21,10 +22,12 @@ export default function Home() {
       {/* ================= HERO ================= */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <img
-            src="https://placehold.co/1600x900"
-            alt="Hero background"
-            className="w-full h-full object-cover scale-105 animate-[fadeIn_1.2s_ease-out]"
+          <Image
+            src="/images/hero.jpeg"
+            alt="calio"
+            fill
+            priority
+            className="object-cover scale-105 animate-[fadeIn_1.2s_ease-out]"
           />
           <div className="absolute inset-0 bg-black/60"></div>
         </div>
@@ -64,9 +67,13 @@ export default function Home() {
       <section id="personalizacion" className="bg-black text-white py-28">
         <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
           <div className="bg-gray-800 aspect-[4/5] flex items-center justify-center text-sm transition-all duration-700 hover:scale-105">
-            Imagen grabado láser 600x800
+            <Image
+              src="/images/grabados.jpeg"
+              alt="Personalización"
+              width={600}
+              height={800}
+            />
           </div>
-
           <div>
             <h2 className="serif-title text-3xl md:text-4xl mb-6">
               Personaliza tu joya con grabado láser
@@ -164,7 +171,8 @@ export default function Home() {
             Pagos por transferencia con diferentes bancos
           </p>
           <p className="transition-all duration-300 hover:tracking-widest">
-            Tiempos estimados de entrega de 24 horas para San Pedro Sula, 1-2 días hábiles para el resto del país
+            Tiempos estimados de entrega de 24 horas para San Pedro Sula, 1-2
+            días hábiles para el resto del país
           </p>
         </div>
       </section>

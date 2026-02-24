@@ -1,15 +1,28 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 
 const categories = [
-  { name: "Aretes", slug: "aretes" },
-  { name: "Collares", slug: "collares" },
-  { name: "Pulseras", slug: "pulseras" },
-  { name: "Anillos", slug: "anillos" },
-  { name: "Sets", slug: "sets" },
-  { name: "Piercings/Cuffs", slug: "piercings-cuffs" },
+  { name: "Aretes", slug: "aretes", link: "/images/categorias/aretes.jpeg" },
+  {
+    name: "Collares",
+    slug: "collares",
+    link: "/images/categorias/collares.jpeg",
+  },
+  {
+    name: "Pulseras",
+    slug: "pulseras",
+    link: "/images/categorias/pulseras.jpeg",
+  },
+  { name: "Anillos", slug: "anillos", link: "/images/categorias/anillos.jpeg" },
+  { name: "Sets", slug: "sets", link: "/images/categorias/sets.jpeg" },
+  {
+    name: "Piercings/Cuffs",
+    slug: "piercings-cuffs",
+    link: "/images/categorias/piercings.jpeg",
+  },
 ];
 
 export default function CategoryCarousel() {
@@ -116,7 +129,12 @@ export default function CategoryCarousel() {
               style={{ width: "280px" }}
             >
               <div className="bg-gray-200 aspect-square flex items-center justify-center text-sm tracking-wide transition-all duration-500 group-hover:scale-[1.03] group-hover:shadow-xl">
-                Imagen 600x600
+                <Image
+                  src={item.link}
+                  alt={item.name}
+                  width={600}
+                  height={600}
+                />
               </div>
 
               <p className="mt-4 text-center font-medium tracking-wide transition-all duration-300 group-hover:tracking-widest">
