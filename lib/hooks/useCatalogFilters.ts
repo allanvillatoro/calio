@@ -1,8 +1,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { Category, Product } from "@/lib/types";
-
-const PRODUCTS_PER_PAGE = 20;
+import { PRODUCTS_PER_PAGE } from "../catalog";
 
 interface UseCatalogFiltersReturn {
   selectedCategories: Category[];
