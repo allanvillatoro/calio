@@ -4,17 +4,16 @@ import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title:
-    "CALIO - Joyería Fina | Anillos, Collares y Accesorios en San Pedro Sula",
+  title: "CALIO - Joyería | Anillos, Collares y Accesorios en San Pedro Sula",
   description:
-    "Descubre joyería de lujo en CALIO, San Pedro Sula, Honduras. Anillos, collares, aretes y accesorios de plata y oro. Diseños únicos para contar tu historia.",
+    "Descubre joyería en CALIO, San Pedro Sula, Honduras. Anillos, collares, aretes y accesorios de acero inoxidable. Diseños únicos para contar tu historia.",
   keywords:
-    "joyería San Pedro Sula, anillos Honduras, collares, aretes, accesorios, plata, oro, joyería fina, joyería SPS",
+    "joyería San Pedro Sula, anillos Honduras, collares, aretes, accesorios, acero inoxidable, joyería SPS, grabados",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://caliojoyeria.com",
   ),
   openGraph: {
-    title: "CALIO - Joyería Fina de Diseño en Honduras",
+    title: "CALIO - Joyería de Diseño en Honduras",
     description: "Joyas para sentirte bien - San Pedro Sula, Honduras",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://caliojoyeria.com",
     type: "website",
@@ -30,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "CALIO - Joyería Fina",
+    title: "CALIO - Joyería",
     description:
       "Descubre nuestra colección de joyería exclusiva en San Pedro Sula",
   },
@@ -55,7 +54,7 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "OnlineStore",
     name: "CALIO Joyería",
-    description: "Tienda de joyería fina en línea",
+    description: "Tienda de joyería en línea",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://caliojoyeria.com",
     image: `${process.env.NEXT_PUBLIC_SITE_URL || "https://caliojoyeria.com"}/og-image.jpg`,
     telephone: process.env.CONTACT_PHONE,

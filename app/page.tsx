@@ -4,11 +4,11 @@ import CategoryCarousel from "@/components/CategoryCarousel";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "CALIO - Joyería Fina de Diseño en San Pedro Sula, Honduras",
+  title: "CALIO - Joyería de diseño en San Pedro Sula, Honduras",
   description:
-    "CALIO Joyería de San Pedro Sula, Honduras. Anillos, collares y accesorios exclusivos de plata y oro. Joyas finas para contar tu historia.",
+    "CALIO Joyería de San Pedro Sula, Honduras. Anillos, collares y accesorios exclusivos de acero inoxidable. Joyas para contar tu historia.",
   openGraph: {
-    title: "CALIO - Joyería Fina en San Pedro Sula",
+    title: "CALIO - Joyería en San Pedro Sula",
     description: "Joyas para sentirte bien - Honduras",
   },
 };
