@@ -64,14 +64,14 @@ export default function Home() {
       <CategoryCarousel />
 
       {/* ================= PERSONALIZACIÓN ================= */}
-      <section id="personalizacion" className="bg-black text-white py-28">
+      <section id="personalizacion" className="bg-black text-white py-12">
         <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-          <div className="bg-gray-800 aspect-[4/5] flex items-center justify-center text-sm transition-all duration-700 hover:scale-105">
+          <div className="bg-gray-800 aspect-square flex items-center justify-center text-sm transition-all duration-700 hover:scale-105">
             <Image
               src="/images/grabados.jpeg"
-              alt="Personalización"
+              alt="grabados"
               width={600}
-              height={800}
+              height={600}
             />
           </div>
           <div>
@@ -96,7 +96,7 @@ export default function Home() {
       </section>
 
       {/* ================= TESTIMONIOS ================= */}
-      <section className="py-28 bg-gray-50">
+      <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-6 text-center max-w-4xl">
           <h2 className="text-4xl md:text-5xl font-serif mb-16 tracking-tight">
             Lo que dicen nuestros clientes
@@ -114,9 +114,9 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-10 text-left">
             <div className="border-l-2 border-black pl-6">
               <p className="italic mb-3">
-                “La calidad es increíble, no se oxida y se ve elegante.”
+                Están super bellos. Me encanta su joyería”
               </p>
-              <p className="font-medium text-sm">— Daniela R.</p>
+              <p className="font-medium text-sm">— Lilliam (Ocotepeque)</p>
             </div>
 
             <div className="border-l-2 border-black pl-6">
@@ -130,7 +130,7 @@ export default function Home() {
       </section>
 
       {/* ================= CÓMO COMPRAR ================= */}
-      <section className="bg-gray-50 py-28">
+      <section className="bg-gray-50 py-12">
         <div className="container mx-auto px-6">
           <h2 className="serif-title text-3xl md:text-4xl text-center mb-20">
             Cómo comprar
@@ -158,7 +158,7 @@ export default function Home() {
       </section>
 
       {/* ================= ENVÍOS ================= */}
-      <section className="container mx-auto px-6 py-28 text-center">
+      <section className="container mx-auto px-6 py-24 text-center">
         <h2 className="serif-title text-3xl md:text-4xl mb-12">
           Envíos locales y nacionales
         </h2>
