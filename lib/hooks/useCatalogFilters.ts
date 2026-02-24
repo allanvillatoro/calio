@@ -10,12 +10,17 @@ interface UseCatalogFiltersReturn {
   currentPage: number;
   totalPages: number;
   isAllSelected: boolean;
-  updateURL: (updates: Partial<{ categorias: string | undefined; pagina: string | undefined }>) => void;
+  updateURL: (
+    updates: Partial<{
+      categorias: string | undefined;
+      pagina: string | undefined;
+    }>,
+  ) => void;
 }
 
 export function useCatalogFilters(
   allProducts: Product[],
-  categories: Category[]
+  categories: Category[],
 ): UseCatalogFiltersReturn {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -39,18 +44,25 @@ export function useCatalogFilters(
   const categoryFilteredProducts = useMemo(() => {
     if (selectedCategories.length === 0) return allProducts;
     return allProducts.filter((product) =>
-      selectedCategories.includes(product.category)
+      selectedCategories.includes(product.category),
     );
   }, [allProducts, selectedCategories]);
 
   // Calculate pagination based on filtered products
-  const totalPages = Math.ceil(categoryFilteredProducts.length / PRODUCTS_PER_PAGE);
+  const totalPages = Math.ceil(
+    categoryFilteredProducts.length / PRODUCTS_PER_PAGE,
+  );
   const currentPage = Math.min(rawPage, Math.max(1, totalPages));
 
   const isAllSelected = selectedCategories.length === 0;
 
   // Generic URL update function
-  const updateURL = (updates: Partial<{ categorias: string | undefined; pagina: string | undefined }>) => {
+  const updateURL = (
+    updates: Partial<{
+      categorias: string | undefined;
+      pagina: string | undefined;
+    }>,
+  ) => {
     const params = new URLSearchParams(searchParams.toString());
 
     if ("categorias" in updates) {
