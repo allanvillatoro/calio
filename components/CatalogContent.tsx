@@ -20,91 +20,73 @@ const CATEGORIES: Category[] = [
 
 export default function CatalogContent() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const allProducts = getProducts();
 
-  // Filter and sort products
-  const filteredProducts = useMemo(() => {
-    const filtered = allProducts;
-    const sorted = sortProductsById(filtered);
-    return sorted;
-  }, [allProducts]);
+  const sortedProducts = useMemo(() => {
+    return sortProductsById(getProducts());
+  }, []);
 
-  // Get URL filters and pagination
   const {
     selectedCategories,
+    categoryFilteredProducts,
     currentPage,
     totalPages,
-    validPage,
     isAllSelected,
     updateURL,
-  } = useCatalogFilters(filteredProducts.length, CATEGORIES);
+  } = useCatalogFilters(sortedProducts, CATEGORIES);
 
-  // Apply category filter
-  const categoryFilteredProducts = useMemo(() => {
-    if (selectedCategories.length === 0) return filteredProducts;
-    return filteredProducts.filter((product) =>
-      selectedCategories.includes(product.category),
-    );
-  }, [filteredProducts, selectedCategories]);
-
-  // Get paginated products
-  const {
-    validPage: displayPage,
-    startIndex,
-    endIndex,
-  } = calculatePagination(categoryFilteredProducts.length, currentPage);
+  // Get paginated slice
+  const { startIndex, endIndex } = calculatePagination(
+    categoryFilteredProducts.length,
+    currentPage,
+  );
   const paginatedProducts = categoryFilteredProducts.slice(
     startIndex,
     endIndex,
   );
 
-  // Handle category toggle
   const handleToggleCategory = (category: Category) => {
     const newCategories = selectedCategories.includes(category)
       ? selectedCategories.filter((c) => c !== category)
       : [...selectedCategories, category];
 
-    const categoriesParam =
-      newCategories.length === 0 ? undefined : newCategories.join(",");
-    updateURL({ categorias: categoriesParam, pagina: undefined });
+    updateURL({
+      categorias:
+        newCategories.length === 0 ? undefined : newCategories.join(","),
+      pagina: undefined,
+    });
   };
 
-  // Handle select all
   const handleSelectAll = () => {
     updateURL({ categorias: undefined, pagina: undefined });
   };
 
-  // Handle page change
   const handlePageChange = (page: number) => {
-    const pagina = page === 1 ? undefined : page.toString();
-    updateURL({ pagina });
+    updateURL({ pagina: page === 1 ? undefined : page.toString() });
   };
 
   return (
-    <>
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex flex-col md:flex-row gap-8">
-          <FiltersSection
-            categories={CATEGORIES}
-            selectedCategories={selectedCategories}
-            isAllSelected={isAllSelected}
-            isOpen={isFiltersOpen}
-            onToggleOpen={() => setIsFiltersOpen(!isFiltersOpen)}
-            onSelectAll={handleSelectAll}
-            onToggleCategory={handleToggleCategory}
-          />
+    <div className="container mx-auto px-4 py-12">
+      <div className="flex flex-col md:flex-row gap-8">
+        <FiltersSection
+          categories={CATEGORIES}
+          selectedCategories={selectedCategories}
+          isAllSelected={isAllSelected}
+          isOpen={isFiltersOpen}
+          onToggleOpen={() => setIsFiltersOpen(!isFiltersOpen)}
+          onSelectAll={handleSelectAll}
+          onToggleCategory={handleToggleCategory}
+        />
 
-          <div className="flex-1">
-            <ProductsGrid
-              products={paginatedProducts}
-              totalProducts={categoryFilteredProducts.length}
-              currentPage={displayPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </div>
+        <div className="flex-1">
+          <ProductsGrid
+            products={paginatedProducts}
+            totalProducts={categoryFilteredProducts.length}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
-    </>
+    </div>
   );
 }
