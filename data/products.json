@@ -1,92 +1,749 @@
 [
   {
     "id": 1,
-    "name": "Chunky hoops dorados",
-    "description": "Aretes en acero inoxidable en dorado, 2cm ",
-    "price": 300,
+    "name": "Aretes Ely Gold",
+    "description": "Chunky hoops en acero inoxidable en dorado.",
+    "price": 320,
     "quantity": 4,
-    "images": ["1.1_eeivce.jpg", "1.2_nbmskr.jpg"],
+    "images": ["1.1_mq9acc.webp", "1.2_amyjoa.webp"],
     "category": "aretes"
   },
   {
     "id": 2,
-    "name": "Chunky hoops plateados",
-    "description": "Aretes en acero inoxidable en plateado, 2cm ",
-    "price": 300,
+    "name": "Aretes Ely Silver",
+    "description": "Chunky hoops en acero inoxidable en plateado.",
+    "price": 320,
     "quantity": 1,
-    "images": ["2.1_rzqhxj.jpg", "2.2_e0ojiw.jpg"],
+    "images": ["2.1_fkdoha.webp", "2.2_aqdisg.webp"],
     "category": "aretes"
   },
   {
     "id": 3,
-    "name": "Worm chunky hoops dorados",
-    "description": "Aretes en acero inoxidable en dorado, 2cm ",
-    "price": 300,
-    "quantity": 3,
-    "images": ["3.1_vsepwx.jpg", "3.2_mgm9kc.jpg"],
+    "name": "Aretes Anto Gold",
+    "description": "Worm chunky hoops en acero inoxidable en dorado.",
+    "price": 320,
+    "quantity": 1,
+    "images": ["3.1_pzlvhq.webp", "3.2_cuiotx.webp"],
     "category": "aretes"
   },
   {
     "id": 4,
-    "name": "Worm chunky hoops plateados",
-    "description": "Aretes en acero inoxidable en plateado, 2cm ",
-    "price": 300,
+    "name": "Aretes Anto Silver",
+    "description": "Worm chunky hoops en acero inoxidable en plateado.",
+    "price": 320,
     "quantity": 1,
-    "images": ["4.1_suww6c.jpg"],
+    "images": ["4.1_zonexv.webp", "4.2_kvzvcs.webp"],
     "category": "aretes"
   },
   {
     "id": 5,
-    "name": "Extra chunky hoops dorados",
-    "description": "Aretes en acero inoxidable en dorado, 4cm ",
+    "name": "Aretes Aria",
+    "description": "Extra chunky hoops en acero inoxidable en dorado.",
     "price": 320,
     "quantity": 3,
-    "images": ["5.1_z0na9s.jpg", "5.2_ut3gvx.webp"],
+    "images": ["5.1_iafncl.webp", "5.2_o7cuz0.webp"],
     "category": "aretes"
   },
   {
     "id": 6,
-    "name": "Media lunas doradas",
-    "description": "Aretes en acero inoxidable en dorado",
-    "price": 300,
+    "name": "Aretes Mila Gold",
+    "description": "Aretes estilo media luna en acero inoxidable en dorado.",
+    "price": 340,
     "quantity": 1,
-    "images": ["6.1_tqkerd.jpg", "6.2_t6hhaj.jpg"],
+    "images": ["6.1_bivskb.webp", "6.2_dgyhbi.webp"],
     "category": "aretes"
   },
   {
     "id": 7,
-    "name": "Media lunas plateadas",
-    "description": "Aretes en acero inoxidable en dorado, 2cm ",
-    "price": 300,
+    "name": "Aretes Mila Silver",
+    "description": "Aretes estilo media luna en acero inoxidable en plateado.",
+    "price": 340,
     "quantity": 3,
-    "images": ["7.1_io7eyx.jpg"],
+    "images": ["7.1_diedgz.webp", "7.2_uque9l.webp"],
     "category": "aretes"
   },
   {
     "id": 8,
-    "name": "Aretes Sophia",
-    "description": "Aretes en acero inoxidable en dorado, 4cm ",
-    "price": 320,
+    "name": "Aretes Zoe",
+    "description": "Aretes en acero inoxidable, mide 3.19cm x 2.35cm",
+    "price": 390,
     "quantity": 2,
-    "images": ["8.1_fzcm8c.jpg", "8.2_wsh5xv.jpg"],
+    "images": ["8.1_x33n5p.webp", "8.2_uxoguw.webp"],
     "category": "aretes"
   },
   {
     "id": 9,
-    "name": "Chunky gotas",
-    "description": "Aretes en acero inoxidable en dorado",
-    "price": 290,
+    "name": "Aretes Gota",
+    "description": "Aretes estilo gota chunky en acero inoxidable en dorado.",
+    "price": 350,
     "quantity": 9,
-    "images": ["9.1_oavidu.jpg"],
+    "images": ["9.1_lqlwli.webp"],
     "category": "aretes"
   },
   {
     "id": 10,
-    "name": "Aretes Ana",
-    "description": "Aretes en acero inoxidable en dorado",
+    "name": "Aretes Viena",
+    "description": "Aretes en acero inoxidable, mide 2.96cm x 2.24cm",
+    "price": 390,
+    "quantity": 2,
+    "images": ["10.1_tmib1u.webp", "10.2_k28a9d.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 11,
+    "name": "Collar Lisa",
+    "description": "Collar chunky de eslabones en acero inoxidable.",
+    "price": 350,
+    "quantity": 2,
+    "images": ["11.1_lqp29w.webp", "11.2_qceb3h.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 12,
+    "name": "Pulsera Pame",
+    "description": "Pulsera chunky en acero inoxidable en dorado.",
+    "price": 320,
+    "quantity": 2,
+    "images": ["12.1_zeq3cv.webp", "12.2_zcv1er.webp"],
+    "category": "pulseras"
+  },
+  {
+    "id": 13,
+    "name": "Aretes Alma",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 310,
+    "quantity": 3,
+    "images": ["13.1_sll1jx.webp", "13.2_sikqno.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 14,
+    "name": "Pulsera Trebol",
+    "description": "Pulsera de trebol rosado en acero inoxidable en dorado.",
+    "price": 310,
+    "quantity": 2,
+    "images": ["14.1_zvh0ti.webp", "14.2_t92htm.webp"],
+    "category": "pulseras"
+  },
+  {
+    "id": 15,
+    "name": "Aretes Carmen",
+    "description": "Chunky hoop cuadrados en acero inoxidable en dorado.",
+    "price": 320,
+    "quantity": 1,
+    "images": ["15.1_dplmgh.webp", "15.2_enyqce.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 16,
+    "name": "Aretes Asimétricos",
+    "description": "Aretes asimétricos en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["16.1_bwfo8y.webp", "16.2_qvx0u9.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 17,
+    "name": "Aretes Nara Gold",
+    "description": "Aretes doble corazón en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 7,
+    "images": ["17.1_rx1bnb.webp", "17.2_r8mev8.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 18,
+    "name": "Aretes Nara Bicolor",
+    "description": "Aretes doble corazón en acero inoxidable en dorado y plateado.",
+    "price": 350,
+    "quantity": 3,
+    "images": ["18.1_vtogjz.webp", "18.2_ol5zac.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 19,
+    "name": "Collar Mary",
+    "description": "Collar doble con dije estilo tornasol en acero inoxidable en dorado.",
+    "price": 340,
+    "quantity": 1,
+    "images": ["19.1_djocf9.webp", "19.2_t07wuz.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 20,
+    "name": "Aretes Dalia Gold",
+    "description": "Aretes de corazón pequeños en acero inoxidables en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["20.1_b5lzkm.webp", "20.2_nsrdpq.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 21,
+    "name": "Aretes Dalia Silver",
+    "description": "Aretes de corazón pequeños en acero inoxidables en plateado.",
     "price": 300,
     "quantity": 2,
-    "images": ["10.1_knmy0y.jpg", "10.2_bzvdsx.jpg"],
+    "images": ["21.1_slwlph.webp", "21.2_k1gixx.webp"],
     "category": "aretes"
+  },
+  {
+    "id": 22,
+    "name": "Anillo Mía",
+    "description": "Anillo ajustable en forma de corazón, mide 2.44cm x 1.78cm en color dorado.",
+    "price": 300,
+    "quantity": 2,
+    "images": ["22.1_modmuy.webp", "22.2_cehs4f.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 23,
+    "name": "Collar Mía",
+    "description": "Collar en forma de corazón, collar mide 50cm + 6cm de extensión y el dije mide 2.6cm x 2.2cm en color dorado.",
+    "price": 330,
+    "quantity": 2,
+    "images": ["23.1_pa1rut.webp", "23.2_mpw4hz.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 24,
+    "name": "Aretes Clara",
+    "description": "Aretes chunky que miden 3.15cm x 2.45cm en acero inoxidable en dorado y plateado",
+    "price": 300,
+    "quantity": 1,
+    "images": ["24.1_n7fwfh.webp", "24.2_x5zk3q.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 25,
+    "name": "Collar Aura",
+    "description": "Collar medalla mide 2cm x 2cm y collar mide 40cm + 5cm de extensión en acero inoxidable en color dorado.",
+    "price": 300,
+    "quantity": 2,
+    "images": ["25.1_uo6tmg.webp", "25.2_gbntmt.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 26,
+    "name": "Collar Estelar",
+    "description": "Collar medalla mide 1.5cm 1.5cm y collar mide 40cm + 5cm de extensión en acero inoxidable en color dorado.",
+    "price": 300,
+    "quantity": 2,
+    "images": ["26.1_heau78.webp", "26.2_amtoyn.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 27,
+    "name": "Aretes Sophia Gold",
+    "description": "Aretes corazón chunky en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["27.1_d1pfk1.webp", "27.2_vbmvtg.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 28,
+    "name": "Aretes Sophia Silver",
+    "description": "Aretes corazón chunky en acero inoxidable en plateados.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["28.1_dxirzv.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 29,
+    "name": "Aretes Julieta",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["29.1_klw3v0.webp", "29.2_iapfcw.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 30,
+    "name": "Aretes Amara",
+    "description": "Aretes chunky estilo media luna en acero inoxidable en dorado.",
+    "price": 320,
+    "quantity": 1,
+    "images": ["30.1_wvhwxd.webp", "30.2_dngcwz.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 31,
+    "name": "Aretes Julia",
+    "description": "Aretes extra chunky livianos en acero inoxidable en dorado.",
+    "price": 320,
+    "quantity": 1,
+    "images": ["31.1_bkeuuw.webp", "31.2_cfahgs.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 32,
+    "name": "Aretes Remolino",
+    "description": "Aretes estilo remolino en acero inoxidable en dorado.",
+    "price": 340,
+    "quantity": 1,
+    "images": ["32.1_bopd9b.webp", "32.2_ukrgrk.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 33,
+    "name": "Aretes Flowers Gold",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["33.1_ng6n2j.webp", "33.2_zuzarw.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 34,
+    "name": "Aretes Flowers Silver",
+    "description": "Aretes en acero inoxidable en plateado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["34.1_xi3ff5.webp", "34.2_sdk1fy.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 35,
+    "name": "Collar Olivia",
+    "description": "Collar de acero inoxidable de 48.5cm en dorado con perla en blanco.",
+    "price": 360,
+    "quantity": 1,
+    "images": ["35.1_vri6go.webp", "35.2_tcwcbo.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 36,
+    "name": "Aretes Ema",
+    "description": "Aretes desmontables en acero inoxidable bicolor.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["36.1_rdf9xs.webp", "36.2_bbe1ri.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 37,
+    "name": "Aretes Lazo",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["37.1_kwsujm.webp", "37.2_lew737.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 38,
+    "name": "Aretes Derretido Gold",
+    "description": "Aretes estilo corazón derretido en acero inoxidable en dorado. ",
+    "price": 370,
+    "quantity": 1,
+    "images": ["38.1_zp6ne9.webp", "38.2_idgqqw.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 39,
+    "name": "Aretes Derretido Silver",
+    "description": "Aretes estilo corazón derretido en acero inoxidable en plateado. ",
+    "price": 370,
+    "quantity": 1,
+    "images": ["39.1_yun6nk.webp", "39.2_kfvaoh.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 40,
+    "name": "Aretes Sara Gold",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 340,
+    "quantity": 1,
+    "images": ["40.1_hryqmq.webp", "40.2_qcnquk.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 41,
+    "name": "Aretes Sara Silver",
+    "description": "Aretes en acero inoxidable en plateado.",
+    "price": 340,
+    "quantity": 1,
+    "images": ["41.1_ot5oqf.webp", "41.2_josjyv.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 42,
+    "name": "Aretes Sara Bicolor",
+    "description": "Aretes en acero inoxidable en bicolor.",
+    "price": 340,
+    "quantity": 300,
+    "images": ["42.1_dlx6cx.webp", "42.2_ylqj2b.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 43,
+    "name": "Aretes Mariposa",
+    "description": "Aretes mariposa en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["43.1_bzsvr2.webp", "43.2_iklfua.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 44,
+    "name": "Collar Dara",
+    "description": "Collar de perlas de agua dulce de eslabones cubanos en acero inoxidable dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["44.1_prryv4.webp", "44.2_qnlzoy.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 45,
+    "name": "Aretes Irregulares Gold",
+    "description": "Aretes irregulares en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["45.1_vzbqxz.webp", "45.2_uxst22.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 46,
+    "name": "Aretes irregulares Silver",
+    "description": "Aretes irregulares en acero inoxidable en plateados.",
+    "price": 320,
+    "quantity": 1,
+    "images": ["46.1_rcetjw.webp", "46.2_tmwulz.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 47,
+    "name": "Aretes Iris",
+    "description": "Aretes de chongo en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["47.1_dfv8au.webp", "47.2_gasv3c.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 48,
+    "name": "Collar Ballon Dog",
+    "description": "Collar en acero inoxidable en dorado.",
+    "price": 320,
+    "quantity": 1,
+    "images": ["48.1_iqj1qf.webp", "48.2_dfn5eu.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 49,
+    "name": "Aretes Croissant",
+    "description": "Aretes en forma de croissant en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["49.1_bcjeqc.webp", "49.2_vglzvh.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 50,
+    "name": "Collar Fatima",
+    "description": "Collar de corazón en concha nacar.",
+    "price": 340,
+    "quantity": 1,
+    "images": ["50.1_cayup9.webp", "50.2_vg9bof.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 51,
+    "name": "Collar Paola",
+    "description": "Collar doble en acero inoxidable en dorado.",
+    "price": 370,
+    "quantity": 1,
+    "images": ["51.1_svl0rp.webp", "51.2_klmfb9.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 52,
+    "name": "Aretes Cereza",
+    "description": "Aretes en forma de cereza en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["52.1_bufgvd.webp", "52.2_pbltme.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 53,
+    "name": "Collar Siena",
+    "description": "Collar con 3 dijes en acero inoxidable en color dorado.",
+    "price": 370,
+    "quantity": 1,
+    "images": ["53.1_q6rzbf.webp", "53.2_f82onh.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 54,
+    "name": "Collar Soft",
+    "description": "Collar con 5 charms en acero inoxidable en dorado.",
+    "price": 370,
+    "quantity": 1,
+    "images": ["54.1_kgc4ba.webp", "54.2_jpdctw.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 55,
+    "name": "Pulsera Antonella",
+    "description": "Pulsera con perla de rio en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["55.1_qm9k12.webp", "55.2_ln9gmr.webp"],
+    "category": "pulseras"
+  },
+  {
+    "id": 56,
+    "name": "Collar Cowboy",
+    "description": "Collar con 3 charms en acero inoxidable en dorado.",
+    "price": 360,
+    "quantity": 1,
+    "images": ["56.1_zyselq.webp", "56.2_osol71.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 57,
+    "name": "Collar Cielo",
+    "description": "Collar con 7 dijes en acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 1,
+    "images": ["57.1_uadi7f.webp", "57.2_q8or0s.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 58,
+    "name": "Aretes Preppy",
+    "description": "Aretes en forma de chongo en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["58.1_cotgbv.webp", "58.2_vmln9l.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 59,
+    "name": "Collar Infinito",
+    "description": "Collar infinito mide 129cm, liviano en acero inoxidable en dorado.",
+    "price": 450,
+    "quantity": 1,
+    "images": ["59.1_igxpmh.webp", "59.2_vq8uid.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 60,
+    "name": "Anillo Star",
+    "description": "Anillo ajustable en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["60.1_x6eoe3.webp", "60.2_idpfkq.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 61,
+    "name": "Aretes Love",
+    "description": "Aretes en forma de corazón de click igual de enfrente y atras en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["61.1_gumquq.webp", "61.2_kh5qol.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 62,
+    "name": "Anillo Ambar",
+    "description": "Anillo con zirconia ajustable de enfente en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["62.1_l4bvt6.webp", "62.2_ffsqvs.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 63,
+    "name": "Aretes Dana",
+    "description": "Aretes de 15.2g en acero inoxidable en dorado., ",
+    "price": 350,
+    "quantity": 1,
+    "images": ["63.1_acdswc.webp", "63.2_jnu9rm.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 64,
+    "name": "Aretes Soler",
+    "description": "Aretes de zirconia de acero inoxidable en dorado.",
+    "price": 280,
+    "quantity": 1,
+    "images": ["64.1_firmfg.webp", "64.2_w3qmoe.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 65,
+    "name": "Collar Fiori",
+    "description": "Collar con dijes de flores en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["65.1_v7vdon.webp", "65.2_fw5v5u.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 66,
+    "name": "Aretes Botón",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 330,
+    "quantity": 1,
+    "images": ["66.1_x0gtuy.webp", "66.2_m6b5o7.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 67,
+    "name": "Collar Mireya",
+    "description": "Collar doble con zirconia en acero inoxidable en dorado.",
+    "price": 330,
+    "quantity": 1,
+    "images": ["67.1_yseuph.webp", "67.2_qqov0y.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 68,
+    "name": "Pulsera Roma",
+    "description": "Pulsera de mini cruces en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["68.1_lv7wld.webp", "68.2_d6ehof.webp"],
+    "category": "pulseras"
+  },
+  {
+    "id": 69,
+    "name": "Charm de Bolso Cherry",
+    "description": "Charm de bolso en forma de cherry en rojo y dorado.",
+    "price": 200,
+    "quantity": 0,
+    "images": ["69.1_xzequ9.webp", "69.2_ldccmx.webp"],
+    "category": "accesorios"
+  },
+  {
+    "id": 70,
+    "name": "Collar Alina",
+    "description": "Collar con dije de entrella en acero inoxidable en dorado.",
+    "price": 370,
+    "quantity": 1,
+    "images": ["70.1_wwdkip.webp", "70.2_nitoey.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 71,
+    "name": "Collar Gota",
+    "description": "Collar asimetrico con dos gotas en acero inoxidable en dorado.",
+    "price": 380,
+    "quantity": 1,
+    "images": ["71.1_tfydze.webp", "71.2_uebemp.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 72,
+    "name": "Aretes Nerea",
+    "description": "Aretes en forma de conchitas en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["72.1_sraal0.webp", "72.2_scynwj.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 73,
+    "name": "Aretes Ariel",
+    "description": "Aretes estilo palma en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["73.1_h0weii.webp", "73.2_fbsszp.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 74,
+    "name": "Pulsera Lía",
+    "description": "Pulsera de estrellas en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["74.1_us8zio.webp", "74.2_tavx62.webp"],
+    "category": "pulseras"
+  },
+  {
+    "id": 75,
+    "name": "Aretes Divina",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 1,
+    "images": ["75.1_xeorob.webp", "75.2_xgh66j.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 76,
+    "name": "Anillo Nova",
+    "description": "Anillo de estrellas en acero inoxidable en dorado.",
+    "price": 280,
+    "quantity": 1,
+    "images": ["76.1_oxbqqw.webp", "76.2_kovloj.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 77,
+    "name": "Collar París",
+    "description": "Collar con perlas de agua dulce ovaladas de acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 1,
+    "images": ["77.1_elyprs.webp", "77.2_kyasp2.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 78,
+    "name": "Aretes Coral",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["78.1_aba0cy.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 79,
+    "name": "Aretes Adriana",
+    "description": "Minis hoops con incrustaciones en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["79.1_oxyfli.webp", "79.2_kcr91j.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 80,
+    "name": "Anillo Pulpi",
+    "description": "Anillo en forma de pulpo en acero inoxidable en dorado.",
+    "price": 290,
+    "quantity": 1,
+    "images": ["80.1_oxdncz.webp", "80.2_kwcxfo.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 81,
+    "name": "Aretes Lyra",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["81.1_caoxvz.webp", "81.2_atynai.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 82,
+    "name": "Pulsera Oliva",
+    "description": "Pulsera de esferas en acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 1,
+    "images": ["82.1_waq5fy.webp", "82.2_vl5kxx.webp"],
+    "category": "pulseras"
+  },
+  {
+    "id": 83,
+    "name": "Pulsera Kaira",
+    "description": "Pulsera de balines de 0.4cm en acero inoxidable en dorado",
+    "price": 280,
+    "quantity": 0,
+    "images": ["83.1_uph8nr.webp", "83.2_vjjf8i.webp"],
+    "category": "pulseras"
   }
 ]
