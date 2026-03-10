@@ -26,7 +26,7 @@ export function generateMetadata({ params }: ProductDetailPageProps): Metadata {
   return {
     title: `${product.name} | CALIO Joyería`,
     description: product.description,
-    keywords: `${product.name}, ${product.category}, joyas, joyería`,
+    keywords: `${product.name}, ${product.category}, joyas, joyería, grabados laser, acero inoxidable, san pedro sula`,
     openGraph: {
       title: product.name,
       description: product.description,

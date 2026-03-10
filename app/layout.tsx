@@ -6,9 +6,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "CALIO - Joyería | Anillos, Collares y Accesorios en San Pedro Sula",
   description:
-    "Descubre joyería en CALIO, San Pedro Sula, Honduras. Anillos, collares, aretes y accesorios de acero inoxidable. Diseños únicos para contar tu historia.",
+    "Descubre CALIO joyería en San Pedro Sula, Honduras. Anillos, collares, aretes y accesorios de acero inoxidable. Joyas para sentirte bien.",
   keywords:
-    "joyería San Pedro Sula, anillos Honduras, collares, aretes, accesorios, acero inoxidable, joyería SPS, grabados",
+    "joyería san pedro sula, anillos honduras, collares, aretes, accesorios, acero inoxidable, joyería sps, grabados laser",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://caliojoyeria.com",
   ),

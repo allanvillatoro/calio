@@ -5,7 +5,7 @@ import CatalogContent from "@/components/CatalogContent";
 export const metadata: Metadata = {
   title: "Catálogo de Joyas | CALIO Joyería",
   description:
-    "Explora nuestra colección completa de joyería. Anillos, collares, aretes y accesorios de diseño exclusivo.",
+    "Explora nuestra colección completa de joyería. Grabados láser, anillos, collares, aretes y accesorios de diseño exclusivo.",
   openGraph: {
     title: "Catálogo | CALIO Joyería",
     description: "Descubre nuestros diseños de joyería",
