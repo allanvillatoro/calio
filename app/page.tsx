@@ -133,28 +133,58 @@ export default function Home() {
 
       {/* ================= CÓMO COMPRAR ================= */}
       <section className="bg-gray-50 py-12">
-        <div className="container mx-auto px-6">
-          <h2 className="serif-title text-3xl md:text-4xl text-center mb-20">
+        <div className="container m-auto px-6">
+          <h2 className="serif-title text-3xl md:text-4xl text-center mb-10">
             Cómo comprar
           </h2>
-
-          <div className="grid md:grid-cols-4 gap-12 text-center">
-            {[
-              "Elige tu pieza",
-              "Escríbenos por WhatsApp",
-              "Confirmamos diseño y pago",
-              "Recibe tu pedido en casa",
-            ].map((step, index) => (
-              <div
-                key={index}
-                className="transition-all duration-500 hover:-translate-y-2"
-              >
-                <div className="text-5xl font-semibold mb-6 serif-title">
-                  0{index + 1}
-                </div>
-                <p className="font-medium tracking-wide">{step}</p>
+          <div className="grid md:grid-cols-2 gap-8 text-center">
+            {/* Visita nuestro punto de venta */}
+            <div>
+              <h3 className="serif-title text-2xl mb-4">
+                Visita nuestro punto de venta
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Estamos dentro de ByLove Floristería y Café, Edificio Galería
+                504, Bulevar UNAH-VS, San Pedro Sula, Honduras
+              </p>
+              <div className="w-full aspect-video overflow-hidden rounded-lg">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.1519167232336!2d-88.03774432465555!3d15.52998468507405!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f665b3833f26d43%3A0x70b634b17896fcb7!2sGaleria%20504!5e0!3m2!1sen!2shn!4v1773327812239!5m2!1sen!2shn"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
-            ))}
+            </div>
+
+            {/* Compra en línea */}
+            <div className="flex flex-col h-full">
+              <h3 className="serif-title text-2xl mb-6">Compra en línea</h3>
+
+              <div className="grid grid-cols-2 gap-6 text-center flex-1 place-content-center">
+                {[
+                  "Elige tu pieza",
+                  "Escríbenos por WhatsApp",
+                  "Confirmamos diseño y pago",
+                  "Recibe tu pedido en casa",
+                ].map((step, index) => (
+                  <div
+                    key={index}
+                    className="transition-all duration-500 hover:-translate-y-2"
+                  >
+                    <div className="text-5xl font-semibold mb-3 serif-title">
+                      0{index + 1}
+                    </div>
+                    <p className="font-medium tracking-wide text-base md:text-lg">
+                      {step}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
