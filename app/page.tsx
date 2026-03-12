@@ -144,7 +144,7 @@ export default function Home() {
                 Visita nuestro punto de venta
               </h3>
               <p className="text-gray-600 mb-4">
-                Estamos dentro de ByLove Floristería y Café, Edificio Galería
+                Estamos dentro de By Love Floristería y Café, Edificio Galería
                 504, Bulevar UNAH-VS, San Pedro Sula, Honduras
               </p>
               <div className="w-full aspect-video overflow-hidden rounded-lg">
