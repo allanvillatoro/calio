@@ -11,7 +11,7 @@ A modern jewelry e-commerce application built with Next.js, TypeScript, and Tail
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Image Storage**: Cloudinary (free tier)
