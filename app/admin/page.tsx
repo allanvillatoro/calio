@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useState } from "react";
 import Image from "next/image";
 import { getProducts } from "@/lib/products";
 import { Product, Category } from "@/lib/types";
@@ -19,11 +18,8 @@ const CATEGORIES: Category[] = [
 ];
 
 export default function AdminPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(() => getProducts());
 
-  useEffect(() => {
-    setProducts(getProducts());
-  }, []);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -250,7 +246,7 @@ export default function AdminPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Imágenes (separadas por comas, ej: "1, 1-1, 1-2")
+                  Imágenes (separadas por comas, ej: &quot;1, 1-1, 1-2&quot;)
                 </label>
                 <input
                   type="text"
@@ -264,8 +260,9 @@ export default function AdminPage() {
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Ingresa todos los nombres de archivo de las imágenes separados
-                  por comas (incluyendo la extensión, ej: "1_rfgqdg.jpg,
-                  cld-sample-4.jpg"). El primer nombre será la imagen principal.
+                  por comas (incluyendo la extensión, ej: &quot;1_rfgqdg.jpg,
+                  cld-sample-4.jpg&quot;). El primer nombre será la imagen
+                  principal.
                 </p>
               </div>
 

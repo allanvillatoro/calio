@@ -105,8 +105,8 @@ export default function Home() {
           {/* Testimonio principal */}
           <div className="mb-20">
             <p className="text-2xl md:text-3xl italic font-light leading-relaxed mb-6">
-              "Me encanta cómo quedó el grabado. A él también le va encantar.
-              Gracias a ti.”
+              &quot;Me encanta cómo quedó el grabado. A él también le va encantar.
+              Gracias a ti.&quot;
             </p>
             <p className="font-semibold tracking-wide">— Evelyn (Villanueva)</p>
           </div>
@@ -115,15 +115,15 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-10 text-left">
             <div className="border-l-2 border-black pl-6">
               <p className="italic mb-3">
-                "Están super bellos. Me encanta su joyería”
+                &quot;Están super bellos. Me encanta su joyería&quot;
               </p>
               <p className="font-medium text-sm">— Lilliam (Ocotepeque)</p>
             </div>
 
             <div className="border-l-2 border-black pl-6">
               <p className="italic mb-3">
-                "Me gustaron muchísimo las cadenitas, la atención y el
-                empaquetado. Muchísimas gracias por todo.”
+                &quot;Me gustaron muchísimo las cadenitas, la atención y el
+                empaquetado. Muchísimas gracias por todo.&quot;
               </p>
               <p className="font-medium text-sm">— Siluat (San Pedro Sula)</p>
             </div>
