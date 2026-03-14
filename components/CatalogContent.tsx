@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { getProducts } from "@/lib/products";
-import { Category } from "@/lib/types";
+import type { Category } from "@/lib/types";
 import { sortProductsById, calculatePagination } from "@/lib/catalog";
 import { useCatalogFilters } from "@/lib/hooks/useCatalogFilters";
 import { FiltersSection } from "@/components/catalog/FiltersSection";

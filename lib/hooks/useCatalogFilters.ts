@@ -1,6 +1,6 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
-import { Category, Product } from "@/lib/types";
+import type { Category, Product } from "@/lib/types";
 import { PRODUCTS_PER_PAGE } from "../catalog";
 
 interface UseCatalogFiltersReturn {

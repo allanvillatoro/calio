@@ -1,4 +1,4 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 import products from "@/data/products.json";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://caliojoyeria.com";

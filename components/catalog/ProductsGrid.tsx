@@ -1,5 +1,5 @@
 import ProductCard from "@/components/ProductCard";
-import { Product } from "@/lib/types";
+import type { Product } from "@/lib/types";
 import { PaginationControls } from "./PaginationControls";
 import { EmptyState } from "./EmptyState";
 

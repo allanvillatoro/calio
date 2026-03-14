@@ -1,4 +1,4 @@
-import { Category } from "@/lib/types";
+import type { Category } from "@/lib/types";
 
 const CHECKBOX_STYLES =
   "w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2";
@@ -48,10 +48,8 @@ interface FiltersSectionProps {
 export function FiltersSection({
   categories,
   selectedCategories,
-  isAllSelected,
   isOpen,
   onToggleOpen,
-  onSelectAll,
   onToggleCategory,
 }: FiltersSectionProps) {
   return (

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { getProducts } from "@/lib/products";
-import { Product, Category } from "@/lib/types";
+import type { Product, Category } from "@/lib/types";
 import { formatPrice, getImageUrl } from "@/lib/utils";
 
 const CATEGORIES: Category[] = [
