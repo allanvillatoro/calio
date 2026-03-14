@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import CatalogContent from '@/components/CatalogContent';
+import CatalogContent from '@/components/catalog/CatalogContent';
 
 export const metadata: Metadata = {
   title: 'Catálogo de Joyas | CALIO Joyería',

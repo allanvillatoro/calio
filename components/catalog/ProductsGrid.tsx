@@ -1,4 +1,4 @@
-import ProductCard from '@/components/ProductCard';
+import ProductCard from '@/components/catalog/ProductCard';
 import type { Product } from '@/lib/types';
 import { PaginationControls } from './PaginationControls';
 import { EmptyState } from './EmptyState';
