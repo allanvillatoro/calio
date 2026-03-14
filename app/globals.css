@@ -17,7 +17,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   font-weight: 400;
   letter-spacing: 0.2px;
 }
@@ -29,7 +29,7 @@ body {
 }
 
 .serif-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-playfair), serif;
 }
 
 @keyframes fadeUp {

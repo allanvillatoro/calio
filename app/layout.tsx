@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Playfair_Display, Inter } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
@@ -45,6 +46,19 @@ export const metadata: Metadata = {
   },
 };
 
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  display: "swap",
+  variable: "--font-playfair", // Crea la variable CSS
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -78,7 +92,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="es">
+    <html lang="es" className={`${inter.variable} ${playfair.variable}`}>
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap"
