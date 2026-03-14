@@ -1,37 +1,33 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { getProducts } from "@/lib/products";
-import { Product, Category } from "@/lib/types";
-import { formatPrice, getImageUrl } from "@/lib/utils";
+import { useState } from 'react';
+import Image from 'next/image';
+import { getProducts } from '@/lib/products';
+import type { Product, Category } from '@/lib/types';
+import { formatPrice, getImageUrl } from '@/lib/utils';
 
 const CATEGORIES: Category[] = [
-  "new in",
-  "aretes",
-  "collares",
-  "pulseras",
-  "anillos",
-  "sets",
-  "piercings-cuffs",
-  "accesorios",
+  'new in',
+  'aretes',
+  'collares',
+  'pulseras',
+  'anillos',
+  'sets',
+  'piercings-cuffs',
+  'accesorios',
 ];
 
 export default function AdminPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(() => getProducts());
 
-  useEffect(() => {
-    setProducts(getProducts());
-  }, []);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    quantity: "",
-    images: "",
-    category: "accesorios" as Category,
+    name: '',
+    description: '',
+    price: '',
+    quantity: '',
+    images: '',
+    category: 'accesorios' as Category,
   });
 
   const handleEdit = (product: Product) => {
@@ -41,23 +37,23 @@ export default function AdminPage() {
       description: product.description,
       price: product.price.toString(),
       quantity: product.quantity.toString(),
-      images: product.images.join(", "),
+      images: product.images.join(', '),
       category: product.category,
     });
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+    if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
       setProducts(products.filter((p) => p.id !== id));
       if (editingProduct?.id === id) {
         setEditingProduct(null);
         setFormData({
-          name: "",
-          description: "",
-          price: "",
-          quantity: "",
-          images: "",
-          category: "accesorios",
+          name: '',
+          description: '',
+          price: '',
+          quantity: '',
+          images: '',
+          category: 'accesorios',
         });
       }
     }
@@ -79,7 +75,7 @@ export default function AdminPage() {
                 quantity: parseInt(formData.quantity),
                 images: formData.images
                   ? formData.images
-                      .split(",")
+                      .split(',')
                       .map((s) => s.trim())
                       .filter(Boolean)
                   : [],
@@ -99,7 +95,7 @@ export default function AdminPage() {
         quantity: parseInt(formData.quantity),
         images: formData.images
           ? formData.images
-              .split(",")
+              .split(',')
               .map((s) => s.trim())
               .filter(Boolean)
           : [],
@@ -109,24 +105,24 @@ export default function AdminPage() {
     }
 
     setFormData({
-      name: "",
-      description: "",
-      price: "",
-      quantity: "",
-      images: "",
-      category: "accesorios",
+      name: '',
+      description: '',
+      price: '',
+      quantity: '',
+      images: '',
+      category: 'accesorios',
     });
   };
 
   const handleCancel = () => {
     setEditingProduct(null);
     setFormData({
-      name: "",
-      description: "",
-      price: "",
-      quantity: "",
-      images: "",
-      category: "accesorios",
+      name: '',
+      description: '',
+      price: '',
+      quantity: '',
+      images: '',
+      category: 'accesorios',
     });
   };
 
@@ -145,10 +141,10 @@ export default function AdminPage() {
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
           <p className="text-sm text-yellow-800">
             <strong>Nota:</strong> Este panel es solo para visualización. Para
-            agregar, editar o eliminar productos, edita el archivo{" "}
+            agregar, editar o eliminar productos, edita el archivo{' '}
             <code className="bg-yellow-100 px-1 rounded">
               data/products.json
-            </code>{" "}
+            </code>{' '}
             y vuelve a desplegar la aplicación.
           </p>
         </div>
@@ -157,7 +153,7 @@ export default function AdminPage() {
           {/* Product Form */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-              {editingProduct ? "Editar Producto" : "Agregar Nuevo Producto"}
+              {editingProduct ? 'Editar Producto' : 'Agregar Nuevo Producto'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -250,7 +246,7 @@ export default function AdminPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Imágenes (separadas por comas, ej: "1, 1-1, 1-2")
+                  Imágenes (separadas por comas, ej: &quot;1, 1-1, 1-2&quot;)
                 </label>
                 <input
                   type="text"
@@ -264,8 +260,9 @@ export default function AdminPage() {
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Ingresa todos los nombres de archivo de las imágenes separados
-                  por comas (incluyendo la extensión, ej: "1_rfgqdg.jpg,
-                  cld-sample-4.jpg"). El primer nombre será la imagen principal.
+                  por comas (incluyendo la extensión, ej: &quot;1_rfgqdg.jpg,
+                  cld-sample-4.jpg&quot;). El primer nombre será la imagen
+                  principal.
                 </p>
               </div>
 
@@ -274,7 +271,7 @@ export default function AdminPage() {
                   type="submit"
                   className="flex-1 bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
                 >
-                  {editingProduct ? "Actualizar Producto" : "Agregar Producto"}
+                  {editingProduct ? 'Actualizar Producto' : 'Agregar Producto'}
                 </button>
                 {editingProduct && (
                   <button

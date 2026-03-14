@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
-import { getProductById } from "@/lib/products";
-import { notFound } from "next/navigation";
-import { formatPrice } from "@/lib/utils";
-import { FaWhatsapp } from "react-icons/fa";
-import ImageCarousel from "@/components/ImageCarousel";
-import BackButton from "@/components/BackButton";
+import { getProductById } from '@/lib/products';
+import { notFound } from 'next/navigation';
+import { formatPrice } from '@/lib/utils';
+import { FaWhatsapp } from 'react-icons/fa';
+import ImageCarousel from '@/components/ImageCarousel';
+import BackButton from '@/components/BackButton';
 
 interface ProductDetailPageProps {
   params: {
@@ -12,16 +11,17 @@ interface ProductDetailPageProps {
   };
 }
 
-export function generateMetadata({ params }: ProductDetailPageProps): Metadata {
-  const product = getProductById(params.id);
+export async function generateMetadata({ params }: ProductDetailPageProps) {
+  const { id } = await params;
+  const product = getProductById(id);
 
   if (!product) {
     return {
-      title: "Producto no encontrado | CALIO",
+      title: 'Producto no encontrado | CALIO',
     };
   }
 
-  const productUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://caliojoyeria.com"}/productos/${product.id}`;
+  const productUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://caliojoyeria.com'}/productos/${product.id}`;
 
   return {
     title: `${product.name} | CALIO Joyería`,
@@ -30,11 +30,11 @@ export function generateMetadata({ params }: ProductDetailPageProps): Metadata {
     openGraph: {
       title: product.name,
       description: product.description,
-      type: "website",
+      type: 'website',
       url: productUrl,
       images: [
         {
-          url: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_pad,w_1200,h_630/${product.images[0] || "default.jpg"}`,
+          url: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_pad,w_1200,h_630/${product.images[0] || 'default.jpg'}`,
           width: 1200,
           height: 630,
           alt: product.name,
@@ -47,13 +47,16 @@ export function generateMetadata({ params }: ProductDetailPageProps): Metadata {
   };
 }
 
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const product = getProductById(params.id);
+export default async function ProductDetailPage({
+  params,
+}: ProductDetailPageProps) {
+  const { id } = await params;
+  const product = getProductById(id);
   if (!product) {
     notFound();
   }
   const productUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/productos/${product.id}`;
-  const phoneNumber = process.env.CONTACT_PHONE || "";
+  const phoneNumber = process.env.CONTACT_PHONE || '';
   const message = `Hola, quiero solicitar este producto: ${product.name} - ${productUrl}`;
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
@@ -61,7 +64,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
     <div className="min-h-screen bg-gray-50">
       {/* Product Detail */}
       <div className="container mx-auto px-4 py-12">
-        <BackButton/>
+        <BackButton />
         <div className="grid md:grid-cols-2 gap-12">
           {/* Product Image Carousel */}
           <ImageCarousel images={product.images} />

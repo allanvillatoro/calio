@@ -1,9 +1,9 @@
-import { Category } from "@/lib/types";
+import type { Category } from '@/lib/types';
 
 const CHECKBOX_STYLES =
-  "w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2";
-const LABEL_STYLES = "flex items-center cursor-pointer group";
-const LABEL_TEXT_STYLES = "ml-3 text-gray-700 group-hover:text-gray-900";
+  'w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2';
+const LABEL_STYLES = 'flex items-center cursor-pointer group';
+const LABEL_TEXT_STYLES = 'ml-3 text-gray-700 group-hover:text-gray-900';
 
 interface CategoryCheckboxProps {
   category: string;
@@ -20,7 +20,7 @@ function CategoryCheckbox({
   uppercase = true,
   isSectionLabel = false,
 }: CategoryCheckboxProps) {
-  const textClasses = `${LABEL_TEXT_STYLES} ${isSectionLabel ? "font-medium" : ""} ${uppercase ? "uppercase" : ""}`;
+  const textClasses = `${LABEL_TEXT_STYLES} ${isSectionLabel ? 'font-medium' : ''} ${uppercase ? 'uppercase' : ''}`;
 
   return (
     <label className={LABEL_STYLES}>
@@ -48,10 +48,8 @@ interface FiltersSectionProps {
 export function FiltersSection({
   categories,
   selectedCategories,
-  isAllSelected,
   isOpen,
   onToggleOpen,
-  onSelectAll,
   onToggleCategory,
 }: FiltersSectionProps) {
   return (
@@ -62,13 +60,13 @@ export function FiltersSection({
         className="md:hidden w-full bg-white rounded-lg shadow-md p-4 mb-4 text-left font-semibold text-gray-900 flex justify-between items-center hover:bg-gray-50"
       >
         <span>Filtros</span>
-        <span className="text-xl">{isOpen ? "−" : "+"}</span>
+        <span className="text-xl">{isOpen ? '−' : '+'}</span>
       </button>
 
       {/* Filters Content */}
       <div
         className={`${
-          isOpen ? "block" : "hidden"
+          isOpen ? 'block' : 'hidden'
         } md:block bg-white rounded-lg shadow-md p-6 md:sticky md:top-4`}
       >
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Categorías</h2>
