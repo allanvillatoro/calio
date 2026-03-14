@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export function Navbar() {
   const pathname = usePathname();
-  const isHome = pathname === "/";
-  const isCollection = pathname === "/catalogo";
+  const isHome = pathname === '/';
+  const isCollection = pathname === '/catalogo';
 
   const logoContent = (
     <span className="text-2xl font-bold text-gray-900">CALIO Joyería</span>
@@ -26,8 +26,8 @@ export function Navbar() {
               href="/"
               className={`${
                 isHome
-                  ? "text-gray-900 font-semibold"
-                  : "text-gray-700 hover:text-gray-900"
+                  ? 'text-gray-900 font-semibold'
+                  : 'text-gray-700 hover:text-gray-900'
               }`}
             >
               Inicio
@@ -36,8 +36,8 @@ export function Navbar() {
               href="/catalogo"
               className={`${
                 isCollection
-                  ? "text-gray-900 font-semibold"
-                  : "text-gray-700 hover:text-gray-900"
+                  ? 'text-gray-900 font-semibold'
+                  : 'text-gray-700 hover:text-gray-900'
               }`}
             >
               Colección

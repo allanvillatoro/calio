@@ -2,7 +2,7 @@ export const PRODUCTS_PER_PAGE = 20;
 
 export function calculatePagination(
   filteredProductsLength: number,
-  currentPage: number
+  currentPage: number,
 ) {
   const totalPages = Math.ceil(filteredProductsLength / PRODUCTS_PER_PAGE);
   const validPage = Math.min(currentPage, Math.max(1, totalPages));

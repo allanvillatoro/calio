@@ -1,19 +1,19 @@
-import Link from "next/link";
-import type { Metadata } from "next";
-import CategoryCarousel from "@/components/CategoryCarousel";
-import Image from "next/image";
+import Link from 'next/link';
+import type { Metadata } from 'next';
+import CategoryCarousel from '@/components/CategoryCarousel';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: "CALIO - Joyería de diseño en San Pedro Sula, Honduras",
+  title: 'CALIO - Joyería de diseño en San Pedro Sula, Honduras',
   description:
-    "CALIO Joyería de San Pedro Sula, Honduras. Anillos, collares y accesorios exclusivos de acero inoxidable. Joyas para contar tu historia.",
+    'CALIO Joyería de San Pedro Sula, Honduras. Anillos, collares y accesorios exclusivos de acero inoxidable. Joyas para contar tu historia.',
   openGraph: {
-    title: "CALIO - Joyería en San Pedro Sula",
-    description: "Joyas para sentirte bien - Honduras",
+    title: 'CALIO - Joyería en San Pedro Sula',
+    description: 'Joyas para sentirte bien - Honduras',
   },
 };
 export default function Home() {
-  const phoneNumber = process.env.CONTACT_PHONE || "";
+  const phoneNumber = process.env.CONTACT_PHONE || '';
   const message = `Hola, quiero un grabado láser personalizado`;
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
@@ -105,8 +105,8 @@ export default function Home() {
           {/* Testimonio principal */}
           <div className="mb-20">
             <p className="text-2xl md:text-3xl italic font-light leading-relaxed mb-6">
-              &quot;Me encanta cómo quedó el grabado. A él también le va encantar.
-              Gracias a ti.&quot;
+              &quot;Me encanta cómo quedó el grabado. A él también le va
+              encantar. Gracias a ti.&quot;
             </p>
             <p className="font-semibold tracking-wide">— Evelyn (Villanueva)</p>
           </div>
@@ -166,10 +166,10 @@ export default function Home() {
 
               <div className="grid grid-cols-2 gap-6 text-center flex-1 place-content-center">
                 {[
-                  "Elige tu pieza",
-                  "Escríbenos por WhatsApp",
-                  "Confirmamos diseño y pago",
-                  "Recibe tu pedido en casa",
+                  'Elige tu pieza',
+                  'Escríbenos por WhatsApp',
+                  'Confirmamos diseño y pago',
+                  'Recibe tu pedido en casa',
                 ].map((step, index) => (
                   <div
                     key={index}

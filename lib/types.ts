@@ -1,12 +1,12 @@
 export type Category =
-  | "new in"
-  | "aretes"
-  | "collares"
-  | "anillos"
-  | "pulseras"
-  | "accesorios"
-  | "sets"
-  | "piercings-cuffs";
+  | 'new in'
+  | 'aretes'
+  | 'collares'
+  | 'anillos'
+  | 'pulseras'
+  | 'accesorios'
+  | 'sets'
+  | 'piercings-cuffs';
 
 export interface Product {
   id: string;

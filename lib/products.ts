@@ -11,4 +11,3 @@ export function getProducts(): Product[] {
 export function getProductById(id: string): Product | undefined {
   return getProducts().find((product) => product.id === id);
 }
-

@@ -1,7 +1,7 @@
-import { useSearchParams, useRouter } from "next/navigation";
-import { useMemo } from "react";
-import type { Category, Product } from "@/lib/types";
-import { PRODUCTS_PER_PAGE } from "../catalog";
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useMemo } from 'react';
+import type { Category, Product } from '@/lib/types';
+import { PRODUCTS_PER_PAGE } from '../catalog';
 
 interface UseCatalogFiltersReturn {
   selectedCategories: Category[];
@@ -26,16 +26,16 @@ export function useCatalogFilters(
 
   // Get selected categories from URL
   const selectedCategories = useMemo(() => {
-    const categoriesParam = searchParams.get("categorias");
+    const categoriesParam = searchParams.get('categorias');
     if (!categoriesParam) return [];
     return categoriesParam
-      .split(",")
+      .split(',')
       .filter((cat): cat is Category => categories.includes(cat as Category));
   }, [searchParams, categories]);
 
   // Get current page from URL (raw, before validation)
   const rawPage = useMemo(() => {
-    const page = searchParams.get("pagina");
+    const page = searchParams.get('pagina');
     return page ? Math.max(1, parseInt(page, 10)) : 1;
   }, [searchParams]);
 
@@ -64,19 +64,19 @@ export function useCatalogFilters(
   ) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if ("categorias" in updates) {
+    if ('categorias' in updates) {
       if (updates.categorias === undefined) {
-        params.delete("categorias");
+        params.delete('categorias');
       } else {
-        params.set("categorias", updates.categorias);
+        params.set('categorias', updates.categorias);
       }
     }
 
-    if ("pagina" in updates) {
+    if ('pagina' in updates) {
       if (updates.pagina === undefined) {
-        params.delete("pagina");
+        params.delete('pagina');
       } else {
-        params.set("pagina", updates.pagina);
+        params.set('pagina', updates.pagina);
       }
     }
 

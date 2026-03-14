@@ -1,5 +1,5 @@
 const BUTTON_STYLES =
-  "px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed";
+  'px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed';
 
 interface PaginationControlsProps {
   currentPage: number;
@@ -45,8 +45,8 @@ export function PaginationControls({
               onClick={() => onPageChange(page)}
               className={`px-3 py-2 rounded-lg ${
                 page === currentPage
-                  ? "bg-gray-900 text-white"
-                  : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                  ? 'bg-gray-900 text-white'
+                  : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
             >
               {page}

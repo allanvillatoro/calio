@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import { getProducts } from "@/lib/products";
-import type { Category } from "@/lib/types";
-import { sortProductsById, calculatePagination } from "@/lib/catalog";
-import { useCatalogFilters } from "@/lib/hooks/useCatalogFilters";
-import { FiltersSection } from "@/components/catalog/FiltersSection";
-import { ProductsGrid } from "@/components/catalog/ProductsGrid";
+import { useMemo, useState } from 'react';
+import { getProducts } from '@/lib/products';
+import type { Category } from '@/lib/types';
+import { sortProductsById, calculatePagination } from '@/lib/catalog';
+import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
+import { FiltersSection } from '@/components/catalog/FiltersSection';
+import { ProductsGrid } from '@/components/catalog/ProductsGrid';
 
 const CATEGORIES: Category[] = [
-  "new in",
-  "aretes",
-  "collares",
-  "pulseras",
-  "anillos",
-  "sets",
-  "piercings-cuffs",
-  "accesorios",
+  'new in',
+  'aretes',
+  'collares',
+  'pulseras',
+  'anillos',
+  'sets',
+  'piercings-cuffs',
+  'accesorios',
 ];
 
 export default function CatalogContent() {
@@ -52,7 +52,7 @@ export default function CatalogContent() {
 
     updateURL({
       categorias:
-        newCategories.length === 0 ? undefined : newCategories.join(","),
+        newCategories.length === 0 ? undefined : newCategories.join(','),
       pagina: undefined,
     });
   };

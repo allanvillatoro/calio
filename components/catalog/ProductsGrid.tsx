@@ -1,7 +1,7 @@
-import ProductCard from "@/components/ProductCard";
-import type { Product } from "@/lib/types";
-import { PaginationControls } from "./PaginationControls";
-import { EmptyState } from "./EmptyState";
+import ProductCard from '@/components/ProductCard';
+import type { Product } from '@/lib/types';
+import { PaginationControls } from './PaginationControls';
+import { EmptyState } from './EmptyState';
 
 interface ProductsGridProps {
   products: Product[];

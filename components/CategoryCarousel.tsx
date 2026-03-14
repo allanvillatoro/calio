@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { useRef, useState, useEffect } from "react";
+import Link from 'next/link';
+import Image from 'next/image';
+import { useRef, useState, useEffect } from 'react';
 
 const categories = [
-  { name: "NEW IN", slug: "new+in", link: "/images/categorias/new in.jpeg" },
-  { name: "ARETES", slug: "aretes", link: "/images/categorias/aretes.jpeg" },
+  { name: 'NEW IN', slug: 'new+in', link: '/images/categorias/new in.jpeg' },
+  { name: 'ARETES', slug: 'aretes', link: '/images/categorias/aretes.jpeg' },
   {
-    name: "COLLARES",
-    slug: "collares",
-    link: "/images/categorias/collares.jpeg",
+    name: 'COLLARES',
+    slug: 'collares',
+    link: '/images/categorias/collares.jpeg',
   },
   {
-    name: "PULSERAS",
-    slug: "pulseras",
-    link: "/images/categorias/pulseras.jpeg",
+    name: 'PULSERAS',
+    slug: 'pulseras',
+    link: '/images/categorias/pulseras.jpeg',
   },
-  { name: "ANILLOS", slug: "anillos", link: "/images/categorias/anillos.jpeg" },
-  { name: "SETS", slug: "sets", link: "/images/categorias/sets.jpeg" },
+  { name: 'ANILLOS', slug: 'anillos', link: '/images/categorias/anillos.jpeg' },
+  { name: 'SETS', slug: 'sets', link: '/images/categorias/sets.jpeg' },
   {
-    name: "PIERCINGS & CUFFS",
-    slug: "piercings-cuffs",
-    link: "/images/categorias/piercings.jpeg",
+    name: 'PIERCINGS & CUFFS',
+    slug: 'piercings-cuffs',
+    link: '/images/categorias/piercings.jpeg',
   },
 ];
 
@@ -42,20 +42,20 @@ export default function CategoryCarousel() {
     const el = scrollRef.current;
     if (!el) return;
     updateArrows();
-    el.addEventListener("scroll", updateArrows);
-    window.addEventListener("resize", updateArrows);
+    el.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
     return () => {
-      el.removeEventListener("scroll", updateArrows);
-      window.removeEventListener("resize", updateArrows);
+      el.removeEventListener('scroll', updateArrows);
+      window.removeEventListener('resize', updateArrows);
     };
   }, []);
 
-  const scroll = (direction: "left" | "right") => {
+  const scroll = (direction: 'left' | 'right') => {
     if (!scrollRef.current) return;
     const amount = 320;
     scrollRef.current.scrollBy({
-      left: direction === "left" ? -amount : amount,
-      behavior: "smooth",
+      left: direction === 'left' ? -amount : amount,
+      behavior: 'smooth',
     });
   };
 
@@ -70,7 +70,7 @@ export default function CategoryCarousel() {
         {/* Flecha izquierda */}
         {showLeft && (
           <button
-            onClick={() => scroll("left")}
+            onClick={() => scroll('left')}
             aria-label="Anterior"
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 bg-white hover:bg-black hover:text-white rounded-full p-2 shadow-lg border border-gray-200 transition-all duration-200"
           >
@@ -93,7 +93,7 @@ export default function CategoryCarousel() {
         {/* Flecha derecha */}
         {showRight && (
           <button
-            onClick={() => scroll("right")}
+            onClick={() => scroll('right')}
             aria-label="Siguiente"
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10 bg-white hover:bg-black hover:text-white rounded-full p-2 shadow-lg border border-gray-200 transition-all duration-200"
           >
@@ -118,8 +118,8 @@ export default function CategoryCarousel() {
           ref={scrollRef}
           className="flex gap-6 overflow-x-auto scroll-smooth pb-4"
           style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
           }}
         >
           {categories.map((item) => (
@@ -127,7 +127,7 @@ export default function CategoryCarousel() {
               key={item.slug}
               href={`/catalogo?categorias=${item.slug}`}
               className="group block flex-none"
-              style={{ width: "280px" }}
+              style={{ width: '280px' }}
             >
               <div className="bg-gray-200 aspect-square flex items-center justify-center text-sm tracking-wide transition-all duration-500 group-hover:scale-[1.03] group-hover:shadow-xl">
                 <Image
