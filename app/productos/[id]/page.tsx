@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { getProductById } from "@/lib/products";
 import { notFound } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
@@ -12,8 +11,9 @@ interface ProductDetailPageProps {
   };
 }
 
-export function generateMetadata({ params }: ProductDetailPageProps): Metadata {
-  const product = getProductById(params.id);
+export async function generateMetadata({ params }: ProductDetailPageProps) {
+  const { id } = await params;
+  const product = getProductById(id);
 
   if (!product) {
     return {
@@ -47,8 +47,9 @@ export function generateMetadata({ params }: ProductDetailPageProps): Metadata {
   };
 }
 
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const product = getProductById(params.id);
+export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
+  const { id } = await params;
+  const product = getProductById(id);
   if (!product) {
     notFound();
   }
