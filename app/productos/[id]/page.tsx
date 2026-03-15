@@ -51,6 +51,8 @@ export default async function ProductDetailPage({
   params,
 }: ProductDetailPageProps) {
   const { id } = await params;
+
+  // TODO: Replace with real data fetching from backend when API is available
   const product = getProductById(id);
   if (!product) {
     notFound();

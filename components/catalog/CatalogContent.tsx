@@ -22,6 +22,7 @@ const CATEGORIES: Category[] = [
 export default function CatalogContent() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
+  // TODO: Remove sorting when backend API is available and returns sorted data
   const sortedProducts = useMemo(() => {
     return sortProductsById(getProducts());
   }, []);
@@ -35,6 +36,7 @@ export default function CatalogContent() {
     updateURL,
   } = useCatalogFilters(sortedProducts, CATEGORIES);
 
+  // TODO: Remove pagination logic when backend API is available and supports pagination
   // Get paginated slice
   const { startIndex, endIndex } = calculatePagination(
     categoryFilteredProducts.length,

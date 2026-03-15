@@ -39,6 +39,7 @@ export function useCatalogFilters(
     return page ? Math.max(1, parseInt(page, 10)) : 1;
   }, [searchParams]);
 
+  // TODO: Remove this when data comes from the backend
   // Apply category filter
   const categoryFilteredProducts = useMemo(() => {
     if (selectedCategories.length === 0) return allProducts;
@@ -79,8 +80,7 @@ export function useCatalogFilters(
         params.set('pagina', updates.pagina);
       }
     }
-
-    router.push(`/catalogo?${params.toString()}`);
+    router.replace(`/catalogo?${params.toString()}`, { scroll: false });
   };
 
   return {
