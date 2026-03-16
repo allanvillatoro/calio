@@ -1,5 +1,5 @@
 const BUTTON_STYLES =
-  'px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed';
+  'px-4 py-2 border border-gray-300 rounded-lg text-gray-700 transition-all duration-150 hover:bg-gray-900 hover:text-white hover:border-gray-900 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 disabled:hover:border-gray-300';
 
 interface PaginationControlsProps {
   currentPage: number;
@@ -28,12 +28,11 @@ export function PaginationControls({
 
   return (
     <>
-      {/* Pagination Buttons */}
       <div className="flex items-center justify-center gap-2 mt-12 flex-wrap">
         <button
           onClick={handlePrevious}
           disabled={currentPage === 1}
-          className={`${BUTTON_STYLES} px-4 py-2`}
+          className={BUTTON_STYLES}
         >
           ← Anterior
         </button>
@@ -43,10 +42,10 @@ export function PaginationControls({
             <button
               key={page}
               onClick={() => onPageChange(page)}
-              className={`px-3 py-2 rounded-lg ${
+              className={`px-3 py-2 rounded-lg transition-all duration-150 active:scale-95 ${
                 page === currentPage
                   ? 'bg-gray-900 text-white'
-                  : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                  : 'border border-gray-300 text-gray-700 hover:bg-gray-900 hover:text-white hover:border-gray-900'
               }`}
             >
               {page}
@@ -57,13 +56,12 @@ export function PaginationControls({
         <button
           onClick={handleNext}
           disabled={currentPage === totalPages}
-          className={`${BUTTON_STYLES} px-4 py-2`}
+          className={BUTTON_STYLES}
         >
           Siguiente →
         </button>
       </div>
 
-      {/* Page Info */}
       <div className="text-center text-gray-600 text-sm mt-4">
         Página {currentPage} de {totalPages} ({totalProducts} productos)
       </div>
