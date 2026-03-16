@@ -13,14 +13,14 @@ interface UseCatalogFiltersReturn {
   currentPage: number;
   totalPages: number;
   productsPerPage: number;
-  showFilters: boolean;
+  printView: boolean;
   isAllSelected: boolean;
   updateURL: (
     updates: Partial<{
       categorias: string | undefined;
       pagina: string | undefined;
       entienda: string | undefined;
-      filtros: string | undefined;
+      modoprint: string | undefined;
     }>,
   ) => void;
 }
@@ -53,10 +53,10 @@ export function useCatalogFilters(
     return inStore === 'true' || false;
   }, [searchParams]);
 
-  // Get filtros param from URL
-  const showFilters = useMemo(() => {
-    const filters = searchParams.get('filtros');
-    return !filters || filters !== 'false';
+  // Get modoprint param from URL
+  const printView = useMemo(() => {
+    const print = searchParams.get('modoprint');
+    return print === 'true' || false;
   }, [searchParams]);
 
   // TODO: Remove this when data comes from the backend
@@ -92,7 +92,7 @@ export function useCatalogFilters(
       categorias: string | undefined;
       pagina: string | undefined;
       entienda: string | undefined;
-      filtros: string | undefined;
+      modoprint: string | undefined;
     }>,
   ) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -121,11 +121,11 @@ export function useCatalogFilters(
       }
     }
 
-    if ('filtros' in updates) {
-      if (updates.filtros === undefined) {
-        params.delete('filtros');
+    if ('modoprint' in updates) {
+      if (updates.modoprint === undefined) {
+        params.delete('modoprint');
       } else {
-        params.set('filtros', updates.filtros);
+        params.set('modoprint', updates.modoprint);
       }
     }
 
@@ -138,7 +138,7 @@ export function useCatalogFilters(
     currentPage,
     totalPages,
     productsPerPage,
-    showFilters,
+    printView,
     isAllSelected,
     updateURL,
   };

@@ -35,7 +35,7 @@ export default function CatalogContent() {
     productsPerPage,
     isAllSelected,
     updateURL,
-    showFilters,
+    printView,
   } = useCatalogFilters(sortedProducts, CATEGORIES);
 
   // TODO: Remove pagination logic when backend API is available and supports pagination
@@ -73,7 +73,7 @@ export default function CatalogContent() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="flex flex-col md:flex-row gap-8">
-        {showFilters && (
+        {!printView && (
           <FiltersSection
             categories={CATEGORIES}
             selectedCategories={selectedCategories}
