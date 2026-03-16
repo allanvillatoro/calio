@@ -18,7 +18,7 @@ export function ProductsGrid({
   currentPage,
   totalPages,
   onPageChange,
-  isAdmin
+  isAdmin,
 }: ProductsGridProps) {
   if (products.length === 0) {
     return <EmptyState />;

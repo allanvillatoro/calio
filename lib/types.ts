@@ -8,6 +8,17 @@ export type Category =
   | 'sets'
   | 'piercings-cuffs';
 
+export const CATEGORIES: Category[] = [
+  'new in',
+  'aretes',
+  'collares',
+  'pulseras',
+  'anillos',
+  'sets',
+  'piercings-cuffs',
+  'accesorios',
+];
+
 export interface Product {
   id: string;
   name: string;
