@@ -487,7 +487,7 @@
   },
   {
     "id": 55,
-    "name": "Pulsera Antonella",
+    "name": "Pulsera Vivi",
     "description": "Pulsera con perla de rio en acero inoxidable en dorado.",
     "price": 350,
     "quantity": 1,
@@ -616,7 +616,7 @@
     "name": "Charm de Bolso Cherry",
     "description": "Charm de bolso en forma de cherry en rojo y dorado.",
     "price": 200,
-    "quantity": 0,
+    "quantity": 1,
     "images": ["69.1_xzequ9.webp", "69.2_ldccmx.webp"],
     "category": "accesorios"
   },
@@ -696,7 +696,7 @@
     "id": 78,
     "name": "Aretes Coral",
     "description": "Aretes en acero inoxidable en dorado.",
-    "price": 300,
+    "price": 350,
     "quantity": 1,
     "images": ["78.1_aba0cy.webp"],
     "category": "aretes"
@@ -741,9 +741,531 @@
     "id": 83,
     "name": "Pulsera Kaira",
     "description": "Pulsera de balines de 0.4cm en acero inoxidable en dorado",
-    "price": 280,
-    "quantity": 0,
+    "price": 290,
+    "quantity": 1,
     "images": ["83.1_uph8nr.webp", "83.2_vjjf8i.webp"],
     "category": "pulseras"
+  },
+  {
+    "id": 84,
+    "name": "Aretes Valery",
+    "description": "Aretes asimétricos en acero inoxidable en dorado.",
+    "price": 330,
+    "quantity": 1,
+    "images": ["84.1_lodkby.webp", "84.2_idedpp.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 85,
+    "name": "Anillo Oval",
+    "description": "Anillo ajustable en acero inoxidable en dorado.",
+    "price": 280,
+    "quantity": 1,
+    "images": ["85.1_z5hwmq.webp", "85.2_flofta.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 86,
+    "name": "Aretes Bali",
+    "description": "Hoops con perlita en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["86.1_axva5f.webp", "86.2_bb2f5z.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 87,
+    "name": "Aretes Lilia",
+    "description": "Aretes mini en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["87.1_pabxqg.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 88,
+    "name": "Aretes Violeta",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["88.1_d10v9r.webp", "88.2_rzz9dw.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 89,
+    "name": "Collar Gracia",
+    "description": "Collar de cruz en acero inoxidable en dorado.",
+    "price": 330,
+    "quantity": 1,
+    "images": ["89.1_wuupsj.webp", "89.2_bajacr.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 90,
+    "name": "Anillo Vera",
+    "description": "Anillo ajustable en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["90.1_o6sahq.webp", "90.2_xfhsmx.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 91,
+    "name": "Aretes Abril",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 1,
+    "images": ["91.1_brbvcn.webp", "91.2_sdtqas.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 92,
+    "name": "Anillo Laura",
+    "description": "Anillo ajustable en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["92.1_oo17i0.webp", "92.2_e75g38.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 93,
+    "name": "Aretes Melanie",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["93.1_y6ddxk.webp", "93.2_zyqame.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 94,
+    "name": "Collar Samantha",
+    "description": "Collar estilo corbata en acero inoxidable en dorado.",
+    "price": 400,
+    "quantity": 1,
+    "images": ["94.1_u5srdl.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 96,
+    "name": "Aretes Clasic",
+    "description": "Aretes pequeños estilo cristal en acero inoxidable en dorado.",
+    "price": 280,
+    "quantity": 1,
+    "images": ["96.1_rcotin.webp", "96.2_azbwmj.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 97,
+    "name": "Anillo Susi",
+    "description": "Anillo en acero inoxidable en dorado.",
+    "price": 280,
+    "quantity": 1,
+    "images": ["97.1_dq5sbt.webp", "97.2_ojsnyq.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 98,
+    "name": "Collar Ester",
+    "description": "Collar en acero inoxidable en dorado.",
+    "price": 360,
+    "quantity": 1,
+    "images": ["98.1_ogzgkb.webp", "98.2_lfjmw7.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 101,
+    "name": "Anillo Anza",
+    "description": "Anillo en acero inoxidable en dorado.",
+    "price": 270,
+    "quantity": 1,
+    "images": ["101.1_thk4vx.webp", "101.2_dmnhuh.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 102,
+    "name": "Anillo Camila",
+    "description": "Anillo ajustable en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["102.1_phvy4v.webp", "102.2_asv80r.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 103,
+    "name": "Collar Naty",
+    "description": "Collar con incrustaciones de circonitas en acero inoxdiables en dorado.",
+    "price": 390,
+    "quantity": 1,
+    "images": ["103.1_ymjwfd.webp", "103.2_hhc0mu.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 104,
+    "name": "Hoops L",
+    "description": "Hoops L en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["104.2_dbj4ik.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 105,
+    "name": "Hoops M",
+    "description": "Hoops M en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["105.2_q35zqt.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 106,
+    "name": "Hoops S",
+    "description": "Hoops S en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["106.2_awqetq.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 107,
+    "name": "Hoops XS",
+    "description": "Hoops XS en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["107.2_ntpuew.webp"],
+    "category": ""
+  },
+  {
+    "id": 108,
+    "name": "Aretes Luna",
+    "description": "Hoops luna en acero inoxidables en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["108.2_yenx2e.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 109,
+    "name": "Aretes Lua",
+    "description": "Aretes de estrella en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["109.2_ye4ell.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 110,
+    "name": "Anillo Eva",
+    "description": "Anillo en acero inoxidable dorado con piedra verde.",
+    "price": 290,
+    "quantity": 1,
+    "images": ["110.1_uu4ksw.webp", "110.2_ogpqj7.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 111,
+    "name": "Aretes Honguito Rojo",
+    "description": "Hoops de honguito rojo en acero inoxidable.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["111.1_aga9ku.webp", "111.2_be9wdb.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 112,
+    "name": "Aretes Honguito Rosa",
+    "description": "Hoops de honguito rojo en acero inoxidable.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["112.1_woqpbf.webp", "112.2_ibdbh0.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 113,
+    "name": "Aretes Antonella",
+    "description": "Aretes en acero inoxidable en bicolor, pesa 30g.",
+    "price": 320,
+    "quantity": 1,
+    "images": ["113.1_ur6bku.webp", "113.2_cboz4l.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 114,
+    "name": "Aretes Ramira",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["114.1_mso3vz.webp", "114.2_igv6ow.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 115,
+    "name": "Pulsera Atenas",
+    "description": "Pulsera con bolitas en acero inoxidable en dorado.",
+    "price": 330,
+    "quantity": 1,
+    "images": ["115.1_d0vcuy.webp"],
+    "category": "pulseras"
+  },
+  {
+    "id": 116,
+    "name": "Anillo Cloe",
+    "description": "Anillo #7 en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["116.1_mmkesq.webp", "116.2_sriaqi.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 117,
+    "name": "Collar Lisboa",
+    "description": "Collar con una zirconia en acero inoxidable en dorado.",
+    "price": 330,
+    "quantity": 1,
+    "images": ["117.1_q5ebhy.webp", "117.2_yx6wtk.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 118,
+    "name": "Collar Marina",
+    "description": "Collar tejido y su dije en acero inoxidable en dorado.",
+    "price": 330,
+    "quantity": 1,
+    "images": ["118.1_k2kwex.webp", "118.2_qk91xv.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 119,
+    "name": "Collar Alba",
+    "description": "Collar tejido y su dije en acero inoxidable en dorado.",
+    "price": 330,
+    "quantity": 1,
+    "images": ["119.1_nxt02q.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 120,
+    "name": "Rosario",
+    "description": "Rosario en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["120.1_yonh4r.webp", "120.2_toqwbw.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 121,
+    "name": "Aretes Renata",
+    "description": "Aretes colgantes en acero inoxidable en dorado.",
+    "price": 400,
+    "quantity": 1,
+    "images": ["121.1_xgshra.webp", "121.2_skqdez.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 122,
+    "name": "Collar Alessia",
+    "description": "Collar mide 41cm+5cm de extensión en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["122.1_whhi9m.webp"],
+    "category": "collares"
+  },
+  {
+    "id": 123,
+    "name": "Aretes Elisa",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 340,
+    "quantity": 1,
+    "images": ["123.1_fzgyti.webp", "123.2_zvuq8w.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 124,
+    "name": "Aretes Luma",
+    "description": "Hoops mini en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["124.1_tzkq1z.webp", "124.2_fnxxkt.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 125,
+    "name": "Aretes Sevilla",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["125.1_tqpv2k.webp", "125.2_izye8a.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 126,
+    "name": "Aretes Lola Gold",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 370,
+    "quantity": 1,
+    "images": ["126.1_nyatuf.webp", "126.2_y2fnai.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 127,
+    "name": "Aretes Lola Bicolor",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 370,
+    "quantity": 1,
+    "images": ["127.1_sjksag.webp", "127.2_mcya9g.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 128,
+    "name": "Anillo Luz",
+    "description": "Anillo minimalista ajustable en acero inoxidable en dorado.",
+    "price": 270,
+    "quantity": 1,
+    "images": ["128.1_mhvceg.webp"],
+    "category": "anillos"
+  },
+  {
+    "id": 129,
+    "name": "Aretes Elia",
+    "description": "Aretes en acero inoxidable en bicolor.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["129.1_tton2z.webp", "129.2_t6phva.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 130,
+    "name": "Aretes Sunny",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 320,
+    "quantity": 1,
+    "images": ["130.1_lc7yyd.webp", "130.2_wfkzti.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 131,
+    "name": "Aretes Lucia",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 400,
+    "quantity": 1,
+    "images": ["131.1_kpqexq.webp", "131.2_y1ruw5.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 132,
+    "name": "Aretes Liora",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 400,
+    "quantity": 1,
+    "images": ["132.1_a9ym6l.webp", "132.2_cyckcn.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 133,
+    "name": "Aretes Jazmin",
+    "description": "Mini aretes en acero inoxidable en dorado.",
+    "price": 280,
+    "quantity": 1,
+    "images": ["133.1_w4pdad.webp", "133.2_ctmaxv.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 134,
+    "name": "Aretes Samara",
+    "description": "Aretes en acero inoxidable con detalle en verde y dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["134.1_jblmd8.webp", "134.2_ennslu.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 135,
+    "name": "Aretes Nora",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["135.1_xtqhrz.webp", "135.2_k2sspt.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 136,
+    "name": "Aretes Estrellas",
+    "description": "Aretes chunky en acero inoxidable en bicolor.",
+    "price": 400,
+    "quantity": 1,
+    "images": ["136.1_hqvl8f.webp", "136.2_rsbqkh.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 138,
+    "name": "Aretes Faby",
+    "description": "Hoops con perla en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["138.1_lud6eo.webp", "138.2_gpgdcn.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 139,
+    "name": "Mini Hoops L",
+    "description": "Hoops L en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["139.2_cnlttb.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 140,
+    "name": "Mini Hoops M",
+    "description": "Hoops M en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["140.2_mycitp.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 141,
+    "name": "Mini Hoops S",
+    "description": "Hoops S en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["141.2_muh0ke.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 142,
+    "name": "Aretes Elena",
+    "description": "Juego de aretes en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 1,
+    "images": ["142.2_urd9li.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 143,
+    "name": "Pulsera Tiffany Rosa",
+    "description": "Pulsera con dije rosado estilo Tiffany en acero inoxidable dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["143.1_zkfnbo.webp"],
+    "category": "pulseras"
+  },
+  {
+    "id": 144,
+    "name": "Aretes Gina",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["144.1_ezkoyu.webp", "144.2_i7ver4.webp"],
+    "category": "aretes"
+  },
+  {
+    "id": 145,
+    "name": "Aretes Dina",
+    "description": "Aretes mini en acero inoxidable en dorado.",
+    "price": 280,
+    "quantity": 1,
+    "images": ["145.1_sdag9m.webp", "145.2_thhdvk.webp"],
+    "category": "aretes"
   }
 ]
