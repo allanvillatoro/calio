@@ -5,9 +5,10 @@ import { formatPrice, getImageUrl } from '@/lib/utils';
 
 interface ProductCardProps {
   product: Product;
+  isAdmin: boolean;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, isAdmin }: ProductCardProps) {
   const mainImage = product.images[0];
 
   return (
@@ -35,6 +36,30 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
           </div>
         </div>
+        {isAdmin && (
+          <div className="flex justify-center gap-2 px-4 pb-4">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                console.log(`Editar producto ${product.id}`);
+              }}
+              aria-label={`Editar ${product.name}`}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-gray-700 rounded-md hover:bg-gray-900 transition-colors"
+            >
+              Editar
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                console.log(`Eliminar producto ${product.id}`);
+              }}
+              aria-label={`Eliminar ${product.name}`}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors"
+            >
+              Eliminar
+            </button>
+          </div>
+        )}
       </div>
     </Link>
   );

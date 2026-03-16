@@ -9,6 +9,7 @@ interface ProductsGridProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  isAdmin: boolean;
 }
 
 export function ProductsGrid({
@@ -17,6 +18,7 @@ export function ProductsGrid({
   currentPage,
   totalPages,
   onPageChange,
+  isAdmin
 }: ProductsGridProps) {
   if (products.length === 0) {
     return <EmptyState />;
@@ -27,7 +29,7 @@ export function ProductsGrid({
       {/* Products Grid */}
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product.id} product={product} isAdmin={isAdmin} />
         ))}
       </div>
 
