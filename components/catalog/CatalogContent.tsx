@@ -19,8 +19,14 @@ const CATEGORIES: Category[] = [
   'accesorios',
 ];
 
-export default function CatalogContent() {
+interface Props {
+  isAdmin?: boolean;
+}
+
+export default function CatalogContent({ isAdmin = false }: Props) {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+
+  // TODO: Detect here from the gloabl state if the user is admin, instead of passing it as a prop from the admin page.
 
   // TODO: Remove sorting when backend API is available and returns sorted data
   const sortedProducts = useMemo(() => {
@@ -69,6 +75,17 @@ export default function CatalogContent() {
 
   return (
     <div className="container mx-auto px-4 py-12">
+      {isAdmin && (
+        <div className="py-4 text-right">
+          <button
+            onClick={() => console.log('Agregar nuevo producto')}
+            aria-label="Agregar"
+            className="px-3 py-1.5 text-sm font-medium text-white bg-gray-700 rounded-md hover:bg-gray-900 transition-colors"
+          >
+            Agregar
+          </button>
+        </div>
+      )}
       <div className="flex flex-col md:flex-row gap-8">
         <FiltersSection
           categories={CATEGORIES}
@@ -87,6 +104,7 @@ export default function CatalogContent() {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            isAdmin={isAdmin}
           />
         </div>
       </div>
