@@ -2,22 +2,12 @@
 
 import { useMemo, useState } from 'react';
 import { getProducts } from '@/lib/products';
-import type { Category } from '@/lib/types';
+import { CATEGORIES, type Category } from '@/lib/types';
 import { sortProductsById, calculatePagination } from '@/lib/catalog';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
 import { FiltersSection } from '@/components/catalog/FiltersSection';
 import { ProductsGrid } from '@/components/catalog/ProductsGrid';
-
-const CATEGORIES: Category[] = [
-  'new in',
-  'aretes',
-  'collares',
-  'pulseras',
-  'anillos',
-  'sets',
-  'piercings-cuffs',
-  'accesorios',
-];
+import { ProductDialog } from '../admin/ProductDialog';
 
 interface Props {
   isAdmin?: boolean;
@@ -77,13 +67,7 @@ export default function CatalogContent({ isAdmin = false }: Props) {
     <div className="container mx-auto px-4 py-12">
       {isAdmin && (
         <div className="py-4 text-right">
-          <button
-            onClick={() => console.log('Agregar nuevo producto')}
-            aria-label="Agregar"
-            className="px-3 py-1.5 text-sm font-medium text-white bg-gray-700 rounded-md hover:bg-gray-900 transition-colors"
-          >
-            Agregar
-          </button>
+          <ProductDialog />
         </div>
       )}
       <div className="flex flex-col md:flex-row gap-8">
