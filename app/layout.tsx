@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Inter } from 'next/font/google';
+import { Playfair_Display, Inter, Geist } from 'next/font/google';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import './globals.css';
+import { cn } from '@/lib/utils';
+
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: 'CALIO - Joyería | Anillos, Collares y Accesorios en San Pedro Sula',
@@ -92,7 +95,15 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="es" className={`${inter.variable} ${playfair.variable}`}>
+    <html
+      lang="es"
+      className={cn(
+        inter.variable,
+        playfair.variable,
+        'font-sans',
+        geist.variable,
+      )}
+    >
       <head>
         <script
           type="application/ld+json"
