@@ -36,6 +36,11 @@ export default function ProductCard({ product, isAdmin }: ProductCardProps) {
             <span className="text-2xl font-bold text-gray-900">
               {formatPrice(product.price)}
             </span>
+            {isAdmin && (
+              <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
+                Stock: {product.quantity}
+              </span>
+            )}
           </div>
         </div>
       </Link>
