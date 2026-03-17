@@ -9,7 +9,7 @@ export default function AdminPage() {
         Panel Administrativo
       </h1>
 
-      <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto py-12">
+      <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto py-8">
         <Link href="/catalogo">
           <div className="bg-gray-700 rounded-lg shadow-md hover:shadow-xl hover:bg-gray-800 transition-all p-8 cursor-pointer group">
             <h2 className="text-xl font-semibold text-white mb-2">
