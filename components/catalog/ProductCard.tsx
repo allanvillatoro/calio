@@ -2,15 +2,21 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Product } from '@/lib/types';
 import { formatPrice, getImageUrl } from '@/lib/utils';
-import { ProductDialog } from '../admin/ProductDialog';
-import { DeleteDialog } from '../admin/DeleteDialog';
+import { Button } from '../ui/button';
 
 interface ProductCardProps {
   product: Product;
   isAdmin: boolean;
+  onEdit: (product: Product) => void;
+  onDelete: (product: Product) => void;
 }
 
-export default function ProductCard({ product, isAdmin }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  isAdmin,
+  onEdit,
+  onDelete,
+}: ProductCardProps) {
   const mainImage = product.images[0];
 
   return (
@@ -46,8 +52,18 @@ export default function ProductCard({ product, isAdmin }: ProductCardProps) {
       </Link>
       {isAdmin && (
         <div className="flex justify-center gap-2 px-4 pb-4">
-          <ProductDialog product={product} />
-          <DeleteDialog product={product} />
+          <Button
+            className="w-20 px-3 py-1.5 text-sm font-medium text-white bg-gray-700 rounded-md hover:bg-gray-900 transition-colors"
+            onClick={() => onEdit(product)}
+          >
+            Editar
+          </Button>
+          <Button
+            className="w-20 px-3 py-1.5 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors"
+            onClick={() => onDelete(product)}
+          >
+            Eliminar
+          </Button>
         </div>
       )}
     </div>
