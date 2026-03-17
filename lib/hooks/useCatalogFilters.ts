@@ -42,32 +42,23 @@ export function useCatalogFilters(
     return page ? Math.max(1, parseInt(page, 10)) : 1;
   }, [searchParams]);
 
-  // Get entienda param from URL
-  const inStoreParam = useMemo(() => {
-    const inStore = searchParams.get('entienda');
-    return inStore === 'true' || false;
-  }, [searchParams]);
-
-  // Get modoprint param from URL
-  const printView = useMemo(() => {
-    const print = searchParams.get('modoprint');
-    return print === 'true' || false;
-  }, [searchParams]);
+  const inStore = searchParams.get('entienda') === 'true';
+  const printView = searchParams.get('modoprint') === 'true';
 
   // TODO: Remove this when data comes from the backend
   // Apply category filter
   const categoryFilteredProducts = useMemo(() => {
     if (selectedCategories.length === 0)
-      return inStoreParam ? allProducts.filter((p) => p.inStore) : allProducts;
+      return inStore ? allProducts.filter((p) => p.inStore) : allProducts;
 
     const filteredCategoryProducts = allProducts.filter((product) =>
       selectedCategories.includes(product.category),
     );
 
-    return inStoreParam
+    return inStore
       ? filteredCategoryProducts.filter((p) => p.inStore)
       : filteredCategoryProducts;
-  }, [allProducts, selectedCategories, inStoreParam]);
+  }, [allProducts, selectedCategories, inStore]);
 
   // Calculate pagination based on filtered products
   const productsPerPage = PRODUCTS_PER_PAGE;
