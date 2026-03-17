@@ -1,11 +1,6 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import {
-  PRODUCTS_PER_PAGE,
-  PRODUCTS_PER_PAGE_STORE,
-  type Category,
-  type Product,
-} from '@/lib/types';
+import { PRODUCTS_PER_PAGE, type Category, type Product } from '@/lib/types';
 
 interface UseCatalogFiltersReturn {
   selectedCategories: Category[];
@@ -75,9 +70,7 @@ export function useCatalogFilters(
   }, [allProducts, selectedCategories, inStoreParam]);
 
   // Calculate pagination based on filtered products
-  const productsPerPage = !inStoreParam
-    ? PRODUCTS_PER_PAGE
-    : PRODUCTS_PER_PAGE_STORE;
+  const productsPerPage = PRODUCTS_PER_PAGE;
 
   const totalPages = Math.ceil(
     categoryFilteredProducts.length / productsPerPage,

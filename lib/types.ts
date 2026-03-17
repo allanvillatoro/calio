@@ -20,4 +20,3 @@ export interface Product {
 }
 
 export const PRODUCTS_PER_PAGE = 20;
-export const PRODUCTS_PER_PAGE_STORE = 40;
