@@ -28,8 +28,10 @@ export default function CatalogContent({ isAdmin = false }: Props) {
     categoryFilteredProducts,
     currentPage,
     totalPages,
+    productsPerPage,
     isAllSelected,
     updateURL,
+    printView,
   } = useCatalogFilters(sortedProducts, CATEGORIES);
 
   // TODO: Remove pagination logic when backend API is available and supports pagination
@@ -37,6 +39,7 @@ export default function CatalogContent({ isAdmin = false }: Props) {
   const { startIndex, endIndex } = calculatePagination(
     categoryFilteredProducts.length,
     currentPage,
+    productsPerPage,
   );
   const paginatedProducts = categoryFilteredProducts.slice(
     startIndex,
@@ -71,15 +74,17 @@ export default function CatalogContent({ isAdmin = false }: Props) {
         </div>
       )}
       <div className="flex flex-col md:flex-row gap-8">
-        <FiltersSection
-          categories={CATEGORIES}
-          selectedCategories={selectedCategories}
-          isAllSelected={isAllSelected}
-          isOpen={isFiltersOpen}
-          onToggleOpen={() => setIsFiltersOpen(!isFiltersOpen)}
-          onSelectAll={handleSelectAll}
-          onToggleCategory={handleToggleCategory}
-        />
+        {!printView && (
+          <FiltersSection
+            categories={CATEGORIES}
+            selectedCategories={selectedCategories}
+            isAllSelected={isAllSelected}
+            isOpen={isFiltersOpen}
+            onToggleOpen={() => setIsFiltersOpen(!isFiltersOpen)}
+            onSelectAll={handleSelectAll}
+            onToggleCategory={handleToggleCategory}
+          />
+        )}
 
         <div className="flex-1">
           <ProductsGrid
