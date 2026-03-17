@@ -2,17 +2,20 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Product } from '@/lib/types';
 import { formatPrice, getImageUrl } from '@/lib/utils';
+import { ProductDialog } from '../admin/ProductDialog';
+import { DeleteDialog } from '../admin/DeleteDialog';
 
 interface ProductCardProps {
   product: Product;
+  isAdmin: boolean;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, isAdmin }: ProductCardProps) {
   const mainImage = product.images[0];
 
   return (
-    <Link href={`/productos/${product.id}`}>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+      <Link href={`/productos/${product.id}`}>
         <div className="relative w-full h-64">
           <Image
             src={getImageUrl(mainImage)}
@@ -33,9 +36,20 @@ export default function ProductCard({ product }: ProductCardProps) {
             <span className="text-2xl font-bold text-gray-900">
               {formatPrice(product.price)}
             </span>
+            {isAdmin && (
+              <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
+                Stock: {product.quantity}
+              </span>
+            )}
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+      {isAdmin && (
+        <div className="flex justify-center gap-2 px-4 pb-4">
+          <ProductDialog product={product} />
+          <DeleteDialog product={product} />
+        </div>
+      )}
+    </div>
   );
 }

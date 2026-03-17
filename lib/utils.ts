@@ -1,3 +1,6 @@
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
 export function formatPrice(price: number): string {
   return `L${price.toLocaleString('es-HN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
 }
@@ -6,4 +9,8 @@ const BASE_URL = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINAR
 
 export function getImageUrl(filename: string): string {
   return `${BASE_URL}${filename}`;
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
