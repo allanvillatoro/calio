@@ -108,19 +108,19 @@ export default function CatalogContent({ isAdmin = false }: Props) {
             onDelete={setDeletingProduct}
           />
         </div>
-
-        <ProductDialog
-          product={editingProduct}
-          open={!!editingProduct}
-          onOpenChange={() => setEditingProduct(null)}
-        />
-
-        <DeleteDialog
-          product={deletingProduct}
-          open={!!deletingProduct}
-          onOpenChange={() => setDeletingProduct(null)}
-        />
       </div>
+
+      <ProductDialog
+        product={editingProduct}
+        open={!!editingProduct}
+        onOpenChange={() => setEditingProduct(null)}
+      />
+
+      <DeleteDialog
+        product={deletingProduct}
+        open={!!deletingProduct}
+        onOpenChange={() => setDeletingProduct(null)}
+      />
     </div>
   );
 }
