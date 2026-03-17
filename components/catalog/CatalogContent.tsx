@@ -68,7 +68,7 @@ export default function CatalogContent({ isAdmin = false }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-12">
-      {isAdmin && (
+      {isAdmin && !printView && (
         <div className="py-4 text-right">
           <ProductDialog />
         </div>
@@ -93,7 +93,7 @@ export default function CatalogContent({ isAdmin = false }: Props) {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
-            isAdmin={isAdmin}
+            isAdmin={isAdmin && !printView}
           />
         </div>
       </div>
