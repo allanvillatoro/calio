@@ -103,6 +103,21 @@ export const ProductDialog = ({ product }: ProductDialogProps) => {
                 </div>
               </div>
 
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="inStore"
+                  defaultChecked={product?.inStore ?? false}
+                  className="w-4 h-4 rounded border-gray-300 accent-gray-900 cursor-pointer"
+                />
+                <label
+                  htmlFor="inStore"
+                  className="text-sm font-medium text-gray-700 cursor-pointer"
+                >
+                  Disponible en tienda física
+                </label>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Categoría
