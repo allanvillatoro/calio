@@ -16,4 +16,7 @@ export interface Product {
   quantity: number;
   images: string[];
   category: Category;
+  inStore?: boolean;
 }
+
+export const PRODUCTS_PER_PAGE = 20;

@@ -1,13 +1,12 @@
-export const PRODUCTS_PER_PAGE = 20;
-
 export function calculatePagination(
   filteredProductsLength: number,
   currentPage: number,
+  productsPerPage: number,
 ) {
-  const totalPages = Math.ceil(filteredProductsLength / PRODUCTS_PER_PAGE);
+  const totalPages = Math.ceil(filteredProductsLength / productsPerPage);
   const validPage = Math.min(currentPage, Math.max(1, totalPages));
-  const startIndex = (validPage - 1) * PRODUCTS_PER_PAGE;
-  const endIndex = startIndex + PRODUCTS_PER_PAGE;
+  const startIndex = (validPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
 
   return {
     totalPages,

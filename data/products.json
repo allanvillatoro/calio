@@ -7,6 +7,7 @@
     "quantity": 4,
     "images": ["1.1_mq9acc.webp", "1.2_amyjoa.webp"],
     "category": "aretes"
+
   },
   {
     "id": 2,
@@ -123,7 +124,8 @@
     "price": 310,
     "quantity": 2,
     "images": ["14.1_zvh0ti.webp", "14.2_t92htm.webp"],
-    "category": "pulseras"
+    "category": "pulseras",
+    "inStore": true
   },
   {
     "id": 15,
@@ -150,7 +152,8 @@
     "price": 350,
     "quantity": 7,
     "images": ["17.1_rx1bnb.webp", "17.2_r8mev8.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 18,
@@ -177,7 +180,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["20.1_b5lzkm.webp", "20.2_nsrdpq.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 21,
@@ -186,7 +190,8 @@
     "price": 300,
     "quantity": 2,
     "images": ["21.1_slwlph.webp", "21.2_k1gixx.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 22,
@@ -240,7 +245,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["27.1_d1pfk1.webp", "27.2_vbmvtg.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 28,
@@ -249,7 +255,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["28.1_dxirzv.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 29,
@@ -330,7 +337,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["37.1_kwsujm.webp", "37.2_lew737.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 38,
@@ -357,7 +365,8 @@
     "price": 340,
     "quantity": 1,
     "images": ["40.1_hryqmq.webp", "40.2_qcnquk.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 41,
@@ -366,7 +375,8 @@
     "price": 340,
     "quantity": 1,
     "images": ["41.1_ot5oqf.webp", "41.2_josjyv.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 42,
@@ -375,7 +385,8 @@
     "price": 340,
     "quantity": 300,
     "images": ["42.1_dlx6cx.webp", "42.2_ylqj2b.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 43,
@@ -384,7 +395,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["43.1_bzsvr2.webp", "43.2_iklfua.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 44,
@@ -402,7 +414,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["45.1_vzbqxz.webp", "45.2_uxst22.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 46,
@@ -438,7 +451,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["49.1_bcjeqc.webp", "49.2_vglzvh.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 50,
@@ -465,7 +479,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["52.1_bufgvd.webp", "52.2_pbltme.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 53,
@@ -492,7 +507,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["55.1_qm9k12.webp", "55.2_ln9gmr.webp"],
-    "category": "pulseras"
+    "category": "pulseras",
+    "inStore": true
   },
   {
     "id": 56,
@@ -519,7 +535,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["58.1_cotgbv.webp", "58.2_vmln9l.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 59,
@@ -564,7 +581,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["63.1_acdswc.webp", "63.2_jnu9rm.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 64,
@@ -603,15 +621,6 @@
     "category": "collares"
   },
   {
-    "id": 68,
-    "name": "Pulsera Roma",
-    "description": "Pulsera de mini cruces en acero inoxidable en dorado.",
-    "price": 350,
-    "quantity": 1,
-    "images": ["68.1_lv7wld.webp", "68.2_d6ehof.webp"],
-    "category": "pulseras"
-  },
-  {
     "id": 69,
     "name": "Charm de Bolso Cherry",
     "description": "Charm de bolso en forma de cherry en rojo y dorado.",
@@ -645,7 +654,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["72.1_sraal0.webp", "72.2_scynwj.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 73,
@@ -663,7 +673,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["74.1_us8zio.webp", "74.2_tavx62.webp"],
-    "category": "pulseras"
+    "category": "pulseras",
+    "inStore": true
   },
   {
     "id": 75,
@@ -699,16 +710,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["78.1_aba0cy.webp"],
-    "category": "aretes"
-  },
-  {
-    "id": 79,
-    "name": "Aretes Adriana",
-    "description": "Minis hoops con incrustaciones en acero inoxidable en dorado.",
-    "price": 300,
-    "quantity": 1,
-    "images": ["79.1_oxyfli.webp", "79.2_kcr91j.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 80,
@@ -726,7 +729,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["81.1_caoxvz.webp", "81.2_atynai.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 82,
@@ -735,16 +739,18 @@
     "price": 390,
     "quantity": 1,
     "images": ["82.1_waq5fy.webp", "82.2_vl5kxx.webp"],
-    "category": "pulseras"
+    "category": "pulseras",
+    "inStore": true
   },
   {
     "id": 83,
     "name": "Pulsera Kaira",
     "description": "Pulsera de balines de 0.4cm en acero inoxidable en dorado",
-    "price": 290,
+    "price": 300,
     "quantity": 1,
     "images": ["83.1_uph8nr.webp", "83.2_vjjf8i.webp"],
-    "category": "pulseras"
+    "category": "pulseras",
+    "inStore": true
   },
   {
     "id": 84,
@@ -771,7 +777,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["86.1_axva5f.webp", "86.2_bb2f5z.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 87,
@@ -780,7 +787,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["87.1_pabxqg.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 88,
@@ -789,7 +797,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["88.1_d10v9r.webp", "88.2_rzz9dw.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 89,
@@ -834,7 +843,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["93.1_y6ddxk.webp", "93.2_zyqame.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 94,
@@ -852,7 +862,8 @@
     "price": 280,
     "quantity": 1,
     "images": ["96.1_rcotin.webp", "96.2_azbwmj.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 97,
@@ -906,7 +917,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["104.2_dbj4ik.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 105,
@@ -915,7 +927,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["105.2_q35zqt.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 106,
@@ -924,7 +937,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["106.2_awqetq.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 107,
@@ -942,7 +956,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["108.2_yenx2e.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 109,
@@ -951,7 +966,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["109.2_ye4ell.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 110,
@@ -969,7 +985,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["111.1_aga9ku.webp", "111.2_be9wdb.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 112,
@@ -978,7 +995,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["112.1_woqpbf.webp", "112.2_ibdbh0.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 113,
@@ -1059,7 +1077,8 @@
     "price": 400,
     "quantity": 1,
     "images": ["121.1_xgshra.webp", "121.2_skqdez.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 122,
@@ -1077,7 +1096,8 @@
     "price": 340,
     "quantity": 1,
     "images": ["123.1_fzgyti.webp", "123.2_zvuq8w.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 124,
@@ -1086,7 +1106,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["124.1_tzkq1z.webp", "124.2_fnxxkt.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 125,
@@ -1095,7 +1116,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["125.1_tqpv2k.webp", "125.2_izye8a.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 126,
@@ -1104,7 +1126,8 @@
     "price": 370,
     "quantity": 1,
     "images": ["126.1_nyatuf.webp", "126.2_y2fnai.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 127,
@@ -1113,7 +1136,8 @@
     "price": 370,
     "quantity": 1,
     "images": ["127.1_sjksag.webp", "127.2_mcya9g.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 128,
@@ -1131,7 +1155,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["129.1_tton2z.webp", "129.2_t6phva.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 130,
@@ -1149,7 +1174,8 @@
     "price": 400,
     "quantity": 1,
     "images": ["131.1_kpqexq.webp", "131.2_y1ruw5.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 132,
@@ -1158,7 +1184,8 @@
     "price": 400,
     "quantity": 1,
     "images": ["132.1_a9ym6l.webp", "132.2_cyckcn.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 133,
@@ -1167,7 +1194,8 @@
     "price": 280,
     "quantity": 1,
     "images": ["133.1_w4pdad.webp", "133.2_ctmaxv.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 134,
@@ -1176,7 +1204,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["134.1_jblmd8.webp", "134.2_ennslu.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 135,
@@ -1185,7 +1214,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["135.1_xtqhrz.webp", "135.2_k2sspt.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 136,
@@ -1194,7 +1224,8 @@
     "price": 400,
     "quantity": 1,
     "images": ["136.1_hqvl8f.webp", "136.2_rsbqkh.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 138,
@@ -1203,7 +1234,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["138.1_lud6eo.webp", "138.2_gpgdcn.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 139,
@@ -1212,7 +1244,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["139.2_cnlttb.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 140,
@@ -1221,7 +1254,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["140.2_mycitp.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 141,
@@ -1230,7 +1264,8 @@
     "price": 300,
     "quantity": 1,
     "images": ["141.2_muh0ke.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 142,
@@ -1248,7 +1283,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["143.1_zkfnbo.webp"],
-    "category": "pulseras"
+    "category": "pulseras",
+    "inStore": true
   },
   {
     "id": 144,
@@ -1257,7 +1293,8 @@
     "price": 350,
     "quantity": 1,
     "images": ["144.1_ezkoyu.webp", "144.2_i7ver4.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   },
   {
     "id": 145,
@@ -1266,6 +1303,7 @@
     "price": 280,
     "quantity": 1,
     "images": ["145.1_sdag9m.webp", "145.2_thhdvk.webp"],
-    "category": "aretes"
+    "category": "aretes",
+    "inStore": true
   }
 ]

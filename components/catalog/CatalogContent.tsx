@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { getProducts } from '@/lib/products';
-import type { Category } from '@/lib/types';
+import { type Category } from '@/lib/types';
 import { sortProductsById, calculatePagination } from '@/lib/catalog';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
 import { FiltersSection } from '@/components/catalog/FiltersSection';
@@ -32,8 +32,10 @@ export default function CatalogContent() {
     categoryFilteredProducts,
     currentPage,
     totalPages,
+    productsPerPage,
     isAllSelected,
     updateURL,
+    printView,
   } = useCatalogFilters(sortedProducts, CATEGORIES);
 
   // TODO: Remove pagination logic when backend API is available and supports pagination
@@ -41,6 +43,7 @@ export default function CatalogContent() {
   const { startIndex, endIndex } = calculatePagination(
     categoryFilteredProducts.length,
     currentPage,
+    productsPerPage,
   );
   const paginatedProducts = categoryFilteredProducts.slice(
     startIndex,
@@ -70,15 +73,17 @@ export default function CatalogContent() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="flex flex-col md:flex-row gap-8">
-        <FiltersSection
-          categories={CATEGORIES}
-          selectedCategories={selectedCategories}
-          isAllSelected={isAllSelected}
-          isOpen={isFiltersOpen}
-          onToggleOpen={() => setIsFiltersOpen(!isFiltersOpen)}
-          onSelectAll={handleSelectAll}
-          onToggleCategory={handleToggleCategory}
-        />
+        {!printView && (
+          <FiltersSection
+            categories={CATEGORIES}
+            selectedCategories={selectedCategories}
+            isAllSelected={isAllSelected}
+            isOpen={isFiltersOpen}
+            onToggleOpen={() => setIsFiltersOpen(!isFiltersOpen)}
+            onSelectAll={handleSelectAll}
+            onToggleCategory={handleToggleCategory}
+          />
+        )}
 
         <div className="flex-1">
           <ProductsGrid
