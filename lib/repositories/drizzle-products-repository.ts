@@ -1,8 +1,9 @@
 import 'server-only';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, count, desc, eq, inArray, type SQL } from 'drizzle-orm';
 import { db } from '@/db';
 import { products, type ProductRow } from '@/db/schema';
 import type {
+  FindAllProductsResult,
   IProduct,
   IProductsRepository,
   ProductChanges,
@@ -13,6 +14,10 @@ function omitUndefined<T extends Record<string, unknown>>(obj: T): Partial<T> {
   return Object.fromEntries(
     Object.entries(obj).filter(([, value]) => value !== undefined),
   ) as Partial<T>;
+}
+
+function isSqlCondition(value: SQL | undefined): value is SQL {
+  return value !== undefined;
 }
 
 function requireProductField<K extends keyof ProductChanges>(
@@ -45,7 +50,10 @@ function mapRowToProduct(row: ProductRow): IProduct {
 
 function normalizeFilters(filters?: ProductFilters | URLSearchParams): ProductFilters {
   if (!filters) {
-    return {};
+    return {
+      page: 1,
+      limit: 20,
+    };
   }
 
   if (filters instanceof URLSearchParams) {
@@ -55,17 +63,23 @@ function normalizeFilters(filters?: ProductFilters | URLSearchParams): ProductFi
       .map((category) => category.trim())
       .filter(Boolean);
     const inStoreParam = filters.get('inStore');
+    const pageParam = filters.get('page');
+    const limitParam = filters.get('limit');
 
     return {
       ...(categories.length > 0 ? { categories } : {}),
       ...(inStoreParam === 'true' ? { inStore: true } : {}),
       ...(inStoreParam === 'false' ? { inStore: false } : {}),
+      page: pageParam ? Number(pageParam) : 1,
+      limit: limitParam ? Number(limitParam) : 20,
     };
   }
 
   return {
     categories: filters.categories?.map((category) => category.trim()).filter(Boolean),
     inStore: filters.inStore,
+    page: filters.page ?? 1,
+    limit: filters.limit ?? 20,
   };
 }
 
@@ -99,26 +113,62 @@ export class DrizzleProductsRepository implements IProductsRepository {
     return product ? mapRowToProduct(product) : null;
   }
 
-  async findAll(filters?: ProductFilters | URLSearchParams): Promise<IProduct[]> {
+  async findAll(
+    filters?: ProductFilters | URLSearchParams,
+  ): Promise<FindAllProductsResult> {
     const normalizedFilters = normalizeFilters(filters);
-    const conditions = [
+    const currentPage = normalizedFilters.page && normalizedFilters.page > 0
+      ? normalizedFilters.page
+      : 1;
+    const limit = normalizedFilters.limit && normalizedFilters.limit > 0
+      ? normalizedFilters.limit
+      : 20;
+    const offset = (currentPage - 1) * limit;
+    const conditions: SQL[] = [
       normalizedFilters.categories && normalizedFilters.categories.length > 0
         ? inArray(products.category, normalizedFilters.categories)
         : undefined,
       normalizedFilters.inStore !== undefined
         ? eq(products.inStore, normalizedFilters.inStore)
         : undefined,
-    ].filter((condition) => condition !== undefined);
+    ].filter(isSqlCondition);
 
-    const productRows =
-      conditions.length > 0
-        ? await db
-            .select()
-            .from(products)
-            .where(and(...conditions))
-        : await db.select().from(products);
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+    const [{ totalItems }] = whereClause
+      ? await db
+          .select({ totalItems: count() })
+          .from(products)
+          .where(whereClause)
+      : await db.select({ totalItems: count() }).from(products);
 
-    return productRows.map(mapRowToProduct);
+    const productRows = whereClause
+      ? await db
+          .select()
+          .from(products)
+          .where(whereClause)
+          .orderBy(desc(products.id))
+          .limit(limit)
+          .offset(offset)
+      : await db
+          .select()
+          .from(products)
+          .orderBy(desc(products.id))
+          .limit(limit)
+          .offset(offset);
+
+    const totalPages = totalItems === 0 ? 0 : Math.ceil(totalItems / limit);
+
+    return {
+      data: productRows.map(mapRowToProduct),
+      paging: {
+        totalItems,
+        totalPages,
+        currentPage,
+        limit,
+        hasNextPage: currentPage < totalPages,
+        hasPreviousPage: currentPage > 1,
+      },
+    };
   }
 
   async updateById(id: number, updates: ProductChanges): Promise<IProduct | null> {
