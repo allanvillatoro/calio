@@ -22,10 +22,7 @@ async function getValidatedProductId(
   return productIdParamsSchema.parse(params).id;
 }
 
-export async function GET(
-  _request: Request,
-  context: ProductRouteContext,
-) {
+export async function GET(_request: Request, context: ProductRouteContext) {
   try {
     const id = await getValidatedProductId(context);
     const product = await productsRepository.findById(id);
@@ -54,10 +51,7 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: Request,
-  context: ProductRouteContext,
-) {
+export async function PUT(request: Request, context: ProductRouteContext) {
   try {
     const id = await getValidatedProductId(context);
     const body = updateProductBodySchema.parse(await request.json());
@@ -87,10 +81,7 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  _request: Request,
-  context: ProductRouteContext,
-) {
+export async function DELETE(_request: Request, context: ProductRouteContext) {
   try {
     const id = await getValidatedProductId(context);
     const deleted = await productsRepository.deleteById(id);

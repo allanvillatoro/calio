@@ -80,7 +80,10 @@ export class DrizzleProductsRepository implements IProductsRepository {
     };
   }
 
-  async updateById(id: number, updates: ProductChanges): Promise<IProduct | null> {
+  async updateById(
+    id: number,
+    updates: ProductChanges,
+  ): Promise<IProduct | null> {
     const [product] = await db
       .update(products)
       .set({

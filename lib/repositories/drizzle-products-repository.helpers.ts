@@ -109,8 +109,12 @@ export function getPagination(filters: ProductFilters) {
 
 export function buildProductsWhereClause(filters: ProductFilters) {
   const conditions: SQL[] = [
-    filters.categories ? inArray(products.category, filters.categories) : undefined,
-    filters.inStore !== undefined ? eq(products.inStore, filters.inStore) : undefined,
+    filters.categories
+      ? inArray(products.category, filters.categories)
+      : undefined,
+    filters.inStore !== undefined
+      ? eq(products.inStore, filters.inStore)
+      : undefined,
   ].filter(isSqlCondition);
 
   return conditions.length > 0 ? and(...conditions) : undefined;
