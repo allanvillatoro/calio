@@ -33,7 +33,7 @@ export const updateProductBodySchema = z
 
 export const productsQuerySchema = z.object({
   category: z.array(categorySchema).optional(),
-  inStore: z.preprocess((value) => {
+  instore: z.preprocess((value) => {
     if (value === undefined) {
       return undefined;
     }
