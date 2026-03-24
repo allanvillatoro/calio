@@ -1,7 +1,7 @@
 import 'server-only';
-import { and, count, desc, eq, inArray, type SQL } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { db } from '@/db';
-import { products, type ProductRow } from '@/db/schema';
+import { products } from '@/db/schema';
 import type {
   FindAllProductsResult,
   IProduct,
@@ -9,79 +9,16 @@ import type {
   ProductChanges,
   ProductFilters,
 } from './products-repository.interface';
-
-function omitUndefined<T extends Record<string, unknown>>(obj: T): Partial<T> {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([, value]) => value !== undefined),
-  ) as Partial<T>;
-}
-
-function isSqlCondition(value: SQL | undefined): value is SQL {
-  return value !== undefined;
-}
-
-function requireProductField<K extends keyof ProductChanges>(
-  input: ProductChanges,
-  field: K,
-): NonNullable<ProductChanges[K]> {
-  const value = input[field];
-
-  if (value === undefined || value === null) {
-    throw new Error(`Missing required product field: ${String(field)}`);
-  }
-
-  return value as NonNullable<ProductChanges[K]>;
-}
-
-function mapRowToProduct(row: ProductRow): IProduct {
-  return {
-    id: row.id,
-    name: row.name,
-    description: row.description,
-    price: row.price,
-    quantity: row.quantity,
-    images: row.images,
-    category: row.category,
-    inStore: row.inStore,
-    createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
-  };
-}
-
-function normalizeFilters(filters?: ProductFilters | URLSearchParams): ProductFilters {
-  if (!filters) {
-    return {
-      page: 1,
-      limit: 20,
-    };
-  }
-
-  if (filters instanceof URLSearchParams) {
-    const categories = filters
-      .getAll('category')
-      .flatMap((category) => category.split(','))
-      .map((category) => category.trim())
-      .filter(Boolean);
-    const inStoreParam = filters.get('inStore');
-    const pageParam = filters.get('page');
-    const limitParam = filters.get('limit');
-
-    return {
-      ...(categories.length > 0 ? { categories } : {}),
-      ...(inStoreParam === 'true' ? { inStore: true } : {}),
-      ...(inStoreParam === 'false' ? { inStore: false } : {}),
-      page: pageParam ? Number(pageParam) : 1,
-      limit: limitParam ? Number(limitParam) : 20,
-    };
-  }
-
-  return {
-    categories: filters.categories?.map((category) => category.trim()).filter(Boolean),
-    inStore: filters.inStore,
-    page: filters.page ?? 1,
-    limit: filters.limit ?? 20,
-  };
-}
+import {
+  buildProductsWhereClause,
+  countProducts,
+  findProductRows,
+  getPagination,
+  mapRowToProduct,
+  normalizeFilters,
+  omitUndefined,
+  requireProductField,
+} from './drizzle-products-repository.helpers';
 
 export class DrizzleProductsRepository implements IProductsRepository {
   async save(input: ProductChanges): Promise<IProduct> {
@@ -117,44 +54,16 @@ export class DrizzleProductsRepository implements IProductsRepository {
     filters?: ProductFilters | URLSearchParams,
   ): Promise<FindAllProductsResult> {
     const normalizedFilters = normalizeFilters(filters);
-    const currentPage = normalizedFilters.page && normalizedFilters.page > 0
-      ? normalizedFilters.page
-      : 1;
-    const limit = normalizedFilters.limit && normalizedFilters.limit > 0
-      ? normalizedFilters.limit
-      : 20;
-    const offset = (currentPage - 1) * limit;
-    const conditions: SQL[] = [
-      normalizedFilters.categories && normalizedFilters.categories.length > 0
-        ? inArray(products.category, normalizedFilters.categories)
-        : undefined,
-      normalizedFilters.inStore !== undefined
-        ? eq(products.inStore, normalizedFilters.inStore)
-        : undefined,
-    ].filter(isSqlCondition);
-
-    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
-    const [{ totalItems }] = whereClause
-      ? await db
-          .select({ totalItems: count() })
-          .from(products)
-          .where(whereClause)
-      : await db.select({ totalItems: count() }).from(products);
-
-    const productRows = whereClause
-      ? await db
-          .select()
-          .from(products)
-          .where(whereClause)
-          .orderBy(desc(products.id))
-          .limit(limit)
-          .offset(offset)
-      : await db
-          .select()
-          .from(products)
-          .orderBy(desc(products.id))
-          .limit(limit)
-          .offset(offset);
+    const { currentPage, limit, offset } = getPagination(normalizedFilters);
+    const whereClause = buildProductsWhereClause(normalizedFilters);
+    const [totalItems, productRows] = await Promise.all([
+      countProducts(whereClause),
+      findProductRows({
+        whereClause,
+        limit,
+        offset,
+      }),
+    ]);
 
     const totalPages = totalItems === 0 ? 0 : Math.ceil(totalItems / limit);
 
