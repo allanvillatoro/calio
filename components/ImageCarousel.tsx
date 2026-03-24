@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
-import { getImageUrl } from '@/lib/utils';
+import { CldImage } from 'next-cloudinary';
 
 interface ImageCarouselProps {
   images: string[];
@@ -11,18 +10,15 @@ interface ImageCarouselProps {
 export default function ImageCarousel({ images }: ImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Map all image filenames to full URLs
-  const allImages = images.map((filename) => getImageUrl(filename));
-
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? allImages.length - 1 : prevIndex - 1,
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1,
     );
   };
 
   const goToNext = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === allImages.length - 1 ? 0 : prevIndex + 1,
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1,
     );
   };
 
@@ -34,17 +30,22 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
     <div className="relative w-full">
       {/* Main Image Display */}
       <div className="relative w-full h-96 md:h-[600px] bg-white rounded-lg overflow-hidden shadow-lg">
-        <Image
-          src={allImages[currentIndex]}
+        <CldImage
+          src={images[currentIndex]}
           alt={`Imagen ${currentIndex + 1}`}
-          fill
-          className="object-cover"
-          priority={currentIndex === 0}
+          width="800"
+          height="800"
+          crop={{
+            type: 'auto',
+            source: true,
+          }}
+          className="h-full w-full object-cover"
+          preload={currentIndex === 0}
           sizes="(max-width: 768px) 100vw, 50vw"
         />
 
         {/* Navigation Arrows - Only show if more than one image */}
-        {allImages.length > 1 && (
+        {images.length > 1 && (
           <>
             <button
               onClick={goToPrevious}
@@ -89,9 +90,9 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
       </div>
 
       {/* Thumbnail Navigation - Only show if more than one image */}
-      {allImages.length > 1 && (
+      {images.length > 1 && (
         <div className="mt-4 flex gap-2 justify-center overflow-x-auto pb-2">
-          {allImages.map((imageUrl, index) => (
+          {images.map((imageUrl, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
@@ -102,11 +103,16 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
               }`}
               aria-label={`Ver imagen ${index + 1}`}
             >
-              <Image
+              <CldImage
                 src={imageUrl}
                 alt={`Miniatura ${index + 1}`}
-                fill
-                className="object-cover"
+                width="100"
+                height="100"
+                crop={{
+                  type: 'auto',
+                  source: true,
+                }}
+                className="h-full w-full object-cover"
                 sizes="100px"
               />
             </button>
