@@ -1,5 +1,4 @@
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useMemo } from 'react';
 import { PRODUCTS_PER_PAGE, type Category, type Product } from '@/lib/types';
 
 interface UseCatalogFiltersReturn {
@@ -28,37 +27,32 @@ export function useCatalogFilters(
   const router = useRouter();
 
   // Get selected categories from URL
-  const selectedCategories = useMemo(() => {
-    const categoriesParam = searchParams.get('categorias');
-    if (!categoriesParam) return [];
-    return categoriesParam
-      .split(',')
-      .filter((cat): cat is Category => categories.includes(cat as Category));
-  }, [searchParams, categories]);
+  const categoriesParam = searchParams.get('categorias');
+  const selectedCategories = !categoriesParam
+    ? []
+    : categoriesParam
+        .split(',')
+        .filter((cat): cat is Category => categories.includes(cat as Category));
 
   // Get current page from URL (raw, before validation)
-  const rawPage = useMemo(() => {
-    const page = searchParams.get('pagina');
-    return page ? Math.max(1, parseInt(page, 10)) : 1;
-  }, [searchParams]);
+  const page = searchParams.get('pagina');
+  const rawPage = page ? Math.max(1, parseInt(page, 10)) : 1;
 
   const inStore = searchParams.get('entienda') === 'true';
   const printView = searchParams.get('modoprint') === 'true';
 
   // TODO: Remove this when data comes from the backend
   // Apply category filter
-  const categoryFilteredProducts = useMemo(() => {
-    if (selectedCategories.length === 0)
-      return inStore ? allProducts.filter((p) => p.inStore) : allProducts;
-
-    const filteredCategoryProducts = allProducts.filter((product) =>
-      selectedCategories.includes(product.category),
-    );
-
-    return inStore
-      ? filteredCategoryProducts.filter((p) => p.inStore)
-      : filteredCategoryProducts;
-  }, [allProducts, selectedCategories, inStore]);
+  const categoryFilteredProducts =
+    selectedCategories.length === 0
+      ? inStore
+        ? allProducts.filter((p) => p.inStore)
+        : allProducts
+      : allProducts.filter(
+          (product) =>
+            selectedCategories.includes(product.category) &&
+            (!inStore || product.inStore),
+        );
 
   // Calculate pagination based on filtered products
   const productsPerPage = PRODUCTS_PER_PAGE;
