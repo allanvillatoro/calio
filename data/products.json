@@ -1304,5 +1304,365 @@
     "images": ["145.1_sdag9m.webp", "145.2_thhdvk.webp"],
     "category": "aretes",
     "inStore": true
+  },
+  {
+    "id": 212,
+    "name": "Collar Ibiza",
+    "description": "Collar con perla en acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 2,
+    "images": ["212.1_tj4f7f.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 214,
+    "name": "Aretes Vera",
+    "description": "Aretes miden 8.5cm en acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 3,
+    "images": ["214.1_kji3i1.webp", "214.2_ixyyum.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 215,
+    "name": "Aretes Serena",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 3,
+    "images": ["215.1_nbn4nb.webp", "215.2_spi9ya.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 216,
+    "name": "Bangle Cata",
+    "description": "Bangle flexible en acero inoxidable en dorado.",
+    "price": 370,
+    "quantity": 2,
+    "images": ["216.1_nun5yb.webp", "216.2_pis29r.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 217,
+    "name": "Collar Kathy",
+    "description": "Collar triple corazón en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 2,
+    "images": ["217.1_qqfozy.webp", "217.2_oex1mn.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 218,
+    "name": "Anillo Berlín",
+    "description": "Anillo ajustable en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 3,
+    "images": ["218.1_eqkroe.webp", "218.2_f0m8ny.webp"],
+    "category": "new in",
+    "inStore": false
+  },
+  {
+    "id": 219,
+    "name": "Collar Refugio",
+    "description": "Collar doble con cruz y zirconia en acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 3,
+    "images": ["219.1_uhdi9z.webp", "219.2_dotrzd.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 220,
+    "name": "Collar Mika",
+    "description": "Collar corazon doble en acero inoxidable en dorado.",
+    "price": 370,
+    "quantity": 3,
+    "images": ["220.1_nc0zsc.webp", "220.2_qjzhyh.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 221,
+    "name": "Collar Amar",
+    "description": "Collar en acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 3,
+    "images": ["221.1_hn6uto.webp", "221.2_zqtzmc.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 222,
+    "name": "Collar Victoria",
+    "description": "Collar doble corazón en acero inoxidable en dorado.",
+    "price": 370,
+    "quantity": 3,
+    "images": ["222.1_igwlhc.webp", "222.2_cicrss.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 223,
+    "name": "Collar Enna",
+    "description": "Collar triple estrella en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 3,
+    "images": ["223.1_hrmfr6.webp", "223.2_ztodaz.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 224,
+    "name": "Collar Corbara Corazones",
+    "description": "Collar estilo corbata mide 40cm + 6cm de extensión y 14.5 de corbara en acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 3,
+    "images": ["224.1_wqhta1.webp", "224.2_dz3ocx.webp"],
+    "category": "new in",
+    "inStore": false
+  },
+  {
+    "id": 225,
+    "name": "Aretes Sienna",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 3,
+    "images": ["225.1_dkrk8b.webp", "225.2_ewcf3l.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 227,
+    "name": "Aretes Mariel",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 2,
+    "images": ["227.1_ssgs4t.webp", "227.2_mqsvzy.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 228,
+    "name": "Anillo Gabriela",
+    "description": "Anillo en forma de corazón ajustable en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 3,
+    "images": ["228.1_sjspdn.webp", "228.2_m9chk0.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 229,
+    "name": "Anillo Mely",
+    "description": "Anillo ajustable de la parte frontal, en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 3,
+    "images": ["229.1_lrtyiw.webp", "229.2_o5nyrq.webp"],
+    "category": "new in",
+    "inStore": false
+  },
+  {
+    "id": 230,
+    "name": "Collar Bora",
+    "description": "Collar con perla natural en acero inoxidable en dorado.",
+    "price": 360,
+    "quantity": 2,
+    "images": ["230.1_sfwjpp.webp", "230.2_duolqk.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 231,
+    "name": "Collar Rigido Curvo",
+    "description": "Collar estilo chocker en acero inoxidable en dorado. Cierre oculto imantado en la parte trasera",
+    "price": 320,
+    "quantity": 2,
+    "images": ["231.1_qp8gnl.webp", "231.2_b7tdou.webp"],
+    "category": "new in",
+    "inStore": false
+  },
+  {
+    "id": 232,
+    "name": "Collar Corbata Balls",
+    "description": "Collar estilo corbata mide 39cm + 5cm extensión y 9.5cm la corbata, en acero inoxidable endorado.",
+    "price": 390,
+    "quantity": 3,
+    "images": ["232.1_c0neow.webp", "232.2_hm5zfx.webp"],
+    "category": "new in",
+    "inStore": false
+  },
+  {
+    "id": 233,
+    "name": "Aretes Lila",
+    "description": "Aretes en acero inoxidable en dorado.",
+    "price": 370,
+    "quantity": 2,
+    "images": ["233.2_ewfyqa.webp", "233.1_zptp1a.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 234,
+    "name": "Faja Verano",
+    "description": "Faja de 89cm en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 2,
+    "images": ["234.1_bex96t.webp", "234.2_apxwj4.webp"],
+    "category": "new in",
+    "inStore": false
+  },
+  {
+    "id": 235,
+    "name": "Aretes Caracol",
+    "description": "Anillos en acero inoxidable en dorado.",
+    "price": 360,
+    "quantity": 3,
+    "images": ["235.1_syvaff.webp", "235.2_xfdw5d.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 236,
+    "name": "Anillo Brisa",
+    "description": "Anillo ajustable en acero inoxidable en dorado.",
+    "price": 320,
+    "quantity": 3,
+    "images": ["236.1_wr5p8h.webp", "236.2_ffn2cr.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 237,
+    "name": "Collar Conchita",
+    "description": "Collar de 42cm + 6cm extensión en acero inoxidable en dorado.",
+    "price": 360,
+    "quantity": 3,
+    "images": ["237.1_bdrwoi.webp", "237.2_hryzxe.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 238,
+    "name": "Pulsera Paradise",
+    "description": "Pulsera en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 3,
+    "images": ["238.1_ozlgap.webp", "238.2_i0qd4n.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 239,
+    "name": "Anillo Oceano",
+    "description": "Anillo ajustable en acero inoxidable en dorado.",
+    "price": 300,
+    "quantity": 3,
+    "images": ["239.1_tp7lkw.webp", "239.2_j0vrxi.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 240,
+    "name": "Bangle Sun",
+    "description": "Bangle en acero inoxidable en dorado.",
+    "price": 320,
+    "quantity": 2,
+    "images": ["240.1_p3udbm.webp", "240.2_nsr2sa.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 241,
+    "name": "Bangle Tropical",
+    "description": "Bangle en forma de estrellas de mar en acero inoxidable en dorado.",
+    "price": 320,
+    "quantity": 2,
+    "images": ["241.1_iyhb5v.webp", "241.2_wyasb3.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 242,
+    "name": "Collar Corbata Estrellas",
+    "description": "Collar de 42cm + 6cm de extensión y 10cm de corbata",
+    "price": 390,
+    "quantity": 3,
+    "images": ["242.1_ein6s5.webp", "242.2_axnyfb.webp"],
+    "category": "new in",
+    "inStore": false
+  },
+  {
+    "id": 243,
+    "name": "Collar Roma",
+    "description": "Collar de 42cm + 6cm de extensión con cruz de 0.9cm en acero inoxidable en dorado. ",
+    "price": 350,
+    "quantity": 5,
+    "images": ["243.1_sktchd.webp", "243.2_fjkv0m.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 244,
+    "name": "Collar Bella",
+    "description": "Collar doble con perla natural en acero inoxidable en dorado.",
+    "price": 390,
+    "quantity": 4,
+    "images": ["244.1_lszti1.webp", "244.2_kqxrqr.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 245,
+    "name": "Aretes Maya",
+    "description": "Aretes con perla en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 1,
+    "images": ["245.1_xj6hfe.webp", "245.2_e8urxg.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 246,
+    "name": "Aretes Perla",
+    "description": "Aretes de perla natural de 0.6cm en acero inoxidable en dorado.",
+    "price": 280,
+    "quantity": 2,
+    "images": ["246.1_nedluv.webp", "246.2_lumdgz.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 247,
+    "name": "Collar Dolce",
+    "description": "Collar de perlas naturales en acero inoxidable en dorado.",
+    "price": 350,
+    "quantity": 3,
+    "images": ["247.1_ynoj3d.webp", "247.2_bygqgx.webp"],
+    "category": "new in",
+    "inStore": true
+  },
+  {
+    "id": 248,
+    "name": "Aretes Nala",
+    "description": "Aretes ajustables con perla natural,en acero inoxidable en dorado.",
+    "price": 320,
+    "quantity": 3,
+    "images": ["248.1_xmaarv.webp", "248.2_g5mfax.webp"],
+    "category": "new in",
+    "inStore": false
+  },
+  {
+    "id": 249,
+    "name": "Bangle Regina",
+    "description": "Bnagle de 6.5cm de longitud de acero inoxidable en dorado.",
+    "price": 450,
+    "quantity": 1,
+    "images": ["249.1_oksybl.webp", "249.2_dqtpg9.webp"],
+    "category": "new in",
+    "inStore": true
   }
 ]
