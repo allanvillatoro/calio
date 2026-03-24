@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
 import { productsRepository } from '@/lib/repositories/drizzle-products-repository';
 import { ZodError } from 'zod';
@@ -30,14 +31,16 @@ export async function GET(request: Request) {
     return NextResponse.json(products);
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json(formatZodError(error), { status: 400 });
+      return NextResponse.json(formatZodError(error), {
+        status: StatusCodes.BAD_REQUEST,
+      });
     }
 
     console.error('Failed to fetch products', error);
 
     return NextResponse.json(
       { error: 'Failed to fetch products' },
-      { status: 500 },
+      { status: StatusCodes.INTERNAL_SERVER_ERROR },
     );
   }
 }
@@ -47,17 +50,19 @@ export async function POST(request: Request) {
     const body = createProductBodySchema.parse(await request.json());
     const product = await productsRepository.save(body);
 
-    return NextResponse.json(product, { status: 201 });
+    return NextResponse.json(product, { status: StatusCodes.CREATED });
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json(formatZodError(error), { status: 400 });
+      return NextResponse.json(formatZodError(error), {
+        status: StatusCodes.BAD_REQUEST,
+      });
     }
 
     console.error('Failed to create product', error);
 
     return NextResponse.json(
       { error: 'Failed to create product' },
-      { status: 500 },
+      { status: StatusCodes.INTERNAL_SERVER_ERROR },
     );
   }
 }
