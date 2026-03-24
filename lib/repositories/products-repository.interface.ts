@@ -13,9 +13,15 @@ export interface IProduct {
 
 export type ProductChanges = Partial<IProduct>;
 
+export interface ProductFilters {
+  categories?: string[];
+  inStore?: boolean;
+}
+
 export interface IProductsRepository {
   save(input: ProductChanges): Promise<IProduct>;
   findById(id: number): Promise<IProduct | null>;
-  findAll(): Promise<IProduct[]>;
+  findAll(filters?: ProductFilters | URLSearchParams): Promise<IProduct[]>;
   updateById(id: number, updates: ProductChanges): Promise<IProduct | null>;
+  deleteById(id: number): Promise<boolean>;
 }
