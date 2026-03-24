@@ -67,10 +67,12 @@ export async function PUT(
       return NextResponse.json(formatZodError(error), { status: 400 });
     }
 
-    const message =
-      error instanceof Error ? error.message : 'Failed to update product';
+    console.error('Failed to update product', error);
 
-    return NextResponse.json({ error: message }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Failed to update product' },
+      { status: 500 },
+    );
   }
 }
 

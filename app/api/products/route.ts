@@ -53,9 +53,11 @@ export async function POST(request: Request) {
       return NextResponse.json(formatZodError(error), { status: 400 });
     }
 
-    const message =
-      error instanceof Error ? error.message : 'Failed to create product';
+    console.error('Failed to create product', error);
 
-    return NextResponse.json({ error: message }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Failed to create product' },
+      { status: 500 },
+    );
   }
 }
