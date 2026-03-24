@@ -34,7 +34,7 @@ export default function Home() {
 
         <div className="relative container mx-auto px-6 py-32 text-center text-white">
           <h1 className="serif-title text-4xl md:text-6xl font-semibold tracking-wide mb-6 opacity-0 animate-[fadeUp_1s_ease-out_0.3s_forwards]">
-            Everything is gold & silver
+            Everything is gold
           </h1>
 
           <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed opacity-0 animate-[fadeUp_1s_ease-out_0.6s_forwards]">
@@ -44,7 +44,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 opacity-0 animate-[fadeUp_1s_ease-out_0.9s_forwards]">
             <Link
-              href="/catalogo"
+              href="/catalogo?categorias=new+in"
               className="bg-white text-black px-8 py-3 font-semibold tracking-wide hover:scale-105 transition-all duration-300"
             >
               Explorar Colección
