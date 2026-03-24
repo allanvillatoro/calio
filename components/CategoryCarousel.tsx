@@ -29,7 +29,7 @@ const categories = [
 export default function CategoryCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeft, setShowLeft] = useState(false);
-  const [showRight, setShowRight] = useState(true);
+  const [showRight, setShowRight] = useState(false);
 
   const updateArrows = () => {
     const el = scrollRef.current;
@@ -41,6 +41,7 @@ export default function CategoryCarousel() {
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
+
     updateArrows();
     el.addEventListener('scroll', updateArrows);
     window.addEventListener('resize', updateArrows);
@@ -68,59 +69,61 @@ export default function CategoryCarousel() {
       {/* Wrapper con posición relativa para las flechas */}
       <div className="relative">
         {/* Flecha izquierda */}
-        {showLeft && (
-          <button
-            onClick={() => scroll('left')}
-            aria-label="Anterior"
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 bg-white hover:bg-black hover:text-white rounded-full p-2 shadow-lg border border-gray-200 transition-all duration-200"
+        <button
+          onClick={() => scroll('left')}
+          aria-label="Anterior"
+          disabled={!showLeft}
+          className={`absolute left-0 top-1/2 z-10 rounded-full border border-gray-200 bg-white p-2 shadow-lg transition-all duration-200 ${
+            showLeft
+              ? '-translate-x-1/2 -translate-y-1/2 hover:bg-black hover:text-white'
+              : '-translate-x-1/2 -translate-y-1/2 pointer-events-none invisible opacity-0'
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-        )}
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
 
         {/* Flecha derecha */}
-        {showRight && (
-          <button
-            onClick={() => scroll('right')}
-            aria-label="Siguiente"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10 bg-white hover:bg-black hover:text-white rounded-full p-2 shadow-lg border border-gray-200 transition-all duration-200"
+        <button
+          onClick={() => scroll('right')}
+          aria-label="Siguiente"
+          disabled={!showRight}
+          className={`absolute right-0 top-1/2 z-10 rounded-full border border-gray-200 bg-white p-2 shadow-lg transition-all duration-200 ${
+            showRight
+              ? 'translate-x-1/2 -translate-y-1/2 hover:bg-black hover:text-white'
+              : 'translate-x-1/2 -translate-y-1/2 pointer-events-none invisible opacity-0'
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
-        )}
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
 
         {/* Carrusel */}
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto scroll-smooth pb-4"
-          style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-          }}
+          className="carousel-scroll flex gap-6 overflow-x-auto scroll-smooth pb-4"
         >
           {categories.map((item) => (
             <Link
@@ -145,13 +148,6 @@ export default function CategoryCarousel() {
           ))}
         </div>
       </div>
-
-      {/* Ocultar scrollbar en WebKit */}
-      <style jsx>{`
-        div::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </section>
   );
 }

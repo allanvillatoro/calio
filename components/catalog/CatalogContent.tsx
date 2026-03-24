@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { getProducts } from '@/lib/products';
 import { CATEGORIES, type Product, type Category } from '@/lib/types';
 import { sortProductsById, calculatePagination } from '@/lib/catalog';
@@ -24,9 +24,7 @@ export default function CatalogContent({ isAdmin = false }: Props) {
   // TODO: Detect here from the gloabl state if the user is admin, instead of passing it as a prop from the admin page.
 
   // TODO: Remove sorting when backend API is available and returns sorted data
-  const sortedProducts = useMemo(() => {
-    return sortProductsById(getProducts());
-  }, []);
+  const sortedProducts = sortProductsById(getProducts());
 
   const {
     selectedCategories,
