@@ -1,11 +1,12 @@
 import 'server-only';
-import { eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { db } from '@/db';
 import { products, type ProductRow } from '@/db/schema';
 import type {
   IProduct,
   IProductsRepository,
   ProductChanges,
+  ProductFilters,
 } from './products-repository.interface';
 
 function omitUndefined<T extends Record<string, unknown>>(obj: T): Partial<T> {
@@ -42,6 +43,32 @@ function mapRowToProduct(row: ProductRow): IProduct {
   };
 }
 
+function normalizeFilters(filters?: ProductFilters | URLSearchParams): ProductFilters {
+  if (!filters) {
+    return {};
+  }
+
+  if (filters instanceof URLSearchParams) {
+    const categories = filters
+      .getAll('category')
+      .flatMap((category) => category.split(','))
+      .map((category) => category.trim())
+      .filter(Boolean);
+    const inStoreParam = filters.get('inStore');
+
+    return {
+      ...(categories.length > 0 ? { categories } : {}),
+      ...(inStoreParam === 'true' ? { inStore: true } : {}),
+      ...(inStoreParam === 'false' ? { inStore: false } : {}),
+    };
+  }
+
+  return {
+    categories: filters.categories?.map((category) => category.trim()).filter(Boolean),
+    inStore: filters.inStore,
+  };
+}
+
 export class DrizzleProductsRepository implements IProductsRepository {
   async save(input: ProductChanges): Promise<IProduct> {
     const [product] = await db
@@ -72,8 +99,24 @@ export class DrizzleProductsRepository implements IProductsRepository {
     return product ? mapRowToProduct(product) : null;
   }
 
-  async findAll(): Promise<IProduct[]> {
-    const productRows = await db.select().from(products);
+  async findAll(filters?: ProductFilters | URLSearchParams): Promise<IProduct[]> {
+    const normalizedFilters = normalizeFilters(filters);
+    const conditions = [
+      normalizedFilters.categories && normalizedFilters.categories.length > 0
+        ? inArray(products.category, normalizedFilters.categories)
+        : undefined,
+      normalizedFilters.inStore !== undefined
+        ? eq(products.inStore, normalizedFilters.inStore)
+        : undefined,
+    ].filter((condition) => condition !== undefined);
+
+    const productRows =
+      conditions.length > 0
+        ? await db
+            .select()
+            .from(products)
+            .where(and(...conditions))
+        : await db.select().from(products);
 
     return productRows.map(mapRowToProduct);
   }
@@ -89,6 +132,15 @@ export class DrizzleProductsRepository implements IProductsRepository {
       .returning();
 
     return product ? mapRowToProduct(product) : null;
+  }
+
+  async deleteById(id: number): Promise<boolean> {
+    const deletedProducts = await db
+      .delete(products)
+      .where(eq(products.id, id))
+      .returning({ id: products.id });
+
+    return deletedProducts.length > 0;
   }
 }
 
