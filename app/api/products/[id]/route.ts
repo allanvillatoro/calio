@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { productsRepository } from '@/lib/repositories/drizzle-products-repository';
-import type { ProductChanges } from '@/lib/repositories/products-repository.interface';
+import { ZodError } from 'zod';
+import {
+  formatZodError,
+  productIdParamsSchema,
+  updateProductBodySchema,
+} from '../schemas';
 
 interface ProductRouteContext {
   params: Promise<{
@@ -8,28 +13,20 @@ interface ProductRouteContext {
   }>;
 }
 
-function parseProductId(value: string): number | null {
-  const id = Number(value);
+async function getValidatedProductId(
+  context: ProductRouteContext,
+): Promise<number> {
+  const params = await context.params;
 
-  if (!Number.isInteger(id) || id <= 0) {
-    return null;
-  }
-
-  return id;
+  return productIdParamsSchema.parse(params).id;
 }
 
 export async function GET(
   _request: Request,
   context: ProductRouteContext,
 ) {
-  const { id: rawId } = await context.params;
-  const id = parseProductId(rawId);
-
-  if (id === null) {
-    return NextResponse.json({ error: 'Invalid product id' }, { status: 400 });
-  }
-
   try {
+    const id = await getValidatedProductId(context);
     const product = await productsRepository.findById(id);
 
     if (!product) {
@@ -38,6 +35,10 @@ export async function GET(
 
     return NextResponse.json(product);
   } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json(formatZodError(error), { status: 400 });
+    }
+
     console.error('Failed to fetch product', error);
 
     return NextResponse.json(
@@ -51,15 +52,9 @@ export async function PUT(
   request: Request,
   context: ProductRouteContext,
 ) {
-  const { id: rawId } = await context.params;
-  const id = parseProductId(rawId);
-
-  if (id === null) {
-    return NextResponse.json({ error: 'Invalid product id' }, { status: 400 });
-  }
-
   try {
-    const body = (await request.json()) as ProductChanges;
+    const id = await getValidatedProductId(context);
+    const body = updateProductBodySchema.parse(await request.json());
     const product = await productsRepository.updateById(id, body);
 
     if (!product) {
@@ -68,6 +63,10 @@ export async function PUT(
 
     return NextResponse.json(product);
   } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json(formatZodError(error), { status: 400 });
+    }
+
     const message =
       error instanceof Error ? error.message : 'Failed to update product';
 
@@ -79,14 +78,8 @@ export async function DELETE(
   _request: Request,
   context: ProductRouteContext,
 ) {
-  const { id: rawId } = await context.params;
-  const id = parseProductId(rawId);
-
-  if (id === null) {
-    return NextResponse.json({ error: 'Invalid product id' }, { status: 400 });
-  }
-
   try {
+    const id = await getValidatedProductId(context);
     const deleted = await productsRepository.deleteById(id);
 
     if (!deleted) {
@@ -95,6 +88,10 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json(formatZodError(error), { status: 400 });
+    }
+
     console.error('Failed to delete product', error);
 
     return NextResponse.json(
