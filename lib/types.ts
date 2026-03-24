@@ -6,7 +6,7 @@ export type Category =
   | 'pulseras'
   | 'accesorios'
   | 'sets'
-  | 'piercings-cuffs';
+  | 'studs-cuffs';
 
 export const CATEGORIES: Category[] = [
   'new in',
@@ -15,7 +15,7 @@ export const CATEGORIES: Category[] = [
   'pulseras',
   'anillos',
   'sets',
-  'piercings-cuffs',
+  'studs-cuffs',
   'accesorios',
 ];
 

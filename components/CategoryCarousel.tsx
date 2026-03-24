@@ -20,9 +20,9 @@ const categories = [
   { name: 'ANILLOS', slug: 'anillos', link: '/images/categorias/anillos.jpeg' },
   { name: 'SETS', slug: 'sets', link: '/images/categorias/sets.jpeg' },
   {
-    name: 'PIERCINGS & CUFFS',
-    slug: 'piercings-cuffs',
-    link: '/images/categorias/piercings.jpeg',
+    name: 'STUDS & CUFFS',
+    slug: 'studs-cuffs',
+    link: '/images/categorias/studs.jpeg',
   },
 ];
 
