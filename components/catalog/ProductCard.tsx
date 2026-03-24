@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import { CldImage } from 'next-cloudinary';
 import type { Product } from '@/lib/types';
-import { formatPrice, getImageUrl } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils';
 import { Button } from '../ui/button';
 
 interface ProductCardProps {
@@ -23,11 +23,16 @@ export default function ProductCard({
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
       <Link href={`/productos/${product.id}`}>
         <div className="relative w-full h-64">
-          <Image
-            src={getImageUrl(mainImage)}
+          <CldImage
+            src={mainImage}
             alt={product.name}
-            fill
-            className="object-cover"
+            width="300"
+            height="300"
+            crop={{
+              type: 'auto',
+              source: true,
+            }}
+            className="h-full w-full object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         </div>
