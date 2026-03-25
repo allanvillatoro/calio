@@ -1,4 +1,3 @@
-import 'server-only';
 import { jwtVerify, SignJWT } from 'jose';
 import type { IUser } from '@/lib/repositories/users-repository.interface';
 
