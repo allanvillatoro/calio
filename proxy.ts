@@ -18,11 +18,6 @@ function isPublicApiRoute(request: NextRequest): boolean {
     return true;
   }
 
-  //TODO: Remove this once the admin user is already there.
-  if (pathname === '/api/users/register' && method === 'POST') {
-    return true;
-  }
-
   return false;
 }
 
