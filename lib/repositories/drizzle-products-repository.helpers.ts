@@ -1,4 +1,4 @@
-import { and, count, desc, eq, inArray, type SQL } from 'drizzle-orm';
+import { and, count, desc, eq, gte, inArray, type SQL } from 'drizzle-orm';
 import { products, type ProductRow } from '@/db/schema';
 import type { AppDb } from '@/db';
 import type {
@@ -53,6 +53,7 @@ export function normalizeFilters(
     return {
       page: 1,
       limit: 20,
+      includeOutOfStock: false,
     };
   }
 
@@ -73,6 +74,7 @@ export function normalizeFilters(
       ...(inStoreParam === 'false' ? { inStore: false } : {}),
       page: pageParam ? Number(pageParam) : 1,
       limit: limitParam ? Number(limitParam) : 20,
+      includeOutOfStock: filters.get('includeOutOfStock') === 'true',
     };
   }
 
@@ -81,6 +83,7 @@ export function normalizeFilters(
     inStore: filters.inStore,
     page: filters.page ?? 1,
     limit: filters.limit ?? 20,
+    includeOutOfStock: filters.includeOutOfStock ?? false,
   };
 }
 
@@ -98,6 +101,7 @@ export function getPagination(filters: ProductFilters) {
 
 export function buildProductsWhereClause(filters: ProductFilters) {
   const conditions: SQL[] = [
+    filters.includeOutOfStock ? undefined : gte(products.quantity, 1),
     filters.categories
       ? inArray(products.category, filters.categories)
       : undefined,

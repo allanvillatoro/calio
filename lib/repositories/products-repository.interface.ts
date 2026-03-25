@@ -18,6 +18,7 @@ export interface ProductFilters {
   inStore?: boolean;
   page?: number;
   limit?: number;
+  includeOutOfStock?: boolean;
 }
 
 export interface ProductPaging {

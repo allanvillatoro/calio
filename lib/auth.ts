@@ -14,6 +14,18 @@ function getJwtSecret(): Uint8Array {
   return new TextEncoder().encode(secret);
 }
 
+export function extractBearerToken(
+  authorizationHeader: string | null,
+): string | null {
+  if (!authorizationHeader) {
+    return null;
+  }
+
+  const match = authorizationHeader.match(/^Bearer\s+(.+)$/i);
+
+  return match?.[1]?.trim() ?? null;
+}
+
 export async function createAuthToken(user: IUser): Promise<string> {
   return new SignJWT({
     sub: user.id,

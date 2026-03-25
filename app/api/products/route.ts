@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
 import { productsRepository } from '@/lib/repositories/drizzle-products-repository';
+import { extractBearerToken, verifyAuthToken } from '@/lib/auth';
 import { ZodError } from 'zod';
 import {
   createProductBodySchema,
@@ -11,6 +12,8 @@ import {
 export async function GET(request: Request) {
   try {
     const searchParams = new URL(request.url).searchParams;
+    const token = extractBearerToken(request.headers.get('authorization'));
+    const authenticatedUser = token ? await verifyAuthToken(token) : null;
     const parsedQuery = productsQuerySchema.parse({
       category: searchParams
         .getAll('category')
@@ -26,6 +29,7 @@ export async function GET(request: Request) {
       inStore: parsedQuery.instore,
       page: parsedQuery.page,
       limit: parsedQuery.limit,
+      includeOutOfStock: Boolean(authenticatedUser),
     });
 
     return NextResponse.json(products);

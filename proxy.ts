@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { verifyAuthToken } from '@/lib/auth';
+import { extractBearerToken, verifyAuthToken } from '@/lib/auth';
 import { StatusCodes } from 'http-status-codes';
 
 function isPublicApiRoute(request: NextRequest): boolean {
@@ -26,24 +26,12 @@ function isPublicApiRoute(request: NextRequest): boolean {
   return false;
 }
 
-function extractBearerToken(request: NextRequest): string | null {
-  const authorizationHeader = request.headers.get('authorization');
-
-  if (!authorizationHeader) {
-    return null;
-  }
-
-  const match = authorizationHeader.match(/^Bearer\s+(.+)$/i);
-
-  return match?.[1]?.trim() ?? null;
-}
-
 export async function proxy(request: NextRequest) {
   if (isPublicApiRoute(request)) {
     return NextResponse.next();
   }
 
-  const token = extractBearerToken(request);
+  const token = extractBearerToken(request.headers.get('authorization'));
 
   if (!token) {
     return NextResponse.json(
