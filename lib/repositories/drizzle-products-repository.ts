@@ -27,6 +27,7 @@ export class DrizzleProductsRepository implements IProductsRepository {
     const [product] = await this.database
       .insert(products)
       .values({
+        ...(input.id !== undefined ? { id: input.id } : {}),
         name: requireProductField(input, 'name'),
         description: requireProductField(input, 'description'),
         price: requireProductField(input, 'price'),

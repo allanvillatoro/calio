@@ -8,6 +8,7 @@ export const productIdParamsSchema = z.object({
 });
 
 export const createProductBodySchema = z.object({
+  id: z.number().int().positive().optional(),
   name: z.string().trim().min(1),
   description: z.string().trim().min(1),
   price: z.number().nonnegative(),
