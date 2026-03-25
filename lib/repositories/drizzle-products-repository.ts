@@ -16,9 +16,9 @@ import {
   getPagination,
   mapRowToProduct,
   normalizeFilters,
-  omitUndefined,
   requireProductField,
 } from './drizzle-products-repository.helpers';
+import { omitUndefined } from './repository.helpers';
 
 export class DrizzleProductsRepository implements IProductsRepository {
   constructor(private readonly database: AppDb) {}

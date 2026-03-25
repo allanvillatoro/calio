@@ -6,14 +6,7 @@ import type {
   ProductChanges,
   ProductFilters,
 } from './products-repository.interface';
-
-export function omitUndefined<T extends Record<string, unknown>>(
-  obj: T,
-): Partial<T> {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([, value]) => value !== undefined),
-  ) as Partial<T>;
-}
+import { requireField } from './repository.helpers';
 
 function isSqlCondition(value: SQL | undefined): value is SQL {
   return value !== undefined;
@@ -23,13 +16,9 @@ export function requireProductField<K extends keyof ProductChanges>(
   input: ProductChanges,
   field: K,
 ): NonNullable<ProductChanges[K]> {
-  const value = input[field];
-
-  if (value === undefined || value === null) {
-    throw new Error(`Missing required product field: ${String(field)}`);
-  }
-
-  return value as NonNullable<ProductChanges[K]>;
+  return requireField(input, field, {
+    label: `product.${String(field)}`,
+  });
 }
 
 export function mapRowToProduct(row: ProductRow): IProduct {
