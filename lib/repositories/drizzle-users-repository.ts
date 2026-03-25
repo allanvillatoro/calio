@@ -81,13 +81,6 @@ export class DrizzleUsersRepository implements IUsersRepository {
       token: await createAuthToken(publicUser),
     };
   }
-
-  async checkAuthStatus(user: IUser): Promise<LoginResult> {
-    return {
-      user,
-      token: await createAuthToken(user),
-    };
-  }
 }
 
 export const usersRepository: IUsersRepository = new DrizzleUsersRepository(db);

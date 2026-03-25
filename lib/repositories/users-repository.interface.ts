@@ -16,5 +16,4 @@ export interface LoginResult {
 export interface IUsersRepository {
   register(credentials: UserCredentials): Promise<IUser>;
   login(credentials: UserCredentials): Promise<LoginResult>;
-  checkAuthStatus(user: IUser): Promise<LoginResult>;
 }
