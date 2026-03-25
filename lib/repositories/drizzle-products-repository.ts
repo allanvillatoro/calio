@@ -1,6 +1,6 @@
 import 'server-only';
 import { eq } from 'drizzle-orm';
-import { db } from '@/db';
+import { db, type AppDb } from '@/db';
 import { products } from '@/db/schema';
 import type {
   FindAllProductsResult,
@@ -11,8 +11,8 @@ import type {
 } from './products-repository.interface';
 import {
   buildProductsWhereClause,
-  countProducts,
-  findProductRows,
+  countProductsWithDb,
+  findProductRowsWithDb,
   getPagination,
   mapRowToProduct,
   normalizeFilters,
@@ -21,8 +21,10 @@ import {
 } from './drizzle-products-repository.helpers';
 
 export class DrizzleProductsRepository implements IProductsRepository {
+  constructor(private readonly database: AppDb) {}
+
   async save(input: ProductChanges): Promise<IProduct> {
-    const [product] = await db
+    const [product] = await this.database
       .insert(products)
       .values({
         name: requireProductField(input, 'name'),
@@ -41,7 +43,7 @@ export class DrizzleProductsRepository implements IProductsRepository {
   }
 
   async findById(id: number): Promise<IProduct | null> {
-    const [product] = await db
+    const [product] = await this.database
       .select()
       .from(products)
       .where(eq(products.id, id))
@@ -57,8 +59,8 @@ export class DrizzleProductsRepository implements IProductsRepository {
     const { currentPage, limit, offset } = getPagination(normalizedFilters);
     const whereClause = buildProductsWhereClause(normalizedFilters);
     const [totalItems, productRows] = await Promise.all([
-      countProducts(whereClause),
-      findProductRows({
+      countProductsWithDb(this.database, whereClause),
+      findProductRowsWithDb(this.database, {
         whereClause,
         limit,
         offset,
@@ -84,7 +86,7 @@ export class DrizzleProductsRepository implements IProductsRepository {
     id: number,
     updates: ProductChanges,
   ): Promise<IProduct | null> {
-    const [product] = await db
+    const [product] = await this.database
       .update(products)
       .set({
         ...omitUndefined(updates),
@@ -97,7 +99,7 @@ export class DrizzleProductsRepository implements IProductsRepository {
   }
 
   async deleteById(id: number): Promise<boolean> {
-    const deletedProducts = await db
+    const deletedProducts = await this.database
       .delete(products)
       .where(eq(products.id, id))
       .returning({ id: products.id });
@@ -107,4 +109,4 @@ export class DrizzleProductsRepository implements IProductsRepository {
 }
 
 export const productsRepository: IProductsRepository =
-  new DrizzleProductsRepository();
+  new DrizzleProductsRepository(db);

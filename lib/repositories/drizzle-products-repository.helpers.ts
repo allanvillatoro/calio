@@ -1,6 +1,6 @@
 import { and, count, desc, eq, inArray, type SQL } from 'drizzle-orm';
-import { db } from '@/db';
 import { products, type ProductRow } from '@/db/schema';
+import type { AppDb } from '@/db';
 import type {
   IProduct,
   ProductChanges,
@@ -120,7 +120,7 @@ export function buildProductsWhereClause(filters: ProductFilters) {
   return conditions.length > 0 ? and(...conditions) : undefined;
 }
 
-export async function countProducts(whereClause?: SQL) {
+export async function countProductsWithDb(db: AppDb, whereClause?: SQL) {
   const [{ totalItems }] = whereClause
     ? await db.select({ totalItems: count() }).from(products).where(whereClause)
     : await db.select({ totalItems: count() }).from(products);
@@ -128,11 +128,14 @@ export async function countProducts(whereClause?: SQL) {
   return totalItems;
 }
 
-export async function findProductRows(options: {
-  whereClause?: SQL;
-  limit: number;
-  offset: number;
-}) {
+function dbSelectProducts(
+  db: AppDb,
+  options: {
+    whereClause?: SQL;
+    limit: number;
+    offset: number;
+  },
+) {
   const { whereClause, limit, offset } = options;
 
   return whereClause
@@ -149,4 +152,15 @@ export async function findProductRows(options: {
         .orderBy(desc(products.id))
         .limit(limit)
         .offset(offset);
+}
+
+export async function findProductRowsWithDb(
+  db: AppDb,
+  options: {
+    whereClause?: SQL;
+    limit: number;
+    offset: number;
+  },
+) {
+  return dbSelectProducts(db, options);
 }
