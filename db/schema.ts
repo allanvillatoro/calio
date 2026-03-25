@@ -7,6 +7,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uuid,
 } from 'drizzle-orm/pg-core';
 
 export const products = pgTable('products', {
@@ -28,5 +29,13 @@ export const products = pgTable('products', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull(),
 });
 
+export const users = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: text('email').notNull().unique(),
+  password: text('password').notNull(),
+});
+
 export type ProductRow = typeof products.$inferSelect;
 export type NewProductRow = typeof products.$inferInsert;
+export type UserRow = typeof users.$inferSelect;
+export type NewUserRow = typeof users.$inferInsert;
