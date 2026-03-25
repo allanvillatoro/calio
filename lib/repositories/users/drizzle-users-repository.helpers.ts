@@ -4,7 +4,7 @@ import { compare, hash } from 'bcryptjs';
 import { users, type UserRow } from '@/db/schema';
 import type { AppDb } from '@/db';
 import type { IUser, UserCredentials } from './users-repository.interface';
-import { requireField } from './repository.helpers';
+import { requireField } from '../repository.helpers';
 
 export function mapRowToUser(row: Pick<UserRow, 'id' | 'email'>): IUser {
   return {

@@ -1,7 +1,7 @@
 import 'server-only';
 import { db, type AppDb } from '@/db';
 import { users } from '@/db/schema';
-import { createAuthToken } from '@/lib/auth';
+import { createAuthToken } from '@/lib/repositories/users/auth';
 import { UserAuthenticationError } from '@/lib/errors';
 import type {
   IUser,

@@ -1,8 +1,8 @@
 import { jwtVerify, SignJWT } from 'jose';
-import type { IUser } from '@/lib/repositories/users-repository.interface';
+import type { IUser } from './users-repository.interface';
 
 const JWT_ALGORITHM = 'HS256';
-const JWT_EXPIRATION = '7d';
+const JWT_EXPIRATION = '4h';
 
 function getJwtSecret(): Uint8Array {
   const secret = process.env.JWT_SECRET;

@@ -2,8 +2,8 @@ import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { UserAuthenticationError } from '@/lib/errors';
-import { usersRepository } from '@/lib/repositories/drizzle-users-repository';
 import { formatZodError, userCredentialsSchema } from '../schemas';
+import { usersRepository } from '@/lib/repositories/users/drizzle-users-repository';
 
 export async function POST(request: Request) {
   try {

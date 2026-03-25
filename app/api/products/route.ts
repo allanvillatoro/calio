@@ -1,13 +1,16 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
-import { productsRepository } from '@/lib/repositories/drizzle-products-repository';
-import { extractBearerToken, verifyAuthToken } from '@/lib/auth';
+import {
+  extractBearerToken,
+  verifyAuthToken,
+} from '@/lib/repositories/users/auth';
 import { ZodError } from 'zod';
 import {
   createProductBodySchema,
   formatZodError,
   productsQuerySchema,
 } from './schemas';
+import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 
 export async function GET(request: Request) {
   try {

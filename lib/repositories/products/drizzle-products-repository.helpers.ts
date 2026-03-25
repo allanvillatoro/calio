@@ -6,7 +6,7 @@ import type {
   ProductChanges,
   ProductFilters,
 } from './products-repository.interface';
-import { requireField } from './repository.helpers';
+import { requireField } from '../repository.helpers';
 
 function isSqlCondition(value: SQL | undefined): value is SQL {
   return value !== undefined;
