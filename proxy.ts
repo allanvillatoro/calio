@@ -1,28 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { extractBearerToken, verifyAuthToken } from '@/lib/auth';
+import { isPublicApiRoute } from '@/lib/config/public-api-routes';
 import { StatusCodes } from 'http-status-codes';
 
-function isPublicApiRoute(request: NextRequest): boolean {
-  const { pathname } = request.nextUrl;
-  const method = request.method.toUpperCase();
-
-  if (pathname === '/api/users/login' && method === 'POST') {
-    return true;
-  }
-
-  if (pathname === '/api/products' && method === 'GET') {
-    return true;
-  }
-
-  if (/^\/api\/products\/[^/]+$/.test(pathname) && method === 'GET') {
-    return true;
-  }
-
-  return false;
-}
-
 export async function proxy(request: NextRequest) {
-  if (isPublicApiRoute(request)) {
+  if (
+    isPublicApiRoute(request.nextUrl.pathname, request.method.toUpperCase())
+  ) {
     return NextResponse.next();
   }
 
