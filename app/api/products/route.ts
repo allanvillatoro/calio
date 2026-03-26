@@ -1,9 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
-import {
-  extractBearerToken,
-  verifyAuthToken,
-} from '@/lib/repositories/users/auth';
+import { extractBearerToken, verifyAuthToken } from '@/lib/auth';
 import { ZodError } from 'zod';
 import {
   createProductBodySchema,

@@ -2,11 +2,11 @@ import { and, count, desc, eq, gte, inArray, type SQL } from 'drizzle-orm';
 import { products, type ProductRow } from '@/db/schema';
 import type { AppDb } from '@/db';
 import type {
-  IProduct,
   ProductChanges,
   ProductFilters,
 } from './products-repository.interface';
 import { requireField } from '../repository.helpers';
+import type { IProduct } from '@/lib/interfaces/product';
 
 function isSqlCondition(value: SQL | undefined): value is SQL {
   return value !== undefined;

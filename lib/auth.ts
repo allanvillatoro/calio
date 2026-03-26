@@ -1,5 +1,5 @@
 import { jwtVerify, SignJWT } from 'jose';
-import type { IUser } from './users-repository.interface';
+import type { IUser } from '@/lib/interfaces/user';
 
 const JWT_ALGORITHM = 'HS256';
 const JWT_EXPIRATION = '4h';

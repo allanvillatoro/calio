@@ -3,8 +3,9 @@ import { eq } from 'drizzle-orm';
 import { compare, hash } from 'bcryptjs';
 import { users, type UserRow } from '@/db/schema';
 import type { AppDb } from '@/db';
-import type { IUser, UserCredentials } from './users-repository.interface';
+import type { IUser } from '@/lib/interfaces/user';
 import { requireField } from '../repository.helpers';
+import type { UserCredentials } from './users-repository.interface';
 
 export function mapRowToUser(row: Pick<UserRow, 'id' | 'email'>): IUser {
   return {

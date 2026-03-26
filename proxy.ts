@@ -1,8 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import {
-  extractBearerToken,
-  verifyAuthToken,
-} from '@/lib/repositories/users/auth';
+import { extractBearerToken, verifyAuthToken } from '@/lib/auth';
 import { StatusCodes } from 'http-status-codes';
 
 function isPublicApiRoute(request: NextRequest): boolean {

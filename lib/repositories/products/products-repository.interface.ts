@@ -1,15 +1,4 @@
-export interface IProduct {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  images: string[];
-  category: string;
-  inStore: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import type { IProduct } from '@/lib/interfaces/product';
 
 export type ProductChanges = Partial<IProduct>;
 

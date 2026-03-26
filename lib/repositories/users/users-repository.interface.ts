@@ -1,7 +1,6 @@
-export interface IUser {
-  id: string;
-  email: string;
-}
+import type { IUser } from '@/lib/interfaces/user';
+
+export type { IUser } from '@/lib/interfaces/user';
 
 export interface UserCredentials {
   email: string;

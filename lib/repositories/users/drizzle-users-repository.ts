@@ -1,10 +1,10 @@
 import 'server-only';
 import { db, type AppDb } from '@/db';
 import { users } from '@/db/schema';
-import { createAuthToken } from '@/lib/repositories/users/auth';
+import { createAuthToken } from '@/lib/auth';
 import { UserAuthenticationError } from '@/lib/errors';
+import type { IUser } from '@/lib/interfaces/user';
 import type {
-  IUser,
   IUsersRepository,
   LoginResult,
   UserCredentials,

@@ -4,7 +4,6 @@ import { db, type AppDb } from '@/db';
 import { products } from '@/db/schema';
 import type {
   FindAllProductsResult,
-  IProduct,
   IProductsRepository,
   ProductChanges,
   ProductFilters,
@@ -19,6 +18,7 @@ import {
   requireProductField,
 } from './drizzle-products-repository.helpers';
 import { omitUndefined } from '../repository.helpers';
+import type { IProduct } from '@/lib/interfaces/product';
 
 export class DrizzleProductsRepository implements IProductsRepository {
   constructor(private readonly database: AppDb) {}
