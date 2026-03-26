@@ -49,13 +49,3 @@ export const productsQuerySchema = z.object({
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().positive().max(100).default(20),
 });
-
-export function formatZodError(error: z.ZodError) {
-  return {
-    error: 'Validation failed',
-    details: error.issues.map((issue) => ({
-      path: issue.path.join('.'),
-      message: issue.message,
-    })),
-  };
-}

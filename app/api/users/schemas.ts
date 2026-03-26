@@ -13,13 +13,3 @@ export const authorizationHeaderSchema = z
 export function extractBearerToken(authorizationHeader: string): string {
   return authorizationHeader.replace(/^Bearer\s+/i, '').trim();
 }
-
-export function formatZodError(error: z.ZodError) {
-  return {
-    error: 'Validation failed',
-    details: error.issues.map((issue) => ({
-      path: issue.path.join('.'),
-      message: issue.message,
-    })),
-  };
-}

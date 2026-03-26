@@ -1,11 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
+import { formatZodError } from '@/lib/zod';
 import { ZodError } from 'zod';
-import {
-  formatZodError,
-  productIdParamsSchema,
-  updateProductBodySchema,
-} from '../schemas';
+import { productIdParamsSchema, updateProductBodySchema } from '../schemas';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 
 interface ProductRouteContext {
