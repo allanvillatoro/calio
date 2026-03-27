@@ -17,10 +17,10 @@ export function calculatePagination(
   };
 }
 
-export function sortProductsById<T extends { id: string }>(products: T[]): T[] {
+export function sortProductsById<T extends { id: number }>(products: T[]): T[] {
   return [...products].sort((a, b) => {
-    const idA = parseInt(a.id, 10);
-    const idB = parseInt(b.id, 10);
+    const idA = a.id;
+    const idB = b.id;
     return idB - idA;
   });
 }
