@@ -33,12 +33,12 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
   return (
     <div className="relative w-full">
       {/* Main Image Display */}
-      <div className="relative w-full h-96 md:h-[600px] bg-white rounded-lg overflow-hidden shadow-lg">
+      <div className="relative w-full aspect-square bg-white rounded-lg overflow-hidden shadow-lg">
         <Image
           src={allImages[currentIndex]}
           alt={`Imagen ${currentIndex + 1}`}
           fill
-          className="object-cover"
+          className="object-contain"
           priority={currentIndex === 0}
           sizes="(max-width: 768px) 100vw, 50vw"
         />
@@ -106,7 +106,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
                 src={imageUrl}
                 alt={`Miniatura ${index + 1}`}
                 fill
-                className="object-cover"
+                className="object-contain"
                 sizes="100px"
               />
             </button>
