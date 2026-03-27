@@ -1,9 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { getProducts } from '@/lib/products';
 import { CATEGORIES, type Product, type Category } from '@/lib/types';
-import { sortProductsById, calculatePagination } from '@/lib/catalog';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
 import { FiltersSection } from '@/components/catalog/FiltersSection';
 import { ProductsGrid } from '@/components/catalog/ProductsGrid';
@@ -11,6 +9,7 @@ import { ProductDialog } from '../admin/ProductDialog';
 import { DeleteDialog } from '../admin/DeleteDialog';
 import { Button } from '../ui/button';
 import { EMPTY_PRODUCT } from '@/lib/utils';
+import { useProducts } from '@/lib/hooks/useProducts';
 
 interface Props {
   isAdmin?: boolean;
@@ -23,31 +22,21 @@ export default function CatalogContent({ isAdmin = false }: Props) {
 
   // TODO: Detect here from the gloabl state if the user is admin, instead of passing it as a prop from the admin page.
 
-  // TODO: Remove sorting when backend API is available and returns sorted data
-  const sortedProducts = sortProductsById(getProducts());
-
   const {
     selectedCategories,
-    categoryFilteredProducts,
+    selectedCategoriesParam,
     currentPage,
-    totalPages,
-    productsPerPage,
+    inStore,
     isAllSelected,
     updateURL,
     printView,
-  } = useCatalogFilters(sortedProducts, CATEGORIES);
+  } = useCatalogFilters(CATEGORIES);
 
-  // TODO: Remove pagination logic when backend API is available and supports pagination
-  // Get paginated slice
-  const { startIndex, endIndex } = calculatePagination(
-    categoryFilteredProducts.length,
-    currentPage,
-    productsPerPage,
-  );
-  const paginatedProducts = categoryFilteredProducts.slice(
-    startIndex,
-    endIndex,
-  );
+  const { products: paginatedProducts, paging } = useProducts({
+    category: selectedCategoriesParam,
+    instore: inStore,
+    page: currentPage,
+  });
 
   const handleToggleCategory = (category: Category) => {
     const newCategories = selectedCategories.includes(category)
@@ -97,9 +86,9 @@ export default function CatalogContent({ isAdmin = false }: Props) {
         <div className="flex-1">
           <ProductsGrid
             products={paginatedProducts}
-            totalProducts={categoryFilteredProducts.length}
+            totalProducts={paging.totalItems}
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={paging.totalPages}
             onPageChange={handlePageChange}
             isAdmin={isAdmin && !printView}
             onEdit={setEditingProduct}
