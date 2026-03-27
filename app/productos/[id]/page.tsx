@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { formatPrice, toNumber } from '@/lib/utils';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -11,9 +12,13 @@ interface ProductDetailPageProps {
   };
 }
 
+const getProduct = cache(async (id: number) => {
+  return productsRepository.findById(id);
+});
+
 export async function generateMetadata({ params }: ProductDetailPageProps) {
   const { id } = await params;
-  const product = await productsRepository.findById(toNumber(id));
+  const product = await getProduct(toNumber(id));
 
   if (!product) {
     return {
@@ -52,7 +57,7 @@ export default async function ProductDetailPage({
 }: ProductDetailPageProps) {
   const { id } = await params;
 
-  const product = await productsRepository.findById(toNumber(id));
+  const product = await getProduct(toNumber(id));
 
   if (!product) {
     notFound();
