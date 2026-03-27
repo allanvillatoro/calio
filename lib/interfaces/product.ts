@@ -10,3 +10,17 @@ export interface IProduct {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ProductResponse {
+  data: IProduct[];
+  paging: Paging;
+}
+
+export interface Paging {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
