@@ -52,8 +52,6 @@ export default async function ProductDetailPage({
 }: ProductDetailPageProps) {
   const { id } = await params;
 
-  // TODO: Replace this. Keep it as a server component and fetch data directly.
-
   const product = await productsRepository.findById(toNumber(id));
 
   if (!product) {
