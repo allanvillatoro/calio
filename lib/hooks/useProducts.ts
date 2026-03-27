@@ -13,7 +13,7 @@ interface UseProductsParams {
 }
 
 interface UseProductsResult {
-  data: Product[];
+  products: Product[];
   paging: Paging;
 }
 
@@ -32,7 +32,7 @@ export const useProducts = ({
   limit = 20,
   instore,
 }: UseProductsParams): UseProductsResult => {
-  const [data, setData] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [paging, setPaging] = useState<Paging>({
     ...DEFAULT_PAGING,
     currentPage: page,
@@ -54,7 +54,7 @@ export const useProducts = ({
         return;
       }
 
-      setData(response.data);
+      setProducts(response.data);
       setPaging(response.paging);
     };
 
@@ -66,7 +66,7 @@ export const useProducts = ({
   }, [category, page, limit, instore]);
 
   return {
-    data,
+    products,
     paging,
   };
 };
