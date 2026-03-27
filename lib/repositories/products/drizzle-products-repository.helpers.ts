@@ -7,6 +7,7 @@ import type {
 } from './products-repository.interface';
 import { requireField } from '../repository.helpers';
 import type { IProduct } from '@/lib/interfaces/product';
+import { PRODUCTS_PER_PAGE } from '@/lib/constants/product';
 
 function isSqlCondition(value: SQL | undefined): value is SQL {
   return value !== undefined;
@@ -52,7 +53,7 @@ export function normalizeFilters(
   if (!filters) {
     return {
       page: 1,
-      limit: 20,
+      limit: PRODUCTS_PER_PAGE,
       includeOutOfStock: false,
     };
   }
@@ -73,7 +74,7 @@ export function normalizeFilters(
       ...(inStoreParam === 'true' ? { inStore: true } : {}),
       ...(inStoreParam === 'false' ? { inStore: false } : {}),
       page: pageParam ? Number(pageParam) : 1,
-      limit: limitParam ? Number(limitParam) : 20,
+      limit: limitParam ? Number(limitParam) : PRODUCTS_PER_PAGE,
       includeOutOfStock: filters.get('includeOutOfStock') === 'true',
     };
   }
@@ -82,14 +83,15 @@ export function normalizeFilters(
     categories: normalizeCategories(filters.categories),
     inStore: filters.inStore,
     page: filters.page ?? 1,
-    limit: filters.limit ?? 20,
+    limit: filters.limit ?? PRODUCTS_PER_PAGE,
     includeOutOfStock: filters.includeOutOfStock ?? false,
   };
 }
 
 export function getPagination(filters: ProductFilters) {
   const currentPage = filters.page && filters.page > 0 ? filters.page : 1;
-  const limit = filters.limit && filters.limit > 0 ? filters.limit : 20;
+  const limit =
+    filters.limit && filters.limit > 0 ? filters.limit : PRODUCTS_PER_PAGE;
   const offset = (currentPage - 1) * limit;
 
   return {
