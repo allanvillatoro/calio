@@ -22,13 +22,13 @@ export default function ProductCard({
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
       <Link href={`/productos/${product.id}`}>
-        <div className="relative w-full h-64">
+        <div className="relative w-full aspect-square bg-white">
           <Image
             src={getImageUrl(mainImage)}
             alt={product.name}
             fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            className="object-contain"
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
           />
         </div>
         <div className="p-4">
