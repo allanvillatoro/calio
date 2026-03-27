@@ -1,9 +1,10 @@
 import type { MetadataRoute } from 'next';
-import products from '@/data/products.json';
+import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://caliojoyeria.com';
+export const revalidate = 3600;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -18,6 +19,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
     },
   ];
+
+  const { data: products } = await productsRepository.findAll({
+    limit: 500,
+    includeOutOfStock: true,
+  });
 
   const productPages: MetadataRoute.Sitemap = products.map((product) => ({
     url: `${baseUrl}/productos/${product.id}`,
