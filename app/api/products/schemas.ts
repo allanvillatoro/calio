@@ -1,6 +1,7 @@
 import { z } from 'zod';
+import { PRODUCT_CATEGORIES } from '@/lib/constants/product-categories';
 
-const categorySchema = z.string().trim().min(1);
+const categorySchema = z.enum(PRODUCT_CATEGORIES);
 const imageSchema = z.string().trim().min(1);
 
 export const productIdParamsSchema = z.object({

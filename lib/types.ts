@@ -1,26 +1,14 @@
-export type Category =
-  | 'new in'
-  | 'aretes'
-  | 'collares'
-  | 'anillos'
-  | 'pulseras'
-  | 'accesorios'
-  | 'sets'
-  | 'studs-cuffs';
+import {
+  PRODUCT_CATEGORIES,
+  type ProductCategory,
+} from './constants/product-categories';
 
-export const CATEGORIES: Category[] = [
-  'new in',
-  'aretes',
-  'collares',
-  'pulseras',
-  'anillos',
-  'sets',
-  'studs-cuffs',
-  'accesorios',
-];
+export type Category = ProductCategory;
+
+export const CATEGORIES: Category[] = [...PRODUCT_CATEGORIES];
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
   description: string;
   price: number;

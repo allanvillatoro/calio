@@ -2,12 +2,14 @@ import ProductCard from '@/components/catalog/ProductCard';
 import type { Product } from '@/lib/types';
 import { PaginationControls } from './PaginationControls';
 import { EmptyState } from './EmptyState';
+import { ProductsGridSkeleton } from './ProductsGridSkeleton';
 
 interface ProductsGridProps {
   products: Product[];
   totalProducts: number;
   currentPage: number;
   totalPages: number;
+  isLoading?: boolean;
   onPageChange: (page: number) => void;
   isAdmin: boolean;
   onEdit: (product: Product | null) => void;
@@ -19,11 +21,16 @@ export function ProductsGrid({
   totalProducts,
   currentPage,
   totalPages,
+  isLoading = false,
   onPageChange,
   isAdmin,
   onEdit,
   onDelete,
 }: ProductsGridProps) {
+  if (isLoading) {
+    return <ProductsGridSkeleton />;
+  }
+
   if (products.length === 0) {
     return <EmptyState />;
   }

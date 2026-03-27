@@ -17,7 +17,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const EMPTY_PRODUCT: Product = {
-  id: '',
+  id: 0,
   name: '',
   description: '',
   price: 100,
@@ -26,3 +26,8 @@ export const EMPTY_PRODUCT: Product = {
   category: CATEGORIES[0],
   images: [],
 };
+
+export function toNumber(value: string): number {
+  const n = Number(value);
+  return Number.isNaN(n) ? 0 : n;
+}

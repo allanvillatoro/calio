@@ -24,7 +24,7 @@ export default function CatalogPage() {
           <div className="text-center py-12">Cargando colección...</div>
         }
       >
-        <CatalogContent />
+        <CatalogContent isAdmin={true} />
       </Suspense>
     </div>
   );

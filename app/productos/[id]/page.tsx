@@ -1,9 +1,9 @@
-import { getProductById } from '@/lib/products';
 import { notFound } from 'next/navigation';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, toNumber } from '@/lib/utils';
 import { FaWhatsapp } from 'react-icons/fa';
 import ImageCarousel from '@/components/ImageCarousel';
 import BackButton from '@/components/BackButton';
+import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 
 interface ProductDetailPageProps {
   params: {
@@ -13,7 +13,7 @@ interface ProductDetailPageProps {
 
 export async function generateMetadata({ params }: ProductDetailPageProps) {
   const { id } = await params;
-  const product = getProductById(id);
+  const product = await productsRepository.findById(toNumber(id));
 
   if (!product) {
     return {
@@ -52,8 +52,8 @@ export default async function ProductDetailPage({
 }: ProductDetailPageProps) {
   const { id } = await params;
 
-  // TODO: Replace this. Keep it as a server component and fetch data directly.
-  const product = getProductById(id);
+  const product = await productsRepository.findById(toNumber(id));
+
   if (!product) {
     notFound();
   }
