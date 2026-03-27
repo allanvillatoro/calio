@@ -1,12 +1,11 @@
 import { useSearchParams, useRouter } from 'next/navigation';
-import { PRODUCTS_PER_PAGE, type Category, type Product } from '@/lib/types';
+import type { Category } from '@/lib/types';
 
 interface UseCatalogFiltersReturn {
   selectedCategories: Category[];
-  categoryFilteredProducts: Product[];
+  selectedCategoriesParam: string | undefined;
   currentPage: number;
-  totalPages: number;
-  productsPerPage: number;
+  inStore: boolean | undefined;
   printView: boolean;
   isAllSelected: boolean;
   updateURL: (
@@ -20,7 +19,6 @@ interface UseCatalogFiltersReturn {
 }
 
 export function useCatalogFilters(
-  allProducts: Product[],
   categories: Category[],
 ): UseCatalogFiltersReturn {
   const searchParams = useSearchParams();
@@ -38,29 +36,14 @@ export function useCatalogFilters(
   const page = searchParams.get('pagina');
   const rawPage = page ? Math.max(1, parseInt(page, 10)) : 1;
 
-  const inStore = searchParams.get('entienda') === 'true';
+  const inStoreParam = searchParams.get('entienda');
+  const inStore =
+    inStoreParam === 'true'
+      ? true
+      : inStoreParam === 'false'
+        ? false
+        : undefined;
   const printView = searchParams.get('modoprint') === 'true';
-
-  // TODO: Remove this when data comes from the backend
-  // Apply category filter
-  const categoryFilteredProducts =
-    selectedCategories.length === 0
-      ? inStore
-        ? allProducts.filter((p) => p.inStore)
-        : allProducts
-      : allProducts.filter(
-          (product) =>
-            selectedCategories.includes(product.category) &&
-            (!inStore || product.inStore),
-        );
-
-  // Calculate pagination based on filtered products
-  const productsPerPage = PRODUCTS_PER_PAGE;
-
-  const totalPages = Math.ceil(
-    categoryFilteredProducts.length / productsPerPage,
-  );
-  const currentPage = Math.min(rawPage, Math.max(1, totalPages));
 
   const isAllSelected = selectedCategories.length === 0;
 
@@ -112,10 +95,10 @@ export function useCatalogFilters(
 
   return {
     selectedCategories,
-    categoryFilteredProducts,
-    currentPage,
-    totalPages,
-    productsPerPage,
+    selectedCategoriesParam:
+      selectedCategories.length > 0 ? selectedCategories.join(',') : undefined,
+    currentPage: rawPage,
+    inStore,
     printView,
     isAllSelected,
     updateURL,
