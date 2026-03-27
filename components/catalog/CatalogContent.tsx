@@ -8,8 +8,8 @@ import { ProductsGrid } from '@/components/catalog/ProductsGrid';
 import { ProductDialog } from '../admin/ProductDialog';
 import { DeleteDialog } from '../admin/DeleteDialog';
 import { Button } from '../ui/button';
-import { EMPTY_PRODUCT } from '@/lib/utils';
 import { useProducts } from '@/lib/hooks/useProducts';
+import { EMPTY_PRODUCT } from '@/lib/constants/product';
 
 interface Props {
   isAdmin?: boolean;

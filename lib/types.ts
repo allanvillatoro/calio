@@ -17,5 +17,3 @@ export interface Product {
   category: Category;
   inStore?: boolean;
 }
-
-export const PRODUCTS_PER_PAGE = 20;

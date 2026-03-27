@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getProductsByQuery } from '@/lib/actions/get-products-by-query.action';
 import type { Paging } from '@/lib/interfaces/product';
 import type { Product } from '@/lib/types';
+import { PRODUCTS_PER_PAGE } from '../constants/product';
 
 interface UseProductsParams {
   category?: string;
@@ -22,7 +23,7 @@ const DEFAULT_PAGING: Paging = {
   totalItems: 0,
   totalPages: 0,
   currentPage: 1,
-  limit: 20,
+  limit: PRODUCTS_PER_PAGE,
   hasNextPage: false,
   hasPreviousPage: false,
 };
@@ -30,7 +31,7 @@ const DEFAULT_PAGING: Paging = {
 export const useProducts = ({
   category,
   page = 1,
-  limit = 20,
+  limit = PRODUCTS_PER_PAGE,
   instore,
 }: UseProductsParams): UseProductsResult => {
   const [products, setProducts] = useState<Product[]>([]);
