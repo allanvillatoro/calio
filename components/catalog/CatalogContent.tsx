@@ -32,7 +32,11 @@ export default function CatalogContent({ isAdmin = false }: Props) {
     printView,
   } = useCatalogFilters(CATEGORIES);
 
-  const { products: paginatedProducts, paging } = useProducts({
+  const {
+    products: paginatedProducts,
+    paging,
+    isLoading,
+  } = useProducts({
     category: selectedCategoriesParam,
     instore: inStore,
     page: currentPage,
@@ -89,6 +93,7 @@ export default function CatalogContent({ isAdmin = false }: Props) {
             totalProducts={paging.totalItems}
             currentPage={currentPage}
             totalPages={paging.totalPages}
+            isLoading={isLoading}
             onPageChange={handlePageChange}
             isAdmin={isAdmin && !printView}
             onEdit={setEditingProduct}

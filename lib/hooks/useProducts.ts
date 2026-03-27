@@ -15,6 +15,7 @@ interface UseProductsParams {
 interface UseProductsResult {
   products: Product[];
   paging: Paging;
+  isLoading: boolean;
 }
 
 const DEFAULT_PAGING: Paging = {
@@ -33,6 +34,7 @@ export const useProducts = ({
   instore,
 }: UseProductsParams): UseProductsResult => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [paging, setPaging] = useState<Paging>({
     ...DEFAULT_PAGING,
     currentPage: page,
@@ -43,6 +45,7 @@ export const useProducts = ({
     let isCancelled = false;
 
     const fetchProducts = async () => {
+      setIsLoading(true);
       const response = await getProductsByQuery({
         category,
         page,
@@ -56,6 +59,7 @@ export const useProducts = ({
 
       setProducts(response.data);
       setPaging(response.paging);
+      setIsLoading(false);
     };
 
     fetchProducts();
@@ -68,5 +72,6 @@ export const useProducts = ({
   return {
     products,
     paging,
+    isLoading,
   };
 };
