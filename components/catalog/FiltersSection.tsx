@@ -1,4 +1,5 @@
 import type { Category } from '@/lib/types';
+import { useCategorySelection } from '@/lib/hooks/useCategorySelection';
 
 const CHECKBOX_STYLES =
   'w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2';
@@ -41,8 +42,7 @@ interface FiltersSectionProps {
   isAllSelected: boolean;
   isOpen: boolean;
   onToggleOpen: () => void;
-  onSelectAll: () => void;
-  onToggleCategory: (category: Category) => void;
+  onSelectionChange: (categories: Category[]) => void;
 }
 
 export function FiltersSection({
@@ -50,8 +50,14 @@ export function FiltersSection({
   selectedCategories,
   isOpen,
   onToggleOpen,
-  onToggleCategory,
+  onSelectionChange,
 }: FiltersSectionProps) {
+  const { localSelectedCategories, handleToggleCategory } =
+    useCategorySelection({
+      selectedCategories,
+      onSelectionChange,
+    });
+
   return (
     <aside className="w-full md:w-64 md:flex-shrink-0">
       {/* Mobile Toggle Button */}
@@ -76,8 +82,8 @@ export function FiltersSection({
             <CategoryCheckbox
               key={category}
               category={category}
-              checked={selectedCategories.includes(category)}
-              onChange={() => onToggleCategory(category)}
+              checked={localSelectedCategories.includes(category)}
+              onChange={() => handleToggleCategory(category)}
             />
           ))}
         </div>

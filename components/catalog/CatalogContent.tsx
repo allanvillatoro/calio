@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CATEGORIES, type Product, type Category } from '@/lib/types';
+import { CATEGORIES, type Product } from '@/lib/types';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
 import { FiltersSection } from '@/components/catalog/FiltersSection';
 import { ProductsGrid } from '@/components/catalog/ProductsGrid';
@@ -28,7 +28,8 @@ export default function CatalogContent({ isAdmin = false }: Props) {
     currentPage,
     inStore,
     isAllSelected,
-    updateURL,
+    onCategorySelectionChange,
+    onPageChange,
     printView,
   } = useCatalogFilters(CATEGORIES);
 
@@ -41,26 +42,6 @@ export default function CatalogContent({ isAdmin = false }: Props) {
     instore: inStore,
     page: currentPage,
   });
-
-  const handleToggleCategory = (category: Category) => {
-    const newCategories = selectedCategories.includes(category)
-      ? selectedCategories.filter((c) => c !== category)
-      : [...selectedCategories, category];
-
-    updateURL({
-      categorias:
-        newCategories.length === 0 ? undefined : newCategories.join(','),
-      pagina: undefined,
-    });
-  };
-
-  const handleSelectAll = () => {
-    updateURL({ categorias: undefined, pagina: undefined });
-  };
-
-  const handlePageChange = (page: number) => {
-    updateURL({ pagina: page === 1 ? undefined : page.toString() });
-  };
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -77,13 +58,13 @@ export default function CatalogContent({ isAdmin = false }: Props) {
       <div className="flex flex-col md:flex-row gap-8">
         {!printView && (
           <FiltersSection
+            key={selectedCategoriesParam ?? 'all'}
             categories={CATEGORIES}
             selectedCategories={selectedCategories}
             isAllSelected={isAllSelected}
             isOpen={isFiltersOpen}
             onToggleOpen={() => setIsFiltersOpen(!isFiltersOpen)}
-            onSelectAll={handleSelectAll}
-            onToggleCategory={handleToggleCategory}
+            onSelectionChange={onCategorySelectionChange}
           />
         )}
 
@@ -94,7 +75,7 @@ export default function CatalogContent({ isAdmin = false }: Props) {
             currentPage={currentPage}
             totalPages={paging.totalPages}
             isLoading={isLoading}
-            onPageChange={handlePageChange}
+            onPageChange={onPageChange}
             isAdmin={isAdmin && !printView}
             onEdit={setEditingProduct}
             onDelete={setDeletingProduct}

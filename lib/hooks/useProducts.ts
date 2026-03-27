@@ -46,23 +46,29 @@ export const useProducts = ({
 
     const fetchProducts = async () => {
       setIsLoading(true);
-      const response = await getProductsByQuery({
-        category,
-        page,
-        limit,
-        instore,
-      });
 
-      if (isCancelled) {
-        return;
+      try {
+        const response = await getProductsByQuery({
+          category,
+          page,
+          limit,
+          instore,
+        });
+
+        if (isCancelled) {
+          return;
+        }
+
+        setProducts(response.data);
+        setPaging(response.paging);
+      } finally {
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
-
-      setProducts(response.data);
-      setPaging(response.paging);
-      setIsLoading(false);
     };
 
-    fetchProducts();
+    void fetchProducts();
 
     return () => {
       isCancelled = true;

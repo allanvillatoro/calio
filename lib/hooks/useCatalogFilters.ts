@@ -8,6 +8,8 @@ interface UseCatalogFiltersReturn {
   inStore: boolean | undefined;
   printView: boolean;
   isAllSelected: boolean;
+  onCategorySelectionChange: (categories: Category[]) => void;
+  onPageChange: (page: number) => void;
   updateURL: (
     updates: Partial<{
       categorias: string | undefined;
@@ -93,6 +95,17 @@ export function useCatalogFilters(
     router.replace(`/catalogo?${params.toString()}`, { scroll: false });
   };
 
+  const onPageChange = (nextPage: number) => {
+    updateURL({ pagina: nextPage === 1 ? undefined : nextPage.toString() });
+  };
+
+  const onCategorySelectionChange = (categories: Category[]) => {
+    updateURL({
+      categorias: categories.length === 0 ? undefined : categories.join(','),
+      pagina: undefined,
+    });
+  };
+
   return {
     selectedCategories,
     selectedCategoriesParam:
@@ -101,6 +114,8 @@ export function useCatalogFilters(
     inStore,
     printView,
     isAllSelected,
+    onCategorySelectionChange,
+    onPageChange,
     updateURL,
   };
 }
