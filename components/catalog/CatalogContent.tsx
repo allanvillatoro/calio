@@ -1,14 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { CATEGORIES, type Product } from '@/lib/types';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
+import { getProductsByQuery } from '@/lib/actions/get-products-by-query.action';
 import { FiltersSection } from '@/components/catalog/FiltersSection';
 import { ProductsGrid } from '@/components/catalog/ProductsGrid';
 import { ProductDialog } from '../admin/ProductDialog';
 import { DeleteDialog } from '../admin/DeleteDialog';
 import { Button } from '../ui/button';
-import { useProducts } from '@/lib/hooks/useProducts';
 import { EMPTY_PRODUCT } from '@/lib/constants/product';
 
 interface Props {
@@ -33,14 +34,30 @@ export default function CatalogContent({ isAdmin = false }: Props) {
     printView,
   } = useCatalogFilters(CATEGORIES);
 
-  const {
-    products: paginatedProducts,
-    paging,
-    isLoading,
-  } = useProducts({
-    category: selectedCategoriesParam,
-    instore: inStore,
-    page: currentPage,
+  const normalizedCategory =
+    selectedCategoriesParam
+      ?.split(',')
+      .map((category) => category.trim())
+      .filter(Boolean)
+      .sort()
+      .join(',') ?? null;
+
+  const { isLoading, data: productsResponse } = useQuery({
+    queryKey: [
+      'products',
+      {
+        category: normalizedCategory,
+        instore: inStore ?? null,
+        page: currentPage,
+      },
+    ],
+    queryFn: () =>
+      getProductsByQuery({
+        category: normalizedCategory ?? undefined,
+        instore: inStore,
+        page: currentPage,
+      }),
+    staleTime: 1000 * 60 * 15,
   });
 
   return (
@@ -70,10 +87,10 @@ export default function CatalogContent({ isAdmin = false }: Props) {
 
         <div className="flex-1">
           <ProductsGrid
-            products={paginatedProducts}
-            totalProducts={paging.totalItems}
+            products={productsResponse?.data ?? []}
+            totalProducts={productsResponse?.paging.totalItems ?? 0}
             currentPage={currentPage}
-            totalPages={paging.totalPages}
+            totalPages={productsResponse?.paging.totalPages ?? 1}
             isLoading={isLoading}
             onPageChange={onPageChange}
             isAdmin={isAdmin && !printView}
