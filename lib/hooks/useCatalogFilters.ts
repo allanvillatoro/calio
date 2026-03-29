@@ -36,7 +36,8 @@ export function useCatalogFilters(
 
   // Get current page from URL (raw, before validation)
   const page = searchParams.get('pagina');
-  const rawPage = page ? Math.max(1, parseInt(page, 10)) : 1;
+  const parsedPage = page ? Number.parseInt(page, 10) : Number.NaN;
+  const rawPage = Number.isNaN(parsedPage) ? 1 : Math.max(1, parsedPage);
 
   const inStoreParam = searchParams.get('entienda');
   const inStore =
