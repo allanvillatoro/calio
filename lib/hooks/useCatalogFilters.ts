@@ -92,7 +92,7 @@ export function useCatalogFilters(
       }
     }
 
-    router.replace(`/catalogo?${params.toString()}`, { scroll: false });
+    router.replace(`/catalogo?${params.toString()}`, { scroll: true });
   };
 
   const onPageChange = (nextPage: number) => {
