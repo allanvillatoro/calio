@@ -149,7 +149,7 @@ export default function Home() {
               </p>
               <div className="w-full aspect-video overflow-hidden rounded-lg">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.1519167232336!2d-88.03774432465555!3d15.52998468507405!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f665b3833f26d43%3A0x70b634b17896fcb7!2sGaleria%20504!5e0!3m2!1sen!2shn!4v1773327812239!5m2!1sen!2shn"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.1495830232566!2d-88.03743942425511!3d15.530109853643753!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f665bf371a52a19%3A0xd5dfcfe3ff432c8c!2sBY%20LOVE%20FLORISTER%C3%8DA%20Y%20CAF%C3%89!5e0!3m2!1sen!2shn!4v1774822799813!5m2!1sen!2shn"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
