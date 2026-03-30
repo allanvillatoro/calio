@@ -70,7 +70,7 @@ export default async function ProductDetailPage({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Product Detail */}
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-4">
         <BackButton />
         <div className="grid md:grid-cols-2 gap-12">
           {/* Product Image Carousel */}
