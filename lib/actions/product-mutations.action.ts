@@ -23,6 +23,11 @@ export interface ProductMutationResult {
   details?: ProductMutationErrorDetail[];
 }
 
+export interface ProductDeleteResult {
+  success: boolean;
+  error?: string;
+}
+
 function revalidateProductPaths(productId: number) {
   revalidatePath('/catalogo');
   revalidatePath(`/productos/${productId}`);
@@ -102,6 +107,53 @@ export async function updateProductAction(
     return {
       success: false,
       error: 'Failed to update product',
+    };
+  }
+}
+
+export async function deleteProductAction(
+  id: number,
+): Promise<ProductDeleteResult> {
+  try {
+    const validatedId = productIdParamsSchema.parse({ id }).id;
+    const product = await productsRepository.findById(validatedId);
+
+    if (!product) {
+      return {
+        success: false,
+        error: 'Product not found',
+      };
+    }
+
+    const deleted = await productsRepository.deleteById(validatedId);
+
+    if (!deleted) {
+      return {
+        success: false,
+        error: 'Product not found',
+      };
+    }
+
+    revalidateProductPaths(validatedId);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      const formattedError = formatZodError(error);
+
+      return {
+        success: false,
+        error: formattedError.error,
+      };
+    }
+
+    console.error('Failed to delete product from server action', error);
+
+    return {
+      success: false,
+      error: 'Failed to delete product',
     };
   }
 }
