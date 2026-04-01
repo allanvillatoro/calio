@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { useEffect, useState, useTransition } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { CATEGORIES, type Product } from '@/lib/types';
 import { useForm } from 'react-hook-form';
@@ -35,16 +36,18 @@ interface ProductFormValues {
   imagesText: string;
 }
 
-const emptyForm = {
-  id: undefined,
-  name: EMPTY_PRODUCT.name,
-  description: EMPTY_PRODUCT.description,
-  price: EMPTY_PRODUCT.price,
-  quantity: EMPTY_PRODUCT.quantity,
-  inStore: EMPTY_PRODUCT.inStore,
-  category: EMPTY_PRODUCT.category,
-  imagesText: '',
-};
+function getEmptyFormValues(): ProductFormValues {
+  return {
+    id: undefined,
+    name: EMPTY_PRODUCT.name,
+    description: EMPTY_PRODUCT.description,
+    price: EMPTY_PRODUCT.price,
+    quantity: EMPTY_PRODUCT.quantity,
+    inStore: EMPTY_PRODUCT.inStore ?? false,
+    category: EMPTY_PRODUCT.category,
+    imagesText: '',
+  };
+}
 
 export const ProductDialog = ({
   product,
@@ -54,6 +57,7 @@ export const ProductDialog = ({
   const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [formVersion, setFormVersion] = useState(0);
   const {
     register,
     reset,
@@ -61,7 +65,7 @@ export const ProductDialog = ({
     setError,
     formState: { errors },
   } = useForm<ProductFormValues>({
-    defaultValues: emptyForm,
+    defaultValues: getEmptyFormValues(),
   });
 
   const handleDialogOpenChange = (nextOpen: boolean) => {
@@ -136,6 +140,9 @@ export const ProductDialog = ({
         });
 
         setSubmitError(result.error ?? 'No se pudo guardar el producto');
+        toast.error(
+          result.error ?? `No se pudo guardar el producto ${productData.name}`,
+        );
         return;
       }
 
@@ -144,18 +151,22 @@ export const ProductDialog = ({
       });
 
       if (isEditing) {
+        toast.success(`Producto ${productData.name} actualizado correctamente`);
         handleDialogOpenChange(false);
         return;
       }
 
-      reset(emptyForm);
+      reset(getEmptyFormValues());
+      setFormVersion((currentVersion) => currentVersion + 1);
+      setSubmitError(null);
+      toast.success(`Producto ${productData.name} creado correctamente`);
     });
   };
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="xl:max-w-xl">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form key={formVersion} onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>
               {isEditing ? 'Editar producto' : 'Agregar nuevo producto'}
@@ -164,8 +175,7 @@ export const ProductDialog = ({
               Ingrese todos los detalles del producto
             </DialogDescription>
           </DialogHeader>
-
-          <div className="space-y-4">
+          <div className="space-y-4 py-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Nombre del Producto
