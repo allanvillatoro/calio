@@ -7,8 +7,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useEffect } from 'react';
 import { Button } from '../ui/button';
 import { CATEGORIES, type Product } from '@/lib/types';
+import { useForm } from 'react-hook-form';
+import { EMPTY_PRODUCT } from '@/lib/constants/product';
 
 interface ProductDialogProps {
   product: Product | null;
@@ -16,21 +19,87 @@ interface ProductDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+interface ProductFormValues {
+  id?: number;
+  name: string;
+  description: string;
+  price: number;
+  quantity: number;
+  inStore: boolean;
+  category: Product['category'];
+  imagesText: string;
+}
+
 export const ProductDialog = ({
   product,
   open,
   onOpenChange,
 }: ProductDialogProps) => {
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ProductFormValues>({
+    defaultValues: {
+      id: undefined,
+      name: EMPTY_PRODUCT.name,
+      description: EMPTY_PRODUCT.description,
+      price: EMPTY_PRODUCT.price,
+      quantity: EMPTY_PRODUCT.quantity,
+      inStore: EMPTY_PRODUCT.inStore,
+      category: EMPTY_PRODUCT.category,
+      imagesText: '',
+    },
+  });
+
+  useEffect(() => {
+    reset({
+      id:
+        typeof product?.id === 'number' && product.id > 0
+          ? product.id
+          : undefined,
+      name: product?.name ?? EMPTY_PRODUCT.name,
+      description: product?.description ?? EMPTY_PRODUCT.description,
+      price: product?.price ?? EMPTY_PRODUCT.price,
+      quantity: product?.quantity ?? EMPTY_PRODUCT.quantity,
+      inStore: product?.inStore ?? EMPTY_PRODUCT.inStore ?? false,
+      category: product?.category ?? EMPTY_PRODUCT.category,
+      imagesText: product?.images?.join(', ') ?? '',
+    });
+  }, [product, reset]);
+
   const isEditing = !!product?.id;
 
-  const handleSubmit = () => {
-    console.log(`Guardar producto ${isEditing ? product?.id : '(nuevo)'}`);
+  const onSubmit = (values: ProductFormValues) => {
+    values.imagesText = values.imagesText.trim();
+    const images = values.imagesText
+      ? values.imagesText.split(',').map((img) => img.trim())
+      : [];
+
+    const productData = {
+      name: values.name,
+      description: values.description,
+      price: values.price,
+      quantity: values.quantity,
+      inStore: values.inStore,
+      category: values.category,
+      images,
+    } as Product;
+
+    if (isEditing) {
+      // Aquí iría la lógica para actualizar el producto existente
+      console.log(`Actualizar producto con ID ${product?.id}`, productData);
+    } else {
+      // Aquí iría la lógica para crear un nuevo producto
+      console.log('Crear nuevo producto', productData);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <form>
-        <DialogContent className="xl:max-w-xl">
+      <DialogContent className="xl:max-w-xl">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>
               {isEditing ? 'Editar producto' : 'Agregar nuevo producto'}
@@ -47,10 +116,16 @@ export const ProductDialog = ({
               </label>
               <input
                 type="text"
-                required
-                defaultValue={product?.name ?? ''}
+                {...register('name', {
+                  required: 'El nombre es obligatorio',
+                })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               />
+              {errors.name && (
+                <p className="mt-1 text-xs text-red-600">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -58,11 +133,17 @@ export const ProductDialog = ({
                 Descripción
               </label>
               <textarea
-                required
-                defaultValue={product?.description ?? ''}
+                {...register('description', {
+                  required: 'La descripción es obligatoria',
+                })}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               />
+              {errors.description && (
+                <p className="mt-1 text-xs text-red-600">
+                  {errors.description.message}
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -72,12 +153,22 @@ export const ProductDialog = ({
                 </label>
                 <input
                   type="number"
-                  required
-                  min="0"
                   step="0.01"
-                  defaultValue={product?.price ?? 100}
+                  {...register('price', {
+                    valueAsNumber: true,
+                    required: 'El precio es obligatorio',
+                    min: {
+                      value: 0,
+                      message: 'El precio no puede ser negativo',
+                    },
+                  })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
+                {errors.price && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.price.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -86,11 +177,21 @@ export const ProductDialog = ({
                 </label>
                 <input
                   type="number"
-                  required
-                  min="0"
-                  defaultValue={product?.quantity ?? 1}
+                  {...register('quantity', {
+                    valueAsNumber: true,
+                    required: 'La cantidad es obligatoria',
+                    min: {
+                      value: 0,
+                      message: 'La cantidad no puede ser negativa',
+                    },
+                  })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
+                {errors.quantity && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.quantity.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -98,7 +199,7 @@ export const ProductDialog = ({
               <input
                 type="checkbox"
                 id="inStore"
-                defaultChecked={product?.inStore ?? false}
+                {...register('inStore')}
                 className="w-4 h-4 rounded border-gray-300 accent-gray-900 cursor-pointer"
               />
               <label
@@ -114,8 +215,9 @@ export const ProductDialog = ({
                 Categoría
               </label>
               <select
-                required
-                defaultValue={product?.category ?? CATEGORIES[0]}
+                {...register('category', {
+                  required: 'La categoría es obligatoria',
+                })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               >
                 {CATEGORIES.map((cat) => (
@@ -124,6 +226,11 @@ export const ProductDialog = ({
                   </option>
                 ))}
               </select>
+              {errors.category && (
+                <p className="mt-1 text-xs text-red-600">
+                  {errors.category.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -132,11 +239,23 @@ export const ProductDialog = ({
               </label>
               <input
                 type="text"
-                required
-                defaultValue={product?.images?.join(', ') ?? ''}
-                placeholder="Ej: 1, 1-1, 1-2"
+                {...register('imagesText', {
+                  required: 'Debes ingresar al menos una imagen',
+                  validate: (value) =>
+                    value
+                      .split(',')
+                      .map((item) => item.trim())
+                      .filter(Boolean).length > 0 ||
+                    'Debes ingresar al menos una imagen valida',
+                })}
+                placeholder="Ej: img1-1.webp, img1-2.webp"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               />
+              {errors.imagesText && (
+                <p className="mt-1 text-xs text-red-600">
+                  {errors.imagesText.message}
+                </p>
+              )}
               <p className="mt-1 text-xs text-gray-500">
                 Ingresa todos los nombres de archivo de las imágenes separados
                 por comas. El primer nombre será la imagen principal.
@@ -146,12 +265,12 @@ export const ProductDialog = ({
 
           <DialogFooter>
             <DialogClose render={<Button variant="outline">Cancelar</Button>} />
-            <Button type="submit" onClick={handleSubmit}>
+            <Button type="submit">
               {isEditing ? 'Guardar cambios' : 'Agregar'}
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 };
