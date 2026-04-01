@@ -1,0 +1,107 @@
+'use server';
+
+import { revalidatePath } from 'next/cache';
+import { ZodError } from 'zod';
+import {
+  createProductBodySchema,
+  productIdParamsSchema,
+  updateProductBodySchema,
+} from '@/app/api/products/schemas';
+import type { IProduct } from '@/lib/interfaces/product';
+import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
+import { formatZodError } from '@/lib/zod';
+
+interface ProductMutationErrorDetail {
+  path: string;
+  message: string;
+}
+
+export interface ProductMutationResult {
+  success: boolean;
+  product?: IProduct;
+  error?: string;
+  details?: ProductMutationErrorDetail[];
+}
+
+function revalidateProductPaths(productId: number) {
+  revalidatePath('/catalogo');
+  revalidatePath(`/productos/${productId}`);
+}
+
+export async function createProductAction(
+  input: unknown,
+): Promise<ProductMutationResult> {
+  try {
+    const parsedBody = createProductBodySchema.parse(input);
+    const product = await productsRepository.save(parsedBody);
+
+    revalidateProductPaths(product.id);
+
+    return {
+      success: true,
+      product,
+    };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      const formattedError = formatZodError(error);
+
+      return {
+        success: false,
+        error: formattedError.error,
+        details: formattedError.details,
+      };
+    }
+
+    console.error('Failed to create product from server action', error);
+
+    return {
+      success: false,
+      error: 'Failed to create product',
+    };
+  }
+}
+
+export async function updateProductAction(
+  id: number,
+  input: unknown,
+): Promise<ProductMutationResult> {
+  try {
+    const validatedId = productIdParamsSchema.parse({ id }).id;
+    const parsedBody = updateProductBodySchema.parse(input);
+    const product = await productsRepository.updateById(
+      validatedId,
+      parsedBody,
+    );
+
+    if (!product) {
+      return {
+        success: false,
+        error: 'Product not found',
+      };
+    }
+
+    revalidateProductPaths(product.id);
+
+    return {
+      success: true,
+      product,
+    };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      const formattedError = formatZodError(error);
+
+      return {
+        success: false,
+        error: formattedError.error,
+        details: formattedError.details,
+      };
+    }
+
+    console.error('Failed to update product from server action', error);
+
+    return {
+      success: false,
+      error: 'Failed to update product',
+    };
+  }
+}
