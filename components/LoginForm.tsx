@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,6 +17,10 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { login } from '@/lib/actions/login.action';
 
 interface LoginFormValues {
   email: string;
@@ -25,9 +31,13 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormValues>({
     defaultValues: {
@@ -36,8 +46,28 @@ export function LoginForm({
     },
   });
 
-  const onSubmit = (values: LoginFormValues) => {
-    console.log('Login form values:', values);
+  const onSubmit = async (values: LoginFormValues) => {
+    setSubmitError(null);
+    setIsSubmitting(true);
+
+    try {
+      await login(values);
+      toast.success('Sesion iniciada correctamente');
+      router.push('/admin');
+      router.refresh();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'No se pudo iniciar sesion';
+
+      setSubmitError(message);
+      setError('root', {
+        type: 'server',
+        message,
+      });
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -86,7 +116,12 @@ export function LoginForm({
                 <FieldError errors={[errors.password]} />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Ingresando...' : 'Login'}
+                </Button>
+                <FieldError
+                  errors={submitError ? [{ message: submitError }] : undefined}
+                />
               </Field>
             </FieldGroup>
           </form>
