@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Plus } from 'lucide-react';
 import { CATEGORIES, type Product } from '@/lib/types';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
 import { getProductsByQuery } from '@/lib/actions/get-products-by-query.action';
@@ -11,17 +12,13 @@ import { ProductDialog } from '../admin/ProductDialog';
 import { DeleteDialog } from '../admin/DeleteDialog';
 import { Button } from '../ui/button';
 import { EMPTY_PRODUCT } from '@/lib/constants/product';
+import { useAuth } from '@/lib/hooks/useAuth';
 
-interface Props {
-  isAdmin?: boolean;
-}
-
-export default function CatalogContent({ isAdmin = false }: Props) {
+export default function CatalogContent() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
-
-  // TODO: Detect here from the gloabl state if the user is admin, instead of passing it as a prop from the admin page.
+  const { isAuthenticated } = useAuth();
 
   const {
     selectedCategories,
@@ -62,12 +59,13 @@ export default function CatalogContent({ isAdmin = false }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-12">
-      {isAdmin && !printView && (
+      {isAuthenticated && !printView && (
         <div className="py-4 text-right">
           <Button
             className="w-24"
             onClick={() => setEditingProduct(EMPTY_PRODUCT)}
           >
+            <Plus className="size-4" />
             Agregar
           </Button>
         </div>
@@ -93,7 +91,7 @@ export default function CatalogContent({ isAdmin = false }: Props) {
             totalPages={productsResponse?.paging.totalPages ?? 1}
             isLoading={isLoading}
             onPageChange={onPageChange}
-            isAdmin={isAdmin && !printView}
+            isAdmin={isAuthenticated && !printView}
             onEdit={setEditingProduct}
             onDelete={setDeletingProduct}
           />

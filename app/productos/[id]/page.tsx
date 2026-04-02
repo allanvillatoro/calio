@@ -2,8 +2,8 @@ import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { formatPrice, toNumber } from '@/lib/utils';
 import { FaWhatsapp } from 'react-icons/fa';
-import ImageCarousel from '@/components/ImageCarousel';
-import BackButton from '@/components/BackButton';
+import ImageCarousel from '@/components/product/ImageCarousel';
+import BackButton from '@/components/product/BackButton';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 
 interface ProductDetailPageProps {

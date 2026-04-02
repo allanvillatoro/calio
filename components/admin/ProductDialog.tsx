@@ -7,11 +7,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useEffect } from 'react';
+import { useEffect, useState, useTransition } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { CATEGORIES, type Product } from '@/lib/types';
 import { useForm } from 'react-hook-form';
 import { EMPTY_PRODUCT } from '@/lib/constants/product';
+import {
+  createProductAction,
+  updateProductAction,
+} from '@/lib/actions/product-mutations.action';
 
 interface ProductDialogProps {
   product: Product | null;
@@ -30,28 +36,58 @@ interface ProductFormValues {
   imagesText: string;
 }
 
+function getEmptyFormValues(): ProductFormValues {
+  return {
+    id: undefined,
+    name: EMPTY_PRODUCT.name,
+    description: EMPTY_PRODUCT.description,
+    price: EMPTY_PRODUCT.price,
+    quantity: EMPTY_PRODUCT.quantity,
+    inStore: EMPTY_PRODUCT.inStore ?? false,
+    category: EMPTY_PRODUCT.category,
+    imagesText: '',
+  };
+}
+
+const backendFieldToFormFieldMap: Partial<
+  Record<string, keyof ProductFormValues>
+> = {
+  images: 'imagesText',
+};
+
 export const ProductDialog = ({
   product,
   open,
   onOpenChange,
 }: ProductDialogProps) => {
+  const queryClient = useQueryClient();
+  const [isPending, startTransition] = useTransition();
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [formVersion, setFormVersion] = useState(0);
+  const [shouldRefreshOnClose, setShouldRefreshOnClose] = useState(false);
   const {
     register,
     reset,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<ProductFormValues>({
-    defaultValues: {
-      id: undefined,
-      name: EMPTY_PRODUCT.name,
-      description: EMPTY_PRODUCT.description,
-      price: EMPTY_PRODUCT.price,
-      quantity: EMPTY_PRODUCT.quantity,
-      inStore: EMPTY_PRODUCT.inStore,
-      category: EMPTY_PRODUCT.category,
-      imagesText: '',
-    },
+    defaultValues: getEmptyFormValues(),
   });
+
+  const handleDialogOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      setSubmitError(null);
+      if (shouldRefreshOnClose) {
+        queryClient.invalidateQueries({
+          queryKey: ['products'],
+        });
+        setShouldRefreshOnClose(false);
+      }
+    }
+
+    onOpenChange(nextOpen);
+  };
 
   useEffect(() => {
     reset({
@@ -72,10 +108,10 @@ export const ProductDialog = ({
   const isEditing = !!product?.id;
 
   const onSubmit = (values: ProductFormValues) => {
-    values.imagesText = values.imagesText.trim();
     const images = values.imagesText
-      ? values.imagesText.split(',').map((img) => img.trim())
-      : [];
+      .split(',')
+      .map((img) => img.trim())
+      .filter(Boolean);
 
     const productData = {
       name: values.name,
@@ -85,21 +121,68 @@ export const ProductDialog = ({
       inStore: values.inStore,
       category: values.category,
       images,
-    } as Product;
+    };
 
-    if (isEditing) {
-      // Aquí iría la lógica para actualizar el producto existente
-      console.log(`Actualizar producto con ID ${product?.id}`, productData);
-    } else {
-      // Aquí iría la lógica para crear un nuevo producto
-      console.log('Crear nuevo producto', productData);
-    }
+    setSubmitError(null);
+
+    startTransition(async () => {
+      const result =
+        isEditing && product?.id
+          ? await updateProductAction(product.id, productData)
+          : await createProductAction(productData);
+
+      if (!result.success) {
+        const formFields: Array<keyof ProductFormValues> = [
+          'name',
+          'description',
+          'price',
+          'quantity',
+          'category',
+          'imagesText',
+        ];
+
+        result.details?.forEach((detail) => {
+          const field =
+            backendFieldToFormFieldMap[detail.path] ??
+            (detail.path as keyof ProductFormValues);
+
+          if (formFields.includes(field)) {
+            setError(field, {
+              type: 'server',
+              message: detail.message,
+            });
+          }
+        });
+
+        setSubmitError(result.error ?? 'No se pudo guardar el producto');
+        toast.error(
+          result.error ?? `No se pudo guardar el producto ${productData.name}`,
+        );
+        return;
+      }
+
+      if (isEditing) {
+        queryClient.invalidateQueries({
+          queryKey: ['products'],
+        });
+        toast.success(`Producto ${productData.name} actualizado correctamente`);
+        handleDialogOpenChange(false);
+        return;
+      }
+
+      setShouldRefreshOnClose(true);
+
+      reset(getEmptyFormValues());
+      setFormVersion((currentVersion) => currentVersion + 1);
+      setSubmitError(null);
+      toast.success(`Producto ${productData.name} creado correctamente`);
+    });
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="xl:max-w-xl">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form key={formVersion} onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>
               {isEditing ? 'Editar producto' : 'Agregar nuevo producto'}
@@ -108,8 +191,7 @@ export const ProductDialog = ({
               Ingrese todos los detalles del producto
             </DialogDescription>
           </DialogHeader>
-
-          <div className="space-y-4">
+          <div className="space-y-4 py-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Nombre del Producto
@@ -264,11 +346,22 @@ export const ProductDialog = ({
           </div>
 
           <DialogFooter>
-            <DialogClose render={<Button variant="outline">Cancelar</Button>} />
-            <Button type="submit">
-              {isEditing ? 'Guardar cambios' : 'Agregar'}
+            <DialogClose
+              render={
+                <Button variant="outline" disabled={isPending}>
+                  Cancelar
+                </Button>
+              }
+            />
+            <Button type="submit" disabled={isPending}>
+              {isPending
+                ? 'Guardando...'
+                : isEditing
+                  ? 'Guardar cambios'
+                  : 'Agregar'}
             </Button>
           </DialogFooter>
+          {submitError && <p className="text-sm text-red-600">{submitError}</p>}
         </form>
       </DialogContent>
     </Dialog>

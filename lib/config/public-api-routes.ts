@@ -10,6 +10,10 @@ export const publicApiRoutes: PublicApiRoute[] = [
     path: '/api/users/login',
   },
   {
+    method: 'POST',
+    path: '/api/users/logout',
+  },
+  {
     method: 'GET',
     path: '/api/products',
   },
