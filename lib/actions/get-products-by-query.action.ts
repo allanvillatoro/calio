@@ -12,7 +12,7 @@ interface GetProductsParams {
 export const getProductsByQuery = async (
   params: GetProductsParams,
 ): Promise<{ data: Product[]; paging: Paging }> => {
-  const response = await productsApi<ProductResponse>('/products', {
+  const response = await productsApi<ProductResponse>('/', {
     params,
   });
 
