@@ -12,7 +12,7 @@ export default function LoginPage() {
               alt="CALIO Joyería"
               fill
               priority
-              className="object-cover"
+              className="object-contain"
               sizes="(max-width: 640px) 180px, (max-width: 768px) 220px, 260px"
             />
           </div>
