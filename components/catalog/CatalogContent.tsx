@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Plus } from 'lucide-react';
 import { CATEGORIES, type Product } from '@/lib/types';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
 import { getProductsByQuery } from '@/lib/actions/get-products-by-query.action';
@@ -64,6 +65,7 @@ export default function CatalogContent() {
             className="w-24"
             onClick={() => setEditingProduct(EMPTY_PRODUCT)}
           >
+            <Plus className="size-4" />
             Agregar
           </Button>
         </div>

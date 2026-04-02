@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { Pencil, Trash2 } from 'lucide-react';
 import type { Product } from '@/lib/types';
 import { formatPrice, getImageUrl } from '@/lib/utils';
 import { Button } from '../ui/button';
@@ -53,16 +54,18 @@ export default function ProductCard({
       {isAdmin && (
         <div className="flex justify-center gap-2 px-4 pb-4">
           <Button
-            className="w-20 px-3 py-1.5 text-sm font-medium text-white bg-gray-700 rounded-md hover:bg-gray-900 transition-colors"
+            className="w-16 bg-gray-700 text-white hover:bg-gray-900"
             onClick={() => onEdit(product)}
+            aria-label={`Editar ${product.name}`}
           >
-            Editar
+            <Pencil className="size-4" />
           </Button>
           <Button
-            className="w-20 px-3 py-1.5 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors"
+            className="w-16 bg-red-500 text-white hover:bg-red-600"
             onClick={() => onDelete(product)}
+            aria-label={`Eliminar ${product.name}`}
           >
-            Eliminar
+            <Trash2 className="size-4" />
           </Button>
         </div>
       )}
