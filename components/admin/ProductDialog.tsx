@@ -49,6 +49,12 @@ function getEmptyFormValues(): ProductFormValues {
   };
 }
 
+const backendFieldToFormFieldMap: Partial<
+  Record<string, keyof ProductFormValues>
+> = {
+  images: 'imagesText',
+};
+
 export const ProductDialog = ({
   product,
   open,
@@ -129,7 +135,9 @@ export const ProductDialog = ({
         ];
 
         result.details?.forEach((detail) => {
-          const field = detail.path as keyof ProductFormValues;
+          const field =
+            backendFieldToFormFieldMap[detail.path] ??
+            (detail.path as keyof ProductFormValues);
 
           if (formFields.includes(field)) {
             setError(field, {
