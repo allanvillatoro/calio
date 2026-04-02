@@ -1,8 +1,10 @@
 import { jwtVerify, SignJWT } from 'jose';
+import { cookies } from 'next/headers';
 import type { IUser } from '@/lib/interfaces/user';
 
 const JWT_ALGORITHM = 'HS256';
 const JWT_EXPIRATION = '4h';
+export const AUTH_TOKEN_COOKIE_NAME = 'calio_auth_token';
 
 function getJwtSecret(): Uint8Array {
   const secret = process.env.JWT_SECRET;
@@ -54,4 +56,29 @@ export async function verifyAuthToken(token: string): Promise<IUser | null> {
   } catch {
     return null;
   }
+}
+
+export async function getAuthenticatedUserFromCookies(): Promise<IUser | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(AUTH_TOKEN_COOKIE_NAME)?.value;
+
+  if (!token) {
+    return null;
+  }
+
+  return verifyAuthToken(token);
+}
+
+export async function clearAuthCookie() {
+  const cookieStore = await cookies();
+
+  cookieStore.set({
+    name: AUTH_TOKEN_COOKIE_NAME,
+    value: '',
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: 0,
+  });
 }
