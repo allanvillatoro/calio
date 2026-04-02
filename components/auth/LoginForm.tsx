@@ -19,9 +19,7 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-import { login } from '@/lib/actions/login.action';
-import { clearStoredAuthToken, setStoredAuthToken } from '@/lib/auth-client';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 interface LoginFormValues {
   email: string;
@@ -32,9 +30,8 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const { login, isLoggingIn } = useAuth();
   const {
     register,
     handleSubmit,
@@ -49,16 +46,10 @@ export function LoginForm({
 
   const onSubmit = async (values: LoginFormValues) => {
     setSubmitError(null);
-    setIsSubmitting(true);
 
     try {
-      const loginResult = await login(values);
-      setStoredAuthToken(loginResult.token);
-      toast.success('Sesión iniciada correctamente');
-      router.push('/admin');
-      router.refresh();
+      await login(values);
     } catch (error) {
-      clearStoredAuthToken();
       const message =
         error instanceof Error ? error.message : 'No se pudo iniciar sesión';
       setSubmitError(message);
@@ -67,8 +58,6 @@ export function LoginForm({
         message,
       });
       toast.error(message);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -118,8 +107,8 @@ export function LoginForm({
                 <FieldError errors={[errors.password]} />
               </Field>
               <Field>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? 'Ingresando...' : 'Iniciar Sesión'}
+                <Button type="submit" disabled={isLoggingIn}>
+                  {isLoggingIn ? 'Ingresando...' : 'Iniciar Sesión'}
                 </Button>
                 <FieldError
                   errors={submitError ? [{ message: submitError }] : undefined}
