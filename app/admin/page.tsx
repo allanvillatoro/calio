@@ -1,8 +1,14 @@
-'use client';
-
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { getAuthenticatedUserFromCookies } from '@/lib/auth';
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const authenticatedUser = await getAuthenticatedUserFromCookies();
+
+  if (!authenticatedUser) {
+    redirect('/login');
+  }
+
   return (
     <div className="container mx-auto px-6 py-16">
       <h1 className="serif-title text-3xl md:text-4xl text-center mb-2">
