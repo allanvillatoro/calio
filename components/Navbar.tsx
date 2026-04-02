@@ -2,11 +2,22 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { LogOut } from 'lucide-react';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 export function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === '/';
   const isCollection = pathname === '/catalogo';
+  const { isAuthenticated, isLoggingOut, logout } = useAuth();
+
+  const handleLogout = async (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    if (isLoggingOut) {
+      return;
+    }
+    await logout();
+  };
 
   const logoContent = (
     <span className="text-2xl font-bold text-gray-900">CALIO Joyería</span>
@@ -42,6 +53,17 @@ export function Navbar() {
             >
               Colección
             </Link>
+            {isAuthenticated && (
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1 text-gray-700 hover:text-gray-900"
+                aria-disabled={isLoggingOut}
+                onClick={handleLogout}
+              >
+                <LogOut className="size-4" />
+                {isLoggingOut ? 'Saliendo...' : 'Salir'}
+              </Link>
+            )}
           </div>
         </div>
       </div>
