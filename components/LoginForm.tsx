@@ -21,6 +21,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { login } from '@/lib/actions/login.action';
+import { setStoredAuthToken } from '@/lib/auth-client';
 
 interface LoginFormValues {
   email: string;
@@ -51,13 +52,14 @@ export function LoginForm({
     setIsSubmitting(true);
 
     try {
-      await login(values);
-      toast.success('Sesion iniciada correctamente');
+      const loginResult = await login(values);
+      setStoredAuthToken(loginResult.token);
+      toast.success('Sesión iniciada correctamente');
       router.push('/admin');
       router.refresh();
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'No se pudo iniciar sesion';
+        error instanceof Error ? error.message : 'No se pudo iniciar sesión';
 
       setSubmitError(message);
       setError('root', {

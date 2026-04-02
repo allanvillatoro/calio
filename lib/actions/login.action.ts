@@ -22,10 +22,10 @@ export const login = async (
   } catch (error) {
     if (axios.isAxiosError<{ error?: string }>(error)) {
       throw new Error(
-        error.response?.data?.error ?? 'No se pudo iniciar sesion',
+        error.response?.data?.error ?? 'No se pudo iniciar sesión',
       );
     }
 
-    throw new Error('No se pudo iniciar sesion');
+    throw new Error('No se pudo iniciar sesión');
   }
 };
