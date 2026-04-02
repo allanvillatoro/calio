@@ -119,7 +119,7 @@ export function LoginForm({
               </Field>
               <Field>
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? 'Ingresando...' : 'Login'}
+                  {isSubmitting ? 'Ingresando...' : 'Iniciar Sesión'}
                 </Button>
                 <FieldError
                   errors={submitError ? [{ message: submitError }] : undefined}
