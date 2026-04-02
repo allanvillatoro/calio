@@ -87,7 +87,7 @@ export function LoginForm({
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="m@calio.com"
                   aria-invalid={!!errors.email}
                   {...register('email', {
                     required: 'El correo es obligatorio',
