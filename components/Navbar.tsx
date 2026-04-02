@@ -20,7 +20,9 @@ export function Navbar() {
   };
 
   const logoContent = (
-    <span className="text-2xl font-bold text-gray-900">CALIO Joyería</span>
+    <span className="text-xl font-bold text-gray-900 sm:text-2xl">
+      CALIO Joyería
+    </span>
   );
 
   return (
@@ -32,7 +34,7 @@ export function Navbar() {
           ) : (
             <Link href="/">{logoContent}</Link>
           )}
-          <div className="space-x-6">
+          <div className="flex items-center gap-3 sm:gap-6">
             <Link
               href="/"
               className={`${
