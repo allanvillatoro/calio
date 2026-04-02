@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 import { Playfair_Display, Inter, Geist } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
+import { AppChrome } from '@/components/AppChrome';
 import { Providers } from './providers';
 import './globals.css';
 import { cn } from '@/lib/utils';
@@ -115,9 +114,7 @@ export default function RootLayout({
       </head>
       <body className="flex flex-col min-h-screen bg-white">
         <Providers>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <AppChrome>{children}</AppChrome>
           <Analytics />
           <SpeedInsights />
         </Providers>
