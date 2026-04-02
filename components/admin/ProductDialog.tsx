@@ -64,6 +64,7 @@ export const ProductDialog = ({
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [formVersion, setFormVersion] = useState(0);
+  const [shouldRefreshOnClose, setShouldRefreshOnClose] = useState(false);
   const {
     register,
     reset,
@@ -77,6 +78,12 @@ export const ProductDialog = ({
   const handleDialogOpenChange = (nextOpen: boolean) => {
     if (!nextOpen) {
       setSubmitError(null);
+      if (shouldRefreshOnClose) {
+        queryClient.invalidateQueries({
+          queryKey: ['products'],
+        });
+        setShouldRefreshOnClose(false);
+      }
     }
 
     onOpenChange(nextOpen);
@@ -154,15 +161,16 @@ export const ProductDialog = ({
         return;
       }
 
-      await queryClient.invalidateQueries({
-        queryKey: ['products'],
-      });
-
       if (isEditing) {
+        queryClient.invalidateQueries({
+          queryKey: ['products'],
+        });
         toast.success(`Producto ${productData.name} actualizado correctamente`);
         handleDialogOpenChange(false);
         return;
       }
+
+      setShouldRefreshOnClose(true);
 
       reset(getEmptyFormValues());
       setFormVersion((currentVersion) => currentVersion + 1);
