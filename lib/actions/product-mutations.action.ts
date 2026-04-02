@@ -7,6 +7,7 @@ import {
   productIdParamsSchema,
   updateProductBodySchema,
 } from '@/app/api/products/schemas';
+import { getAuthenticatedUserFromCookies } from '@/lib/auth';
 import type { IProduct } from '@/lib/interfaces/product';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 import { formatZodError } from '@/lib/zod';
@@ -33,10 +34,32 @@ function revalidateProductPaths(productId: number) {
   revalidatePath(`/productos/${productId}`);
 }
 
+async function ensureAuthenticatedUser() {
+  const authenticatedUser = await getAuthenticatedUserFromCookies();
+
+  if (!authenticatedUser) {
+    return {
+      success: false as const,
+      error: 'Unauthorized',
+    };
+  }
+
+  return {
+    success: true as const,
+    user: authenticatedUser,
+  };
+}
+
 export async function createProductAction(
   input: unknown,
 ): Promise<ProductMutationResult> {
   try {
+    const authResult = await ensureAuthenticatedUser();
+
+    if (!authResult.success) {
+      return authResult;
+    }
+
     const parsedBody = createProductBodySchema.parse(input);
     const product = await productsRepository.save(parsedBody);
 
@@ -71,6 +94,12 @@ export async function updateProductAction(
   input: unknown,
 ): Promise<ProductMutationResult> {
   try {
+    const authResult = await ensureAuthenticatedUser();
+
+    if (!authResult.success) {
+      return authResult;
+    }
+
     const validatedId = productIdParamsSchema.parse({ id }).id;
     const parsedBody = updateProductBodySchema.parse(input);
     const product = await productsRepository.updateById(
@@ -115,6 +144,12 @@ export async function deleteProductAction(
   id: number,
 ): Promise<ProductDeleteResult> {
   try {
+    const authResult = await ensureAuthenticatedUser();
+
+    if (!authResult.success) {
+      return authResult;
+    }
+
     const validatedId = productIdParamsSchema.parse({ id }).id;
     const product = await productsRepository.findById(validatedId);
 
