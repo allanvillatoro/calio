@@ -255,6 +255,7 @@ export function useProductDialogForm({
     });
   };
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const currentImages = watch('images') || [];
   const currentFiles = watch('files') || [];
 
