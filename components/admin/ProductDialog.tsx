@@ -1,3 +1,7 @@
+import Image from 'next/image';
+import { ChevronLeft, ChevronRight, Upload, X } from 'lucide-react';
+
+import { Button } from '../ui/button';
 import {
   Dialog,
   DialogClose,
@@ -7,51 +11,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useEffect, useState, useTransition } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { Button } from '../ui/button';
-import { CATEGORIES, type Category, type Product } from '@/lib/types';
-import { useForm } from 'react-hook-form';
-import { EMPTY_PRODUCT } from '@/lib/constants/product';
-import {
-  createProductAction,
-  updateProductAction,
-} from '@/lib/actions/product-mutations.action';
-import Image from 'next/image';
-import { ChevronLeft, ChevronRight, Upload, X } from 'lucide-react';
-import { cn, getImageUrl, mergeFilesByName, moveArrayItem } from '@/lib/utils';
+import { CATEGORIES, type Product } from '@/lib/types';
+import { cn, getImageUrl } from '@/lib/utils';
+import { useProductDialogForm } from '@/lib/hooks/useProductDialogForm';
 
 interface ProductDialogProps {
   product: Product | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
-interface ProductFormValues {
-  id?: number;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  inStore: boolean;
-  category: Category;
-  images: string[];
-}
-interface FormInputs extends ProductFormValues {
-  files?: File[];
-}
-
-function getEmptyFormValues(): ProductFormValues {
-  return {
-    id: undefined,
-    name: EMPTY_PRODUCT.name,
-    description: EMPTY_PRODUCT.description,
-    price: EMPTY_PRODUCT.price,
-    quantity: EMPTY_PRODUCT.quantity,
-    inStore: EMPTY_PRODUCT.inStore ?? false,
-    category: EMPTY_PRODUCT.category,
-    images: [],
-  };
 }
 
 export const ProductDialog = ({
@@ -59,215 +26,30 @@ export const ProductDialog = ({
   open,
   onOpenChange,
 }: ProductDialogProps) => {
-  const queryClient = useQueryClient();
-  const [isPending, startTransition] = useTransition();
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [formVersion, setFormVersion] = useState(0);
-  const [shouldRefreshOnClose, setShouldRefreshOnClose] = useState(false);
-  const [dragActive, setDragActive] = useState(false);
   const {
-    register,
-    reset,
+    currentFiles,
+    currentImages,
+    dragActive,
+    errors,
+    formVersion,
+    handleDeleteCurrentImage,
+    handleDeleteUploadImage,
+    handleDialogOpenChange,
+    handleDrag,
+    handleDrop,
+    handleFileChange,
+    handleMoveCurrentImage,
+    handleMoveUploadImage,
     handleSubmit,
-    clearErrors,
-    setError,
-    getValues,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<FormInputs>({
-    defaultValues: { ...getEmptyFormValues(), files: [] },
+    isEditing,
+    isPending,
+    onSubmit,
+    register,
+    submitError,
+  } = useProductDialogForm({
+    product,
+    onOpenChange,
   });
-
-  const handleDialogOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen) {
-      setSubmitError(null);
-      if (shouldRefreshOnClose) {
-        queryClient.invalidateQueries({
-          queryKey: ['products'],
-        });
-        setShouldRefreshOnClose(false);
-      }
-    }
-
-    onOpenChange(nextOpen);
-  };
-
-  useEffect(() => {
-    reset({
-      id:
-        typeof product?.id === 'number' && product.id > 0
-          ? product.id
-          : undefined,
-      name: product?.name ?? EMPTY_PRODUCT.name,
-      description: product?.description ?? EMPTY_PRODUCT.description,
-      price: product?.price ?? EMPTY_PRODUCT.price,
-      quantity: product?.quantity ?? EMPTY_PRODUCT.quantity,
-      inStore: product?.inStore ?? EMPTY_PRODUCT.inStore ?? false,
-      category: product?.category ?? EMPTY_PRODUCT.category,
-      images: product?.images ?? [],
-      files: [],
-    });
-  }, [product, reset]);
-
-  const isEditing = !!product?.id;
-
-  const clearImagesErrorIfNeeded = (
-    files: File[] = getValues('files') || [],
-  ) => {
-    if ((getValues('images') || []).length > 0 || files.length > 0) {
-      clearErrors('images');
-    }
-  };
-
-  const onSubmit = (values: FormInputs) => {
-    clearImagesErrorIfNeeded(values.files ?? []);
-
-    const productData = {
-      name: values.name,
-      description: values.description,
-      price: values.price,
-      quantity: values.quantity,
-      inStore: values.inStore,
-      category: values.category,
-      images: values.images,
-      files: values.files,
-    };
-
-    setSubmitError(null);
-
-    startTransition(async () => {
-      const result =
-        isEditing && product?.id
-          ? await updateProductAction(product.id, productData)
-          : await createProductAction(productData);
-
-      if (!result.success) {
-        const formFields: Array<keyof ProductFormValues> = [
-          'name',
-          'description',
-          'price',
-          'quantity',
-          'category',
-          'images',
-        ];
-
-        result.details?.forEach((detail) => {
-          const field = detail.path as keyof ProductFormValues;
-
-          if (formFields.includes(field)) {
-            setError(field, {
-              type: 'server',
-              message: detail.message,
-            });
-          }
-        });
-
-        setSubmitError(result.error ?? 'No se pudo guardar el producto');
-        toast.error(
-          result.error ?? `No se pudo guardar el producto ${productData.name}`,
-        );
-        return;
-      }
-
-      if (isEditing) {
-        queryClient.invalidateQueries({
-          queryKey: ['products'],
-        });
-        toast.success(`Producto ${productData.name} actualizado correctamente`);
-        handleDialogOpenChange(false);
-        return;
-      }
-
-      setShouldRefreshOnClose(true);
-
-      reset(getEmptyFormValues());
-      setFormVersion((currentVersion) => currentVersion + 1);
-      setSubmitError(null);
-      toast.success(`Producto ${productData.name} creado correctamente`);
-    });
-  };
-
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === 'dragenter' || e.type === 'dragover') {
-      setDragActive(true);
-    } else if (e.type === 'dragleave') {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    const droppedFiles = e.dataTransfer.files;
-
-    if (!droppedFiles) return;
-
-    const currentFiles = getValues('files') || [];
-    const nextFiles = mergeFilesByName(currentFiles, Array.from(droppedFiles));
-    setValue('files', nextFiles, {
-      shouldDirty: true,
-    });
-    clearImagesErrorIfNeeded(nextFiles);
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = e.target.files;
-
-    if (!selectedFiles) return;
-
-    const currentFiles = getValues('files') || [];
-    const nextFiles = mergeFilesByName(currentFiles, Array.from(selectedFiles));
-    setValue('files', nextFiles, {
-      shouldDirty: true,
-    });
-    clearImagesErrorIfNeeded(nextFiles);
-  };
-
-  const handleDeleteUploadImage = (fileName: string) => {
-    const currentFiles = getValues('files') || [];
-    setValue(
-      'files',
-      currentFiles.filter((f) => f.name !== fileName),
-      {
-        shouldDirty: true,
-      },
-    );
-  };
-
-  const handleDeleteCurrentImage = (imageName: string) => {
-    const currentImages = getValues('images') || [];
-
-    setValue(
-      'images',
-      currentImages.filter((image) => image !== imageName),
-      {
-        shouldDirty: true,
-        shouldValidate: true,
-      },
-    );
-  };
-
-  const handleMoveCurrentImage = (fromIndex: number, toIndex: number) => {
-    const images = getValues('images') || [];
-    setValue('images', moveArrayItem(images, fromIndex, toIndex), {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-  };
-
-  const handleMoveUploadImage = (fromIndex: number, toIndex: number) => {
-    const files = getValues('files') || [];
-    setValue('files', moveArrayItem(files, fromIndex, toIndex), {
-      shouldDirty: true,
-    });
-  };
-
-  const currentImages = watch('images') || [];
-  const currentFiles = watch('files') || [];
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
@@ -410,7 +192,7 @@ export const ProductDialog = ({
                     </p>
                   )}
                 </div>
-                {/* Current Images */}
+
                 <div
                   className={cn('mt-6 space-y-3', {
                     hidden: currentImages.length === 0,
@@ -473,14 +255,13 @@ export const ProductDialog = ({
                   </div>
                 </div>
               </div>
+
               <div className="space-y-6 py-4">
-                {/* Product Images */}
                 <div className="bg-white px-6">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Imágenes del producto
                   </label>
 
-                  {/* Drag & Drop Zone */}
                   <div
                     className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 ${
                       dragActive
@@ -496,7 +277,7 @@ export const ProductDialog = ({
                       type="file"
                       multiple
                       accept="image/*"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                       onChange={handleFileChange}
                     />
                     <div className="space-y-4">
@@ -515,7 +296,7 @@ export const ProductDialog = ({
                       </p>
                     </div>
                   </div>
-                  {/* Imagenes por cargar */}
+
                   <div
                     className={cn('mt-6 space-y-3', {
                       hidden: currentFiles.length === 0,
