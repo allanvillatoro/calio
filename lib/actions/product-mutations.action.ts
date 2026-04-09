@@ -8,6 +8,7 @@ import {
   updateProductBodySchema,
 } from '@/app/api/products/schemas';
 import { getAuthenticatedUserFromCookies } from '@/lib/auth';
+import { uploadProductImagesAction } from '@/lib/actions/cloudinary-upload.action';
 import type { IProduct } from '@/lib/interfaces/product';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 import { formatZodError } from '@/lib/zod';
@@ -63,7 +64,8 @@ export async function createProductAction(
 
     const { files = [], ...productData } = input;
     if (files.length > 0) {
-      //Make the API call to upload the files and get the URLs (file names in this case)
+      const uploadedImages = await uploadProductImagesAction(files);
+      productData.images = [...(productData.images ?? []), ...uploadedImages];
     }
 
     const parsedBody = createProductBodySchema.parse(productData);
@@ -110,7 +112,8 @@ export async function updateProductAction(
 
     const { files = [], ...productData } = input;
     if (files.length > 0) {
-      //Make the API call to upload the files and get the URLs (file names in this case)
+      const uploadedImages = await uploadProductImagesAction(files);
+      productData.images = [...(productData.images ?? []), ...uploadedImages];
     }
 
     const parsedBody = updateProductBodySchema.parse(productData);
