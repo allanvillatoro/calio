@@ -83,7 +83,7 @@ export const ProductDialog = ({
     setValue,
     formState: { errors },
   } = useForm<FormInputs>({
-    defaultValues: getEmptyFormValues(),
+    defaultValues: { ...getEmptyFormValues(), files: [] },
   });
 
   const handleDialogOpenChange = (nextOpen: boolean) => {
@@ -114,6 +114,9 @@ export const ProductDialog = ({
       category: product?.category ?? EMPTY_PRODUCT.category,
       imagesText: product?.images?.join(', ') ?? '',
     });
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFiles([]);
   }, [product, reset]);
 
   const isEditing = !!product?.id;
@@ -229,246 +232,252 @@ export const ProductDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
-      <DialogContent className="xl:max-w-xl">
-        <form key={formVersion} onSubmit={handleSubmit(onSubmit)}>
-          <DialogHeader>
-            <DialogTitle>
-              {isEditing ? 'Editar producto' : 'Agregar nuevo producto'}
-            </DialogTitle>
-            <DialogDescription>
-              Ingrese todos los detalles del producto
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="space-y-4 py-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nombre del Producto
-                </label>
-                <input
-                  type="text"
-                  {...register('name', {
-                    required: 'El nombre es obligatorio',
-                  })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Descripción
-                </label>
-                <textarea
-                  {...register('description', {
-                    required: 'La descripción es obligatoria',
-                  })}
-                  rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                />
-                {errors.description && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {errors.description.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
+      <DialogContent className="flex max-h-[90vh] w-full flex-col overflow-hidden sm:max-w-4xl xl:max-w-5xl">
+        <form
+          key={formVersion}
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex min-h-0 flex-1 flex-col"
+        >
+          <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+            <DialogHeader>
+              <DialogTitle>
+                {isEditing ? 'Editar producto' : 'Agregar nuevo producto'}
+              </DialogTitle>
+              <DialogDescription>
+                Ingrese todos los detalles del producto
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <div className="space-y-4 py-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Precio (L.)
+                    Nombre del Producto
                   </label>
                   <input
-                    type="number"
-                    step="0.01"
-                    {...register('price', {
-                      valueAsNumber: true,
-                      required: 'El precio es obligatorio',
-                      min: {
-                        value: 0,
-                        message: 'El precio no puede ser negativo',
-                      },
+                    type="text"
+                    {...register('name', {
+                      required: 'El nombre es obligatorio',
                     })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                   />
-                  {errors.price && (
+                  {errors.name && (
                     <p className="mt-1 text-xs text-red-600">
-                      {errors.price.message}
+                      {errors.name.message}
                     </p>
                   )}
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Cantidad
+                    Descripción
                   </label>
-                  <input
-                    type="number"
-                    {...register('quantity', {
-                      valueAsNumber: true,
-                      required: 'La cantidad es obligatoria',
-                      min: {
-                        value: 0,
-                        message: 'La cantidad no puede ser negativa',
-                      },
+                  <textarea
+                    {...register('description', {
+                      required: 'La descripción es obligatoria',
                     })}
+                    rows={4}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                   />
-                  {errors.quantity && (
+                  {errors.description && (
                     <p className="mt-1 text-xs text-red-600">
-                      {errors.quantity.message}
+                      {errors.description.message}
                     </p>
                   )}
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="inStore"
-                  {...register('inStore')}
-                  className="w-4 h-4 rounded border-gray-300 accent-gray-900 cursor-pointer"
-                />
-                <label
-                  htmlFor="inStore"
-                  className="text-sm font-medium text-gray-700 cursor-pointer"
-                >
-                  Disponible en tienda física
-                </label>
-              </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Precio (L.)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      {...register('price', {
+                        valueAsNumber: true,
+                        required: 'El precio es obligatorio',
+                        min: {
+                          value: 0,
+                          message: 'El precio no puede ser negativo',
+                        },
+                      })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                    />
+                    {errors.price && (
+                      <p className="mt-1 text-xs text-red-600">
+                        {errors.price.message}
+                      </p>
+                    )}
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Categoría
-                </label>
-                <select
-                  {...register('category', {
-                    required: 'La categoría es obligatoria',
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Cantidad
+                    </label>
+                    <input
+                      type="number"
+                      {...register('quantity', {
+                        valueAsNumber: true,
+                        required: 'La cantidad es obligatoria',
+                        min: {
+                          value: 0,
+                          message: 'La cantidad no puede ser negativa',
+                        },
+                      })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                    />
+                    {errors.quantity && (
+                      <p className="mt-1 text-xs text-red-600">
+                        {errors.quantity.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="inStore"
+                    {...register('inStore')}
+                    className="w-4 h-4 rounded border-gray-300 accent-gray-900 cursor-pointer"
+                  />
+                  <label
+                    htmlFor="inStore"
+                    className="text-sm font-medium text-gray-700 cursor-pointer"
+                  >
+                    Disponible en tienda física
+                  </label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Categoría
+                  </label>
+                  <select
+                    {...register('category', {
+                      required: 'La categoría es obligatoria',
+                    })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                  >
+                    {CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.category && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {errors.category.message}
+                    </p>
+                  )}
+                </div>
+                {/* Current Images */}
+                <div
+                  className={cn('mt-6 space-y-3', {
+                    hidden: !product || product.images.length === 0,
                   })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                    </option>
-                  ))}
-                </select>
-                {errors.category && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {errors.category.message}
-                  </p>
-                )}
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Imágenes actuales
+                  </label>
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
+                    {' '}
+                    {product &&
+                      product.images.map((image, index) => (
+                        <div key={index} className="relative group">
+                          <div className="relative aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center overflow-hidden">
+                            <Image
+                              src={getImageUrl(image)}
+                              alt="Product"
+                              fill
+                              sizes="(max-width: 1024px) 50vw, 25vw"
+                              className="object-cover rounded-lg"
+                            />
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              console.log('delete');
+                            }}
+                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                          <p className="mt-1 text-xs text-slate-600 truncate">
+                            {image}
+                          </p>
+                        </div>
+                      ))}
+                  </div>
+                </div>
               </div>
-              {/* Current Images */}
-              <div
-                className={cn('mt-6 space-y-3', {
-                  hidden: !product || product.images.length === 0,
-                })}
-              >
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Imágenes actuales
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  {' '}
-                  {product &&
-                    product.images.map((image, index) => (
-                      <div key={index} className="relative group">
-                        <div className="relative aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center overflow-hidden">
+              <div className="space-y-6 py-4">
+                {/* Product Images */}
+                <div className="bg-white px-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Imágenes del producto
+                  </label>
+
+                  {/* Drag & Drop Zone */}
+                  <div
+                    className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 ${
+                      dragActive
+                        ? 'border-blue-400 bg-blue-50'
+                        : 'border-slate-300 hover:border-slate-400'
+                    }`}
+                    onDragEnter={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDragOver={handleDrag}
+                    onDrop={handleDrop}
+                  >
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={handleFileChange}
+                    />
+                    <div className="space-y-4">
+                      <Upload className="mx-auto h-12 w-12 text-slate-400" />
+                      <div>
+                        <p className="text-lg font-medium text-slate-700">
+                          Arrastra las imágenes aquí
+                        </p>
+                        <p className="text-sm text-slate-500">
+                          o haz clic para buscar
+                        </p>
+                      </div>
+                      <p className="text-xs text-slate-400">
+                        PNG, JPG, WebP hasta 10MB cada una
+                      </p>
+                    </div>
+                  </div>
+                  {/* Imagenes por cargar */}
+                  <div
+                    className={cn('mt-6 space-y-3', {
+                      hidden: files.length === 0,
+                    })}
+                  >
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Imágenes por cargar
+                    </label>
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
+                      {files.map((file, index) => (
+                        <div
+                          key={index}
+                          className="relative group aspect-square overflow-hidden rounded-lg"
+                        >
                           <Image
-                            src={getImageUrl(image)}
+                            src={URL.createObjectURL(file)}
                             alt="Product"
                             fill
+                            unoptimized
                             sizes="(max-width: 1024px) 50vw, 25vw"
                             className="object-cover rounded-lg"
                           />
                         </div>
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            console.log('delete');
-                          }}
-                          className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                        <p className="mt-1 text-xs text-slate-600 truncate">
-                          {image}
-                        </p>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            </div>
-            <div className="space-y-6">
-              {/* Product Images */}
-              <div className="bg-white p-6">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Imágenes del producto
-                </label>
-
-                {/* Drag & Drop Zone */}
-                <div
-                  className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 ${
-                    dragActive
-                      ? 'border-blue-400 bg-blue-50'
-                      : 'border-slate-300 hover:border-slate-400'
-                  }`}
-                  onDragEnter={handleDrag}
-                  onDragLeave={handleDrag}
-                  onDragOver={handleDrag}
-                  onDrop={handleDrop}
-                >
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    onChange={handleFileChange}
-                  />
-                  <div className="space-y-4">
-                    <Upload className="mx-auto h-12 w-12 text-slate-400" />
-                    <div>
-                      <p className="text-lg font-medium text-slate-700">
-                        Arrastra las imágenes aquí
-                      </p>
-                      <p className="text-sm text-slate-500">
-                        o haz clic para buscar
-                      </p>
+                      ))}
                     </div>
-                    <p className="text-xs text-slate-400">
-                      PNG, JPG, WebP hasta 10MB cada una
-                    </p>
-                  </div>
-                </div>
-                {/* Imagenes por cargar */}
-                <div
-                  className={cn('mt-6 space-y-3', {
-                    hidden: files.length === 0,
-                  })}
-                >
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Imágenes por cargar
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {files.map((file, index) => (
-                      <div
-                        key={index}
-                        className="relative group aspect-square overflow-hidden rounded-lg"
-                      >
-                        <Image
-                          src={URL.createObjectURL(file)}
-                          alt="Product"
-                          fill
-                          unoptimized
-                          sizes="(max-width: 1024px) 50vw, 25vw"
-                          className="object-cover rounded-lg"
-                        />
-                      </div>
-                    ))}
                   </div>
                 </div>
               </div>
