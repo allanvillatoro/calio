@@ -82,7 +82,7 @@ export function LoginForm({
                     required: 'El correo es obligatorio',
                     pattern: {
                       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: 'Ingresa un correo valido',
+                      message: 'Ingresa un correo válido',
                     },
                   })}
                 />
@@ -97,10 +97,10 @@ export function LoginForm({
                   type="password"
                   aria-invalid={!!errors.password}
                   {...register('password', {
-                    required: 'La contrasena es obligatoria',
+                    required: 'La contraseña es obligatoria',
                     minLength: {
                       value: 6,
-                      message: 'La contrasena debe tener al menos 6 caracteres',
+                      message: 'La contraseña debe tener al menos 6 caracteres',
                     },
                   })}
                 />
