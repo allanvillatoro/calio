@@ -18,6 +18,9 @@ import {
   createProductAction,
   updateProductAction,
 } from '@/lib/actions/product-mutations.action';
+import Image from 'next/image';
+import { Upload, X } from 'lucide-react';
+import { cn, getImageUrl } from '@/lib/utils';
 
 interface ProductDialogProps {
   product: Product | null;
@@ -55,6 +58,10 @@ const backendFieldToFormFieldMap: Partial<
   images: 'imagesText',
 };
 
+interface FormInputs extends ProductFormValues {
+  files?: File[];
+}
+
 export const ProductDialog = ({
   product,
   open,
@@ -65,13 +72,17 @@ export const ProductDialog = ({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [formVersion, setFormVersion] = useState(0);
   const [shouldRefreshOnClose, setShouldRefreshOnClose] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
   const {
     register,
     reset,
     handleSubmit,
     setError,
+    getValues,
+    setValue,
     formState: { errors },
-  } = useForm<ProductFormValues>({
+  } = useForm<FormInputs>({
     defaultValues: getEmptyFormValues(),
   });
 
@@ -179,6 +190,43 @@ export const ProductDialog = ({
     });
   };
 
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true);
+    } else if (e.type === 'dragleave') {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    const files = e.dataTransfer.files;
+    console.log(files);
+
+    if (!files) return;
+
+    setFiles((prev) => [...prev, ...Array.from(files)]);
+
+    const currentFiles = getValues('files') || [];
+    setValue('files', [...currentFiles, ...Array.from(files)]);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    console.log(files);
+
+    if (!files) return;
+
+    setFiles((prev) => [...prev, ...Array.from(files)]);
+
+    const currentFiles = getValues('files') || [];
+    setValue('files', [...currentFiles, ...Array.from(files)]);
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="xl:max-w-xl">
@@ -191,157 +239,239 @@ export const ProductDialog = ({
               Ingrese todos los detalles del producto
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nombre del Producto
-              </label>
-              <input
-                type="text"
-                {...register('name', {
-                  required: 'El nombre es obligatorio',
-                })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-              />
-              {errors.name && (
-                <p className="mt-1 text-xs text-red-600">
-                  {errors.name.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Descripción
-              </label>
-              <textarea
-                {...register('description', {
-                  required: 'La descripción es obligatoria',
-                })}
-                rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-              />
-              {errors.description && (
-                <p className="mt-1 text-xs text-red-600">
-                  {errors.description.message}
-                </p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4 py-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Precio (L.)
+                  Nombre del Producto
                 </label>
                 <input
-                  type="number"
-                  step="0.01"
-                  {...register('price', {
-                    valueAsNumber: true,
-                    required: 'El precio es obligatorio',
-                    min: {
-                      value: 0,
-                      message: 'El precio no puede ser negativo',
-                    },
+                  type="text"
+                  {...register('name', {
+                    required: 'El nombre es obligatorio',
                   })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
-                {errors.price && (
+                {errors.name && (
                   <p className="mt-1 text-xs text-red-600">
-                    {errors.price.message}
+                    {errors.name.message}
                   </p>
                 )}
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Cantidad
+                  Descripción
                 </label>
-                <input
-                  type="number"
-                  {...register('quantity', {
-                    valueAsNumber: true,
-                    required: 'La cantidad es obligatoria',
-                    min: {
-                      value: 0,
-                      message: 'La cantidad no puede ser negativa',
-                    },
+                <textarea
+                  {...register('description', {
+                    required: 'La descripción es obligatoria',
                   })}
+                  rows={4}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
-                {errors.quantity && (
+                {errors.description && (
                   <p className="mt-1 text-xs text-red-600">
-                    {errors.quantity.message}
+                    {errors.description.message}
                   </p>
                 )}
               </div>
-            </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="inStore"
-                {...register('inStore')}
-                className="w-4 h-4 rounded border-gray-300 accent-gray-900 cursor-pointer"
-              />
-              <label
-                htmlFor="inStore"
-                className="text-sm font-medium text-gray-700 cursor-pointer"
-              >
-                Disponible en tienda física
-              </label>
-            </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Precio (L.)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    {...register('price', {
+                      valueAsNumber: true,
+                      required: 'El precio es obligatorio',
+                      min: {
+                        value: 0,
+                        message: 'El precio no puede ser negativo',
+                      },
+                    })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                  />
+                  {errors.price && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {errors.price.message}
+                    </p>
+                  )}
+                </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Categoría
-              </label>
-              <select
-                {...register('category', {
-                  required: 'La categoría es obligatoria',
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Cantidad
+                  </label>
+                  <input
+                    type="number"
+                    {...register('quantity', {
+                      valueAsNumber: true,
+                      required: 'La cantidad es obligatoria',
+                      min: {
+                        value: 0,
+                        message: 'La cantidad no puede ser negativa',
+                      },
+                    })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                  />
+                  {errors.quantity && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {errors.quantity.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="inStore"
+                  {...register('inStore')}
+                  className="w-4 h-4 rounded border-gray-300 accent-gray-900 cursor-pointer"
+                />
+                <label
+                  htmlFor="inStore"
+                  className="text-sm font-medium text-gray-700 cursor-pointer"
+                >
+                  Disponible en tienda física
+                </label>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Categoría
+                </label>
+                <select
+                  {...register('category', {
+                    required: 'La categoría es obligatoria',
+                  })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                >
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    </option>
+                  ))}
+                </select>
+                {errors.category && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.category.message}
+                  </p>
+                )}
+              </div>
+              {/* Current Images */}
+              <div
+                className={cn('mt-6 space-y-3', {
+                  hidden: !product || product.images.length === 0,
                 })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                  </option>
-                ))}
-              </select>
-              {errors.category && (
-                <p className="mt-1 text-xs text-red-600">
-                  {errors.category.message}
-                </p>
-              )}
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Imágenes actuales
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {' '}
+                  {product &&
+                    product.images.map((image, index) => (
+                      <div key={index} className="relative group">
+                        <div className="relative aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center overflow-hidden">
+                          <Image
+                            src={getImageUrl(image)}
+                            alt="Product"
+                            fill
+                            sizes="(max-width: 1024px) 50vw, 25vw"
+                            className="object-cover rounded-lg"
+                          />
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            console.log('delete');
+                          }}
+                          className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                        <p className="mt-1 text-xs text-slate-600 truncate">
+                          {image}
+                        </p>
+                      </div>
+                    ))}
+                </div>
+              </div>
             </div>
+            <div className="space-y-6">
+              {/* Product Images */}
+              <div className="bg-white p-6">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Imágenes del producto
+                </label>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Imágenes (separadas por comas, ej: &quot;1, 1-1, 1-2&quot;)
-              </label>
-              <input
-                type="text"
-                {...register('imagesText', {
-                  required: 'Debes ingresar al menos una imagen',
-                  validate: (value) =>
-                    value
-                      .split(',')
-                      .map((item) => item.trim())
-                      .filter(Boolean).length > 0 ||
-                    'Debes ingresar al menos una imagen valida',
-                })}
-                placeholder="Ej: img1-1.webp, img1-2.webp"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-              />
-              {errors.imagesText && (
-                <p className="mt-1 text-xs text-red-600">
-                  {errors.imagesText.message}
-                </p>
-              )}
-              <p className="mt-1 text-xs text-gray-500">
-                Ingresa todos los nombres de archivo de las imágenes separados
-                por comas. El primer nombre será la imagen principal.
-              </p>
+                {/* Drag & Drop Zone */}
+                <div
+                  className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 ${
+                    dragActive
+                      ? 'border-blue-400 bg-blue-50'
+                      : 'border-slate-300 hover:border-slate-400'
+                  }`}
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={handleDrop}
+                >
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    onChange={handleFileChange}
+                  />
+                  <div className="space-y-4">
+                    <Upload className="mx-auto h-12 w-12 text-slate-400" />
+                    <div>
+                      <p className="text-lg font-medium text-slate-700">
+                        Arrastra las imágenes aquí
+                      </p>
+                      <p className="text-sm text-slate-500">
+                        o haz clic para buscar
+                      </p>
+                    </div>
+                    <p className="text-xs text-slate-400">
+                      PNG, JPG, WebP hasta 10MB cada una
+                    </p>
+                  </div>
+                </div>
+                {/* Imagenes por cargar */}
+                <div
+                  className={cn('mt-6 space-y-3', {
+                    hidden: files.length === 0,
+                  })}
+                >
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Imágenes por cargar
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {files.map((file, index) => (
+                      <div
+                        key={index}
+                        className="relative group aspect-square overflow-hidden rounded-lg"
+                      >
+                        <Image
+                          src={URL.createObjectURL(file)}
+                          alt="Product"
+                          fill
+                          unoptimized
+                          sizes="(max-width: 1024px) 50vw, 25vw"
+                          className="object-cover rounded-lg"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
