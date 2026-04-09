@@ -69,7 +69,7 @@ export const ProductDialog = ({
               </DialogDescription>
             </DialogHeader>
             <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-              <div className="space-y-4 py-4">
+              <div className="space-y-4 py-4 px-2">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Nombre del Producto
@@ -256,8 +256,8 @@ export const ProductDialog = ({
                 </div>
               </div>
 
-              <div className="space-y-6 py-4">
-                <div className="bg-white px-6">
+              <div className="space-y-6 py-4 px-2">
+                <div className="bg-white">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Imágenes del producto
                   </label>
