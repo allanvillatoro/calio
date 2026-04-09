@@ -259,7 +259,7 @@ export const ProductDialog = ({
               <div className="space-y-6 py-4 px-2">
                 <div className="bg-white">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Imágenes del producto
+                    Nuevas imágenes
                   </label>
 
                   <div
