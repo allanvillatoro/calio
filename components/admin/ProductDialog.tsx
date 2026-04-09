@@ -19,7 +19,7 @@ import {
   updateProductAction,
 } from '@/lib/actions/product-mutations.action';
 import Image from 'next/image';
-import { Upload, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Upload, X } from 'lucide-react';
 import { cn, getImageUrl } from '@/lib/utils';
 
 interface ProductDialogProps {
@@ -65,6 +65,24 @@ function mergeFilesByName(
   });
 
   return Array.from(fileMap.values());
+}
+
+function moveArrayItem<T>(items: T[], fromIndex: number, toIndex: number): T[] {
+  if (
+    fromIndex === toIndex ||
+    fromIndex < 0 ||
+    toIndex < 0 ||
+    fromIndex >= items.length ||
+    toIndex >= items.length
+  ) {
+    return items;
+  }
+
+  const nextItems = [...items];
+  const [movedItem] = nextItems.splice(fromIndex, 1);
+  nextItems.splice(toIndex, 0, movedItem);
+
+  return nextItems;
 }
 
 interface FormInputs extends ProductFormValues {
@@ -262,6 +280,21 @@ export const ProductDialog = ({
     );
   };
 
+  const handleMoveCurrentImage = (fromIndex: number, toIndex: number) => {
+    const images = getValues('images') || [];
+    setValue('images', moveArrayItem(images, fromIndex, toIndex), {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
+  const handleMoveUploadImage = (fromIndex: number, toIndex: number) => {
+    const files = getValues('files') || [];
+    setValue('files', moveArrayItem(files, fromIndex, toIndex), {
+      shouldDirty: true,
+    });
+  };
+
   const currentImages = watch('images') || [];
   const currentFiles = watch('files') || [];
 
@@ -416,7 +449,7 @@ export const ProductDialog = ({
                     Imágenes actuales
                   </label>
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
-                    {currentImages.map((image) => (
+                    {currentImages.map((image, index) => (
                       <div key={image} className="relative group">
                         <div className="relative aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center overflow-hidden">
                           <Image
@@ -427,7 +460,32 @@ export const ProductDialog = ({
                             className="object-cover rounded-lg"
                           />
                         </div>
+                        <div className="absolute top-2 left-2 flex gap-1">
+                          <button
+                            type="button"
+                            disabled={index === 0}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleMoveCurrentImage(index, index - 1);
+                            }}
+                            className="rounded-full bg-white/90 p-1 text-slate-700 shadow-sm transition disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            <ChevronLeft className="h-3 w-3" />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={index === currentImages.length - 1}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleMoveCurrentImage(index, index + 1);
+                            }}
+                            className="rounded-full bg-white/90 p-1 text-slate-700 shadow-sm transition disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            <ChevronRight className="h-3 w-3" />
+                          </button>
+                        </div>
                         <button
+                          type="button"
                           onClick={(e) => {
                             e.preventDefault();
                             handleDeleteCurrentImage(image);
@@ -495,7 +553,7 @@ export const ProductDialog = ({
                       Imágenes por cargar
                     </label>
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
-                      {currentFiles.map((file) => (
+                      {currentFiles.map((file, index) => (
                         <div key={file.name} className="relative group">
                           <div className="relative aspect-square overflow-hidden rounded-lg">
                             <Image
@@ -507,7 +565,32 @@ export const ProductDialog = ({
                               className="object-cover rounded-lg"
                             />
                           </div>
+                          <div className="absolute top-2 left-2 flex gap-1">
+                            <button
+                              type="button"
+                              disabled={index === 0}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleMoveUploadImage(index, index - 1);
+                              }}
+                              className="rounded-full bg-white/90 p-1 text-slate-700 shadow-sm transition disabled:cursor-not-allowed disabled:opacity-40"
+                            >
+                              <ChevronLeft className="h-3 w-3" />
+                            </button>
+                            <button
+                              type="button"
+                              disabled={index === currentFiles.length - 1}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleMoveUploadImage(index, index + 1);
+                              }}
+                              className="rounded-full bg-white/90 p-1 text-slate-700 shadow-sm transition disabled:cursor-not-allowed disabled:opacity-40"
+                            >
+                              <ChevronRight className="h-3 w-3" />
+                            </button>
+                          </div>
                           <button
+                            type="button"
                             onClick={(e) => {
                               e.preventDefault();
                               handleDeleteUploadImage(file.name);
