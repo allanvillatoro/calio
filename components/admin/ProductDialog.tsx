@@ -390,7 +390,6 @@ export const ProductDialog = ({
                     Imágenes actuales
                   </label>
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
-                    {' '}
                     {product &&
                       product.images.map((image) => (
                         <div key={image} className="relative group">
@@ -472,18 +471,17 @@ export const ProductDialog = ({
                     </label>
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
                       {files.map((file) => (
-                        <div
-                          key={file.name}
-                          className="relative group aspect-square overflow-hidden rounded-lg"
-                        >
-                          <Image
-                            src={URL.createObjectURL(file)}
-                            alt="Product"
-                            fill
-                            unoptimized
-                            sizes="(max-width: 1024px) 50vw, 25vw"
-                            className="object-cover rounded-lg"
-                          />
+                        <div key={file.name} className="relative group">
+                          <div className="relative aspect-square overflow-hidden rounded-lg">
+                            <Image
+                              src={URL.createObjectURL(file)}
+                              alt="Product"
+                              fill
+                              unoptimized
+                              sizes="(max-width: 1024px) 50vw, 25vw"
+                              className="object-cover rounded-lg"
+                            />
+                          </div>
                           <button
                             onClick={(e) => {
                               e.preventDefault();
@@ -493,6 +491,9 @@ export const ProductDialog = ({
                           >
                             <X className="h-3 w-3" />
                           </button>
+                          <p className="mt-1 text-xs text-slate-600 truncate">
+                            {file.name}
+                          </p>
                         </div>
                       ))}
                     </div>
