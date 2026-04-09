@@ -573,6 +573,11 @@ export const ProductDialog = ({
                       ))}
                     </div>
                   </div>
+                  {errors.images && (
+                    <p className="mt-2 text-xs text-red-600">
+                      {errors.images.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
