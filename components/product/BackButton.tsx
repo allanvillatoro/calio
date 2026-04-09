@@ -10,7 +10,7 @@ export default function BackButton() {
       onClick={() => router.back()}
       className="text-gray-600 hover:text-gray-900 mb-6 inline-block"
     >
-      ← Volver a Colección
+      ← Volver
     </button>
   );
 }
