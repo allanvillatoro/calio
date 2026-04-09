@@ -36,7 +36,7 @@ interface ProductFormValues {
   quantity: number;
   inStore: boolean;
   category: Product['category'];
-  imagesText: string;
+  images: string[];
 }
 
 function getEmptyFormValues(): ProductFormValues {
@@ -48,15 +48,9 @@ function getEmptyFormValues(): ProductFormValues {
     quantity: EMPTY_PRODUCT.quantity,
     inStore: EMPTY_PRODUCT.inStore ?? false,
     category: EMPTY_PRODUCT.category,
-    imagesText: '',
+    images: [],
   };
 }
-
-const backendFieldToFormFieldMap: Partial<
-  Record<string, keyof ProductFormValues>
-> = {
-  images: 'imagesText',
-};
 
 interface FormInputs extends ProductFormValues {
   files?: File[];
@@ -81,6 +75,7 @@ export const ProductDialog = ({
     setError,
     getValues,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<FormInputs>({
     defaultValues: { ...getEmptyFormValues(), files: [] },
@@ -112,7 +107,7 @@ export const ProductDialog = ({
       quantity: product?.quantity ?? EMPTY_PRODUCT.quantity,
       inStore: product?.inStore ?? EMPTY_PRODUCT.inStore ?? false,
       category: product?.category ?? EMPTY_PRODUCT.category,
-      imagesText: product?.images?.join(', ') ?? '',
+      images: product?.images ?? [],
     });
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -122,11 +117,6 @@ export const ProductDialog = ({
   const isEditing = !!product?.id;
 
   const onSubmit = (values: ProductFormValues) => {
-    const images = values.imagesText
-      .split(',')
-      .map((img) => img.trim())
-      .filter(Boolean);
-
     const productData = {
       name: values.name,
       description: values.description,
@@ -134,10 +124,12 @@ export const ProductDialog = ({
       quantity: values.quantity,
       inStore: values.inStore,
       category: values.category,
-      images,
+      images: values.images,
     };
 
     setSubmitError(null);
+
+    console.log('Imagenes a subir', { files });
 
     startTransition(async () => {
       const result =
@@ -152,13 +144,11 @@ export const ProductDialog = ({
           'price',
           'quantity',
           'category',
-          'imagesText',
+          'images',
         ];
 
         result.details?.forEach((detail) => {
-          const field =
-            backendFieldToFormFieldMap[detail.path] ??
-            (detail.path as keyof ProductFormValues);
+          const field = detail.path as keyof ProductFormValues;
 
           if (formFields.includes(field)) {
             setError(field, {
@@ -208,7 +198,6 @@ export const ProductDialog = ({
     e.stopPropagation();
     setDragActive(false);
     const files = e.dataTransfer.files;
-    console.log(files);
 
     if (!files) return;
 
@@ -220,7 +209,6 @@ export const ProductDialog = ({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    console.log(files);
 
     if (!files) return;
 
@@ -238,6 +226,21 @@ export const ProductDialog = ({
       currentFiles.filter((f) => f.name !== fileName),
     );
   };
+
+  const handleDeleteCurrentImage = (imageName: string) => {
+    const currentImages = getValues('images') || [];
+
+    setValue(
+      'images',
+      currentImages.filter((image) => image !== imageName),
+      {
+        shouldDirty: true,
+        shouldValidate: true,
+      },
+    );
+  };
+
+  const currentImages = watch('images') || [];
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
@@ -383,39 +386,38 @@ export const ProductDialog = ({
                 {/* Current Images */}
                 <div
                   className={cn('mt-6 space-y-3', {
-                    hidden: !product || product.images.length === 0,
+                    hidden: currentImages.length === 0,
                   })}
                 >
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Imágenes actuales
                   </label>
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
-                    {product &&
-                      product.images.map((image) => (
-                        <div key={image} className="relative group">
-                          <div className="relative aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center overflow-hidden">
-                            <Image
-                              src={getImageUrl(image)}
-                              alt="Product"
-                              fill
-                              sizes="(max-width: 1024px) 50vw, 25vw"
-                              className="object-cover rounded-lg"
-                            />
-                          </div>
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              console.log('delete');
-                            }}
-                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                          <p className="mt-1 text-xs text-slate-600 truncate">
-                            {image}
-                          </p>
+                    {currentImages.map((image) => (
+                      <div key={image} className="relative group">
+                        <div className="relative aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center overflow-hidden">
+                          <Image
+                            src={getImageUrl(image)}
+                            alt="Product"
+                            fill
+                            sizes="(max-width: 1024px) 50vw, 25vw"
+                            className="object-cover rounded-lg"
+                          />
                         </div>
-                      ))}
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleDeleteCurrentImage(image);
+                          }}
+                          className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                        <p className="mt-1 text-xs text-slate-600 truncate">
+                          {image}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
