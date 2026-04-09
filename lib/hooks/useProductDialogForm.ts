@@ -31,6 +31,8 @@ interface UseProductDialogFormParams {
   onOpenChange: (open: boolean) => void;
 }
 
+const MAX_IMAGE_FILE_SIZE_BYTES = 1024 * 1024;
+
 function getEmptyFormValues(): ProductFormValues {
   return {
     id: undefined,
@@ -109,6 +111,18 @@ export function useProductDialogForm({
     }
   };
 
+  const getValidFiles = (incomingFiles: File[]) => {
+    const validFiles = incomingFiles.filter(
+      (file) => file.size <= MAX_IMAGE_FILE_SIZE_BYTES,
+    );
+
+    if (validFiles.length !== incomingFiles.length) {
+      toast.error('Cada imagen debe pesar menos de 1 MB');
+    }
+
+    return validFiles;
+  };
+
   const onSubmit = (values: FormInputs) => {
     clearImagesErrorIfNeeded(values.files ?? []);
 
@@ -126,54 +140,63 @@ export function useProductDialogForm({
     setSubmitError(null);
 
     startTransition(async () => {
-      const result =
-        isEditing && product?.id
-          ? await updateProductAction(product.id, productData)
-          : await createProductAction(productData);
+      try {
+        const result =
+          isEditing && product?.id
+            ? await updateProductAction(product.id, productData)
+            : await createProductAction(productData);
 
-      if (!result.success) {
-        const formFields: Array<keyof ProductFormValues> = [
-          'name',
-          'description',
-          'price',
-          'quantity',
-          'category',
-          'images',
-        ];
+        if (!result.success) {
+          const formFields: Array<keyof ProductFormValues> = [
+            'name',
+            'description',
+            'price',
+            'quantity',
+            'category',
+            'images',
+          ];
 
-        result.details?.forEach((detail) => {
-          const field = detail.path as keyof ProductFormValues;
+          result.details?.forEach((detail) => {
+            const field = detail.path as keyof ProductFormValues;
 
-          if (formFields.includes(field)) {
-            setError(field, {
-              type: 'server',
-              message: detail.message,
-            });
-          }
-        });
+            if (formFields.includes(field)) {
+              setError(field, {
+                type: 'server',
+                message: detail.message,
+              });
+            }
+          });
 
-        setSubmitError(result.error ?? 'No se pudo guardar el producto');
-        toast.error(
-          result.error ?? `No se pudo guardar el producto ${productData.name}`,
-        );
-        return;
+          setSubmitError(result.error ?? 'No se pudo guardar el producto');
+          toast.error(
+            result.error ??
+              `No se pudo guardar el producto ${productData.name}`,
+          );
+          return;
+        }
+
+        if (isEditing) {
+          queryClient.invalidateQueries({
+            queryKey: ['products'],
+          });
+          toast.success(
+            `Producto ${productData.name} actualizado correctamente`,
+          );
+          handleDialogOpenChange(false);
+          return;
+        }
+
+        setShouldRefreshOnClose(true);
+
+        reset(getEmptyFormValues());
+        setFormVersion((currentVersion) => currentVersion + 1);
+        setSubmitError(null);
+        toast.success(`Producto ${productData.name} creado correctamente`);
+      } catch (error) {
+        console.error('Unexpected error while submitting product form', error);
+        setSubmitError('Ocurrió un error inesperado al guardar el producto');
+        toast.error('Ocurrió un error inesperado al guardar el producto');
       }
-
-      if (isEditing) {
-        queryClient.invalidateQueries({
-          queryKey: ['products'],
-        });
-        toast.success(`Producto ${productData.name} actualizado correctamente`);
-        handleDialogOpenChange(false);
-        return;
-      }
-
-      setShouldRefreshOnClose(true);
-
-      reset(getEmptyFormValues());
-      setFormVersion((currentVersion) => currentVersion + 1);
-      setSubmitError(null);
-      toast.success(`Producto ${productData.name} creado correctamente`);
     });
   };
 
@@ -195,8 +218,12 @@ export function useProductDialogForm({
 
     if (!droppedFiles) return;
 
+    const validFiles = getValidFiles(Array.from(droppedFiles));
+
+    if (validFiles.length === 0) return;
+
     const currentFiles = getValues('files') || [];
-    const nextFiles = mergeFilesByName(currentFiles, Array.from(droppedFiles));
+    const nextFiles = mergeFilesByName(currentFiles, validFiles);
     setValue('files', nextFiles, {
       shouldDirty: true,
     });
@@ -208,8 +235,12 @@ export function useProductDialogForm({
 
     if (!selectedFiles) return;
 
+    const validFiles = getValidFiles(Array.from(selectedFiles));
+
+    if (validFiles.length === 0) return;
+
     const currentFiles = getValues('files') || [];
-    const nextFiles = mergeFilesByName(currentFiles, Array.from(selectedFiles));
+    const nextFiles = mergeFilesByName(currentFiles, validFiles);
     setValue('files', nextFiles, {
       shouldDirty: true,
     });

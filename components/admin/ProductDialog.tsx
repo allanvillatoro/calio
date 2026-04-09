@@ -291,8 +291,8 @@ export const ProductDialog = ({
                         </p>
                       </div>
                       <p className="text-xs text-slate-400">
-                        Preferiblemente en formato WebP de 800 x 800 píxeles
-                        para mejor rendimiento
+                        Máximo 1 MB por imagen. Preferiblemente en formato WebP
+                        de 800 x 800 píxeles para mejor rendimiento
                       </p>
                     </div>
                   </div>
