@@ -67,7 +67,6 @@ export const ProductDialog = ({
   const [formVersion, setFormVersion] = useState(0);
   const [shouldRefreshOnClose, setShouldRefreshOnClose] = useState(false);
   const [dragActive, setDragActive] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
   const {
     register,
     reset,
@@ -108,15 +107,13 @@ export const ProductDialog = ({
       inStore: product?.inStore ?? EMPTY_PRODUCT.inStore ?? false,
       category: product?.category ?? EMPTY_PRODUCT.category,
       images: product?.images ?? [],
+      files: [],
     });
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setFiles([]);
   }, [product, reset]);
 
   const isEditing = !!product?.id;
 
-  const onSubmit = (values: ProductFormValues) => {
+  const onSubmit = (values: FormInputs) => {
     const productData = {
       name: values.name,
       description: values.description,
@@ -129,7 +126,7 @@ export const ProductDialog = ({
 
     setSubmitError(null);
 
-    console.log('Imagenes a subir', { files });
+    console.log('Imagenes a subir', { files: values.files ?? [] });
 
     startTransition(async () => {
       const result =
@@ -197,33 +194,35 @@ export const ProductDialog = ({
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    const files = e.dataTransfer.files;
+    const droppedFiles = e.dataTransfer.files;
 
-    if (!files) return;
-
-    setFiles((prev) => [...prev, ...Array.from(files)]);
+    if (!droppedFiles) return;
 
     const currentFiles = getValues('files') || [];
-    setValue('files', [...currentFiles, ...Array.from(files)]);
+    setValue('files', [...currentFiles, ...Array.from(droppedFiles)], {
+      shouldDirty: true,
+    });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+    const selectedFiles = e.target.files;
 
-    if (!files) return;
-
-    setFiles((prev) => [...prev, ...Array.from(files)]);
+    if (!selectedFiles) return;
 
     const currentFiles = getValues('files') || [];
-    setValue('files', [...currentFiles, ...Array.from(files)]);
+    setValue('files', [...currentFiles, ...Array.from(selectedFiles)], {
+      shouldDirty: true,
+    });
   };
 
   const handleDeleteUploadImage = (fileName: string) => {
-    setFiles((prev) => prev.filter((f) => f.name !== fileName));
     const currentFiles = getValues('files') || [];
     setValue(
       'files',
       currentFiles.filter((f) => f.name !== fileName),
+      {
+        shouldDirty: true,
+      },
     );
   };
 
@@ -241,6 +240,7 @@ export const ProductDialog = ({
   };
 
   const currentImages = watch('images') || [];
+  const currentFiles = watch('files') || [];
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
@@ -465,14 +465,14 @@ export const ProductDialog = ({
                   {/* Imagenes por cargar */}
                   <div
                     className={cn('mt-6 space-y-3', {
-                      hidden: files.length === 0,
+                      hidden: currentFiles.length === 0,
                     })}
                   >
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Imágenes por cargar
                     </label>
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
-                      {files.map((file) => (
+                      {currentFiles.map((file) => (
                         <div key={file.name} className="relative group">
                           <div className="relative aspect-square overflow-hidden rounded-lg">
                             <Image
