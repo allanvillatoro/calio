@@ -69,6 +69,7 @@ export const ProductDialog = ({
     register,
     reset,
     handleSubmit,
+    clearErrors,
     setError,
     getValues,
     setValue,
@@ -111,7 +112,17 @@ export const ProductDialog = ({
 
   const isEditing = !!product?.id;
 
+  const clearImagesErrorIfNeeded = (
+    files: File[] = getValues('files') || [],
+  ) => {
+    if ((getValues('images') || []).length > 0 || files.length > 0) {
+      clearErrors('images');
+    }
+  };
+
   const onSubmit = (values: FormInputs) => {
+    clearImagesErrorIfNeeded(values.files ?? []);
+
     const productData = {
       name: values.name,
       description: values.description,
@@ -124,8 +135,6 @@ export const ProductDialog = ({
     };
 
     setSubmitError(null);
-
-    console.log('Imagenes a subir', { files: values.files ?? [] });
 
     startTransition(async () => {
       const result =
@@ -198,13 +207,11 @@ export const ProductDialog = ({
     if (!droppedFiles) return;
 
     const currentFiles = getValues('files') || [];
-    setValue(
-      'files',
-      mergeFilesByName(currentFiles, Array.from(droppedFiles)),
-      {
-        shouldDirty: true,
-      },
-    );
+    const nextFiles = mergeFilesByName(currentFiles, Array.from(droppedFiles));
+    setValue('files', nextFiles, {
+      shouldDirty: true,
+    });
+    clearImagesErrorIfNeeded(nextFiles);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -213,13 +220,11 @@ export const ProductDialog = ({
     if (!selectedFiles) return;
 
     const currentFiles = getValues('files') || [];
-    setValue(
-      'files',
-      mergeFilesByName(currentFiles, Array.from(selectedFiles)),
-      {
-        shouldDirty: true,
-      },
-    );
+    const nextFiles = mergeFilesByName(currentFiles, Array.from(selectedFiles));
+    setValue('files', nextFiles, {
+      shouldDirty: true,
+    });
+    clearImagesErrorIfNeeded(nextFiles);
   };
 
   const handleDeleteUploadImage = (fileName: string) => {
