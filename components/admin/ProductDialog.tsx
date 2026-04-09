@@ -11,7 +11,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
-import { CATEGORIES, type Product } from '@/lib/types';
+import { CATEGORIES, type Category, type Product } from '@/lib/types';
 import { useForm } from 'react-hook-form';
 import { EMPTY_PRODUCT } from '@/lib/constants/product';
 import {
@@ -20,14 +20,13 @@ import {
 } from '@/lib/actions/product-mutations.action';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Upload, X } from 'lucide-react';
-import { cn, getImageUrl } from '@/lib/utils';
+import { cn, getImageUrl, mergeFilesByName, moveArrayItem } from '@/lib/utils';
 
 interface ProductDialogProps {
   product: Product | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-
 interface ProductFormValues {
   id?: number;
   name: string;
@@ -35,8 +34,11 @@ interface ProductFormValues {
   price: number;
   quantity: number;
   inStore: boolean;
-  category: Product['category'];
+  category: Category;
   images: string[];
+}
+interface FormInputs extends ProductFormValues {
+  files?: File[];
 }
 
 function getEmptyFormValues(): ProductFormValues {
@@ -50,43 +52,6 @@ function getEmptyFormValues(): ProductFormValues {
     category: EMPTY_PRODUCT.category,
     images: [],
   };
-}
-
-function mergeFilesByName(
-  existingFiles: File[],
-  incomingFiles: File[],
-): File[] {
-  const fileMap = new Map(existingFiles.map((file) => [file.name, file]));
-
-  incomingFiles.forEach((file) => {
-    if (!fileMap.has(file.name)) {
-      fileMap.set(file.name, file);
-    }
-  });
-
-  return Array.from(fileMap.values());
-}
-
-function moveArrayItem<T>(items: T[], fromIndex: number, toIndex: number): T[] {
-  if (
-    fromIndex === toIndex ||
-    fromIndex < 0 ||
-    toIndex < 0 ||
-    fromIndex >= items.length ||
-    toIndex >= items.length
-  ) {
-    return items;
-  }
-
-  const nextItems = [...items];
-  const [movedItem] = nextItems.splice(fromIndex, 1);
-  nextItems.splice(toIndex, 0, movedItem);
-
-  return nextItems;
-}
-
-interface FormInputs extends ProductFormValues {
-  files?: File[];
 }
 
 export const ProductDialog = ({
@@ -155,6 +120,7 @@ export const ProductDialog = ({
       inStore: values.inStore,
       category: values.category,
       images: values.images,
+      files: values.files,
     };
 
     setSubmitError(null);
@@ -539,7 +505,8 @@ export const ProductDialog = ({
                         </p>
                       </div>
                       <p className="text-xs text-slate-400">
-                        PNG, JPG, WebP hasta 10MB cada una
+                        Preferiblemente en formato WebP de 800 x 800 píxeles
+                        para mejor rendimiento
                       </p>
                     </div>
                   </div>
