@@ -52,6 +52,21 @@ function getEmptyFormValues(): ProductFormValues {
   };
 }
 
+function mergeFilesByName(
+  existingFiles: File[],
+  incomingFiles: File[],
+): File[] {
+  const fileMap = new Map(existingFiles.map((file) => [file.name, file]));
+
+  incomingFiles.forEach((file) => {
+    if (!fileMap.has(file.name)) {
+      fileMap.set(file.name, file);
+    }
+  });
+
+  return Array.from(fileMap.values());
+}
+
 interface FormInputs extends ProductFormValues {
   files?: File[];
 }
@@ -199,9 +214,13 @@ export const ProductDialog = ({
     if (!droppedFiles) return;
 
     const currentFiles = getValues('files') || [];
-    setValue('files', [...currentFiles, ...Array.from(droppedFiles)], {
-      shouldDirty: true,
-    });
+    setValue(
+      'files',
+      mergeFilesByName(currentFiles, Array.from(droppedFiles)),
+      {
+        shouldDirty: true,
+      },
+    );
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -210,9 +229,13 @@ export const ProductDialog = ({
     if (!selectedFiles) return;
 
     const currentFiles = getValues('files') || [];
-    setValue('files', [...currentFiles, ...Array.from(selectedFiles)], {
-      shouldDirty: true,
-    });
+    setValue(
+      'files',
+      mergeFilesByName(currentFiles, Array.from(selectedFiles)),
+      {
+        shouldDirty: true,
+      },
+    );
   };
 
   const handleDeleteUploadImage = (fileName: string) => {
@@ -413,7 +436,7 @@ export const ProductDialog = ({
                         >
                           <X className="h-3 w-3" />
                         </button>
-                        <p className="mt-1 text-xs text-slate-600 truncate">
+                        <p className="mt-1 text-xs text-slate-600 truncate px-2">
                           {image}
                         </p>
                       </div>
@@ -493,7 +516,7 @@ export const ProductDialog = ({
                           >
                             <X className="h-3 w-3" />
                           </button>
-                          <p className="mt-1 text-xs text-slate-600 truncate">
+                          <p className="mt-1 text-xs text-slate-600 truncate px-2">
                             {file.name}
                           </p>
                         </div>
