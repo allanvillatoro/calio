@@ -230,6 +230,15 @@ export const ProductDialog = ({
     setValue('files', [...currentFiles, ...Array.from(files)]);
   };
 
+  const handleDeleteUploadImage = (fileName: string) => {
+    setFiles((prev) => prev.filter((f) => f.name !== fileName));
+    const currentFiles = getValues('files') || [];
+    setValue(
+      'files',
+      currentFiles.filter((f) => f.name !== fileName),
+    );
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="flex max-h-[90vh] w-full flex-col overflow-hidden sm:max-w-4xl xl:max-w-5xl">
@@ -383,8 +392,8 @@ export const ProductDialog = ({
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
                     {' '}
                     {product &&
-                      product.images.map((image, index) => (
-                        <div key={index} className="relative group">
+                      product.images.map((image) => (
+                        <div key={image} className="relative group">
                           <div className="relative aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center overflow-hidden">
                             <Image
                               src={getImageUrl(image)}
@@ -462,9 +471,9 @@ export const ProductDialog = ({
                       Imágenes por cargar
                     </label>
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-2">
-                      {files.map((file, index) => (
+                      {files.map((file) => (
                         <div
-                          key={index}
+                          key={file.name}
                           className="relative group aspect-square overflow-hidden rounded-lg"
                         >
                           <Image
@@ -475,6 +484,15 @@ export const ProductDialog = ({
                             sizes="(max-width: 1024px) 50vw, 25vw"
                             className="object-cover rounded-lg"
                           />
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleDeleteUploadImage(file.name);
+                            }}
+                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
                         </div>
                       ))}
                     </div>
