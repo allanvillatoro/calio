@@ -70,10 +70,17 @@ DATABASE_URL=
 JWT_SECRET=
 NEXT_PUBLIC_SITE_URL=
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 CONTACT_PHONE=
 NEXT_PUBLIC_STREET_ADDRESS=
 NEXT_PUBLIC_POSTAL_CODE=
 ```
+
+Cloudinary notes:
+
+- `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` is public and used to resolve image URLs
+- `CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET` are server-only and used by Server Actions to upload product images
 
 ## Local Development
 
@@ -135,7 +142,9 @@ npm run db:studio
 ## Products and Data
 
 - Products are stored in PostgreSQL
-- Product images are resolved from Cloudinary using the file name
+- Product images are uploaded to Cloudinary from Server Actions
+- Only the final Cloudinary file name (for example `image-name.webp`) is stored in the database
+- Product images are resolved from Cloudinary using that stored file name
 - The catalog uses React Query for reads
 - Create, update, and delete product flows use Server Actions
 
