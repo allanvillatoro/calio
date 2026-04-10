@@ -1,5 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
+import {
+  getProductNameUniqueViolationResult,
+  isProductNameUniqueViolation,
+} from '@/lib/repositories/products/products-repository.errors';
 import { formatZodError } from '@/lib/zod';
 import { ZodError } from 'zod';
 import { productIdParamsSchema, updateProductBodySchema } from '../schemas';
@@ -66,6 +70,12 @@ export async function PUT(request: Request, context: ProductRouteContext) {
     if (error instanceof ZodError) {
       return NextResponse.json(formatZodError(error), {
         status: StatusCodes.BAD_REQUEST,
+      });
+    }
+
+    if (isProductNameUniqueViolation(error)) {
+      return NextResponse.json(getProductNameUniqueViolationResult(), {
+        status: StatusCodes.CONFLICT,
       });
     }
 
