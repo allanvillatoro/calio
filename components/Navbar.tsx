@@ -7,6 +7,12 @@ import { usePathname } from 'next/navigation';
 import { LogOut, Menu, X } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 
+interface NavItem {
+  href: string;
+  label: string;
+  isActive: boolean;
+}
+
 export function Navbar() {
   const pathname = usePathname();
   const isCollection = pathname === '/catalogo';
@@ -33,6 +39,36 @@ export function Navbar() {
     />
   );
 
+  const navItems: NavItem[] = [
+    {
+      href: '/',
+      label: 'Inicio',
+      isActive: pathname === '/',
+    },
+    {
+      href: '/catalogo?categorias=new+in',
+      label: 'Colección',
+      isActive: isCollection,
+    },
+  ];
+
+  const getNavLinkClassName = (isActive: boolean) =>
+    isActive
+      ? 'text-gray-900 font-semibold'
+      : 'text-gray-700 hover:text-gray-900';
+
+  const renderNavLinks = (onNavigate?: () => void) =>
+    navItems.map((item) => (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={getNavLinkClassName(item.isActive)}
+        onClick={onNavigate}
+      >
+        {item.label}
+      </Link>
+    ));
+
   return (
     <nav className="bg-white shadow-sm">
       <div className="container mx-auto px-4 py-12">
@@ -57,26 +93,7 @@ export function Navbar() {
             )}
           </button>
           <div className="hidden items-center gap-3 sm:gap-6 md:flex">
-            <Link
-              href="/"
-              className={`${
-                pathname === '/'
-                  ? 'text-gray-900 font-semibold'
-                  : 'text-gray-700 hover:text-gray-900'
-              }`}
-            >
-              Inicio
-            </Link>
-            <Link
-              href="/catalogo?categorias=new+in"
-              className={`${
-                isCollection
-                  ? 'text-gray-900 font-semibold'
-                  : 'text-gray-700 hover:text-gray-900'
-              }`}
-            >
-              Colección
-            </Link>
+            {renderNavLinks()}
             {isAuthenticated && (
               <Link
                 href="/login"
@@ -93,28 +110,7 @@ export function Navbar() {
         {isMobileMenuOpen && (
           <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm md:hidden">
             <div className="flex flex-col gap-3">
-              <Link
-                href="/"
-                className={`${
-                  pathname === '/'
-                    ? 'text-gray-900 font-semibold'
-                    : 'text-gray-700 hover:text-gray-900'
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Inicio
-              </Link>
-              <Link
-                href="/catalogo?categorias=new+in"
-                className={`${
-                  isCollection
-                    ? 'text-gray-900 font-semibold'
-                    : 'text-gray-700 hover:text-gray-900'
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Colección
-              </Link>
+              {renderNavLinks(() => setIsMobileMenuOpen(false))}
               {isAuthenticated && (
                 <Link
                   href="/login"
