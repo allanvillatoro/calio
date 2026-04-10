@@ -72,7 +72,7 @@ export const ProductDialog = ({
               <div className="space-y-4 py-4 px-2">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Nombre del Producto
+                    {`Nombre del Producto${product?.id ? ` (ID: ${product.id})` : ''}`}
                   </label>
                   <input
                     type="text"
