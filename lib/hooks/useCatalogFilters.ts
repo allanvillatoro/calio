@@ -116,6 +116,7 @@ export function useCatalogFilters(
     updateURL({
       categorias: categories.length === 0 ? undefined : categories.join(','),
       pagina: undefined,
+      query: undefined,
     });
   };
 
