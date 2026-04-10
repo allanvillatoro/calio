@@ -4,6 +4,7 @@ import type { Category } from '@/lib/types';
 interface UseCatalogFiltersReturn {
   selectedCategories: Category[];
   selectedCategoriesParam: string | undefined;
+  query: string | undefined;
   currentPage: number;
   inStore: boolean | undefined;
   printView: boolean;
@@ -16,6 +17,7 @@ interface UseCatalogFiltersReturn {
       pagina: string | undefined;
       entienda: string | undefined;
       modoprint: string | undefined;
+      query: string | undefined;
     }>,
   ) => void;
 }
@@ -38,6 +40,7 @@ export function useCatalogFilters(
   const page = searchParams.get('pagina');
   const parsedPage = page ? Number.parseInt(page, 10) : Number.NaN;
   const rawPage = Number.isNaN(parsedPage) ? 1 : Math.max(1, parsedPage);
+  const query = searchParams.get('query')?.trim() || undefined;
 
   const inStoreParam = searchParams.get('entienda');
   const inStore =
@@ -57,6 +60,7 @@ export function useCatalogFilters(
       pagina: string | undefined;
       entienda: string | undefined;
       modoprint: string | undefined;
+      query: string | undefined;
     }>,
   ) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -93,6 +97,14 @@ export function useCatalogFilters(
       }
     }
 
+    if ('query' in updates) {
+      if (updates.query === undefined) {
+        params.delete('query');
+      } else {
+        params.set('query', updates.query);
+      }
+    }
+
     router.replace(`/catalogo?${params.toString()}`, { scroll: true });
   };
 
@@ -111,6 +123,7 @@ export function useCatalogFilters(
     selectedCategories,
     selectedCategoriesParam:
       selectedCategories.length > 0 ? selectedCategories.join(',') : undefined,
+    query,
     currentPage: rawPage,
     inStore,
     printView,
