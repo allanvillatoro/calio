@@ -1,4 +1,13 @@
-import { and, count, desc, eq, gte, inArray, type SQL } from 'drizzle-orm';
+import {
+  and,
+  count,
+  desc,
+  eq,
+  gte,
+  ilike,
+  inArray,
+  type SQL,
+} from 'drizzle-orm';
 import { products, type ProductRow } from '@/db/schema';
 import type { AppDb } from '@/db';
 import type {
@@ -47,6 +56,11 @@ function normalizeCategories(categories?: string[]): string[] | undefined {
     : undefined;
 }
 
+function normalizeQuery(query?: string): string | undefined {
+  const normalizedQuery = query?.trim();
+  return normalizedQuery ? normalizedQuery : undefined;
+}
+
 export function normalizeFilters(
   filters?: ProductFilters | URLSearchParams,
 ): ProductFilters {
@@ -66,11 +80,13 @@ export function normalizeFilters(
         .map((category) => category.trim()),
     );
     const inStoreParam = filters.get('instore');
+    const queryParam = normalizeQuery(filters.get('query') ?? undefined);
     const pageParam = filters.get('page');
     const limitParam = filters.get('limit');
 
     return {
       ...(categories ? { categories } : {}),
+      ...(queryParam ? { query: queryParam } : {}),
       ...(inStoreParam === 'true' ? { inStore: true } : {}),
       ...(inStoreParam === 'false' ? { inStore: false } : {}),
       page: pageParam ? Number(pageParam) : 1,
@@ -81,6 +97,7 @@ export function normalizeFilters(
 
   return {
     categories: normalizeCategories(filters.categories),
+    query: normalizeQuery(filters.query),
     inStore: filters.inStore,
     page: filters.page ?? 1,
     limit: filters.limit ?? PRODUCTS_PER_PAGE,
@@ -107,6 +124,7 @@ export function buildProductsWhereClause(filters: ProductFilters) {
     filters.categories
       ? inArray(products.category, filters.categories)
       : undefined,
+    filters.query ? ilike(products.name, `%${filters.query}%`) : undefined,
     filters.inStore !== undefined
       ? eq(products.inStore, filters.inStore)
       : undefined,

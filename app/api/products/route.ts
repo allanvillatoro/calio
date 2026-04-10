@@ -17,12 +17,14 @@ export async function GET(request: Request) {
         .flatMap((category) => category.split(','))
         .map((category) => category.trim())
         .filter(Boolean),
+      query: searchParams.get('query') ?? undefined,
       instore: searchParams.get('instore') ?? undefined,
       page: searchParams.get('page') ?? undefined,
       limit: searchParams.get('limit') ?? undefined,
     });
     const products = await productsRepository.findAll({
       categories: parsedQuery.category,
+      query: parsedQuery.query,
       inStore: parsedQuery.instore,
       page: parsedQuery.page,
       limit: parsedQuery.limit,

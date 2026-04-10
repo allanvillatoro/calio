@@ -7,6 +7,7 @@ import { CATEGORIES, type Product } from '@/lib/types';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
 import { getProductsByQuery } from '@/lib/actions/get-products-by-query.action';
 import { FiltersSection } from '@/components/catalog/FiltersSection';
+import { CatalogSearchBar } from '@/components/catalog/CatalogSearchBar';
 import { ProductsGrid } from '@/components/catalog/ProductsGrid';
 import { ProductDialog } from '../admin/ProductDialog';
 import { DeleteDialog } from '../admin/DeleteDialog';
@@ -23,12 +24,14 @@ export default function CatalogContent() {
   const {
     selectedCategories,
     selectedCategoriesParam,
+    query,
     currentPage,
     inStore,
     isAllSelected,
     onCategorySelectionChange,
     onPageChange,
     printView,
+    updateURL,
   } = useCatalogFilters(CATEGORIES);
 
   const normalizedCategory =
@@ -44,6 +47,7 @@ export default function CatalogContent() {
       'products',
       {
         category: normalizedCategory,
+        query: query ?? null,
         instore: inStore ?? null,
         page: currentPage,
       },
@@ -51,11 +55,25 @@ export default function CatalogContent() {
     queryFn: () =>
       getProductsByQuery({
         category: normalizedCategory ?? undefined,
+        query,
         instore: inStore,
         page: currentPage,
       }),
     staleTime: 1000 * 60 * 15,
   });
+
+  const handleSearch = (searchQuery: string) => {
+    if (!searchQuery) {
+      updateURL({ query: undefined, categorias: 'new in', pagina: undefined });
+      return;
+    }
+
+    updateURL({
+      query: searchQuery,
+      categorias: undefined,
+      pagina: undefined,
+    });
+  };
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -84,6 +102,7 @@ export default function CatalogContent() {
         )}
 
         <div className="flex-1">
+          <CatalogSearchBar defaultValue={query} onSearch={handleSearch} />
           <ProductsGrid
             products={productsResponse?.data ?? []}
             totalProducts={productsResponse?.paging.totalItems ?? 0}

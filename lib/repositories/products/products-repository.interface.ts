@@ -4,6 +4,7 @@ export type ProductChanges = Partial<IProduct>;
 
 export interface ProductFilters {
   categories?: string[];
+  query?: string;
   inStore?: boolean;
   page?: number;
   limit?: number;

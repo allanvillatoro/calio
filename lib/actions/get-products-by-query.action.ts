@@ -4,6 +4,7 @@ import type { Category, Product } from '../types';
 
 interface GetProductsParams {
   category?: string;
+  query?: string;
   page?: number;
   limit?: number;
   instore?: boolean;
