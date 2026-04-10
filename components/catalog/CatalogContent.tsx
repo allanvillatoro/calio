@@ -64,7 +64,7 @@ export default function CatalogContent() {
 
   const handleSearch = (searchQuery: string) => {
     if (!searchQuery) {
-      updateURL({ query: undefined, categorias: 'new in' });
+      updateURL({ query: undefined, categorias: 'new in', pagina: undefined });
       return;
     }
 
