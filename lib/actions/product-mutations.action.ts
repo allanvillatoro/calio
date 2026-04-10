@@ -10,6 +10,10 @@ import {
 import { getAuthenticatedUserFromCookies } from '@/lib/auth';
 import { uploadProductImagesAction } from '@/lib/actions/cloudinary-upload.action';
 import type { IProduct } from '@/lib/interfaces/product';
+import {
+  getProductNameUniqueViolationResult,
+  isProductNameUniqueViolation,
+} from '@/lib/repositories/products/products-repository.errors';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 import { formatZodError } from '@/lib/zod';
 import type { Product } from '../types';
@@ -88,6 +92,16 @@ export async function createProductAction(
       };
     }
 
+    if (isProductNameUniqueViolation(error)) {
+      const duplicateNameError = getProductNameUniqueViolationResult();
+
+      return {
+        success: false,
+        error: duplicateNameError.error,
+        details: duplicateNameError.details,
+      };
+    }
+
     console.error('Failed to create product from server action', error);
 
     return {
@@ -143,6 +157,16 @@ export async function updateProductAction(
         success: false,
         error: formattedError.error,
         details: formattedError.details,
+      };
+    }
+
+    if (isProductNameUniqueViolation(error)) {
+      const duplicateNameError = getProductNameUniqueViolationResult();
+
+      return {
+        success: false,
+        error: duplicateNameError.error,
+        details: duplicateNameError.details,
       };
     }
 
