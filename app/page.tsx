@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { FaWhatsapp } from 'react-icons/fa';
 import CategoryCarousel from '@/components/CategoryCarousel';
 import Image from 'next/image';
 
@@ -14,8 +15,9 @@ export const metadata: Metadata = {
 };
 export default function Home() {
   const phoneNumber = process.env.CONTACT_PHONE || '';
-  const message = `Hola, quiero un grabado láser personalizado`;
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = `https://wa.me/${phoneNumber}`;
+  const urlGrabados = `${whatsappUrl}?text=${encodeURIComponent(`Hola, quiero un grabado láser personalizado`)}`;
+  const urlContactUs = `${whatsappUrl}?text=${encodeURIComponent(`Hola, quiero más información sobre sus joyas`)}`;
 
   return (
     <div className="bg-white text-black">
@@ -86,7 +88,10 @@ export default function Home() {
             </p>
 
             <Link
-              href={whatsappUrl}
+              href={urlGrabados}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Grabados laser personalizados"
               className="inline-block bg-white text-black px-8 py-3 font-semibold tracking-wide hover:scale-105 transition-all duration-300"
             >
               Quiero personalizar
@@ -208,6 +213,15 @@ export default function Home() {
           </p>
         </div>
       </section>
+      <a
+        href={urlContactUs}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Escríbenos por WhatsApp"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-600 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:bg-green-700"
+      >
+        <FaWhatsapp className="h-7 w-7" />
+      </a>
     </div>
   );
 }
