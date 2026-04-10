@@ -1,6 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
 import { extractBearerToken, verifyAuthToken } from '@/lib/auth';
+import {
+  getProductNameUniqueViolationResult,
+  isProductNameUniqueViolation,
+} from '@/lib/repositories/products/products-repository.errors';
 import { formatZodError } from '@/lib/zod';
 import { ZodError } from 'zod';
 import { createProductBodySchema, productsQuerySchema } from './schemas';
@@ -58,6 +62,12 @@ export async function POST(request: Request) {
     if (error instanceof ZodError) {
       return NextResponse.json(formatZodError(error), {
         status: StatusCodes.BAD_REQUEST,
+      });
+    }
+
+    if (isProductNameUniqueViolation(error)) {
+      return NextResponse.json(getProductNameUniqueViolationResult(), {
+        status: StatusCodes.CONFLICT,
       });
     }
 
