@@ -8,9 +8,11 @@ import {
   updateProductBodySchema,
 } from '@/app/api/products/schemas';
 import { getAuthenticatedUserFromCookies } from '@/lib/auth';
+import { uploadProductImagesAction } from '@/lib/actions/cloudinary-upload.action';
 import type { IProduct } from '@/lib/interfaces/product';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 import { formatZodError } from '@/lib/zod';
+import type { Product } from '../types';
 
 interface ProductMutationErrorDetail {
   path: string;
@@ -51,7 +53,7 @@ async function ensureAuthenticatedUser() {
 }
 
 export async function createProductAction(
-  input: unknown,
+  input: Partial<Product> & { files?: File[] },
 ): Promise<ProductMutationResult> {
   try {
     const authResult = await ensureAuthenticatedUser();
@@ -60,7 +62,13 @@ export async function createProductAction(
       return authResult;
     }
 
-    const parsedBody = createProductBodySchema.parse(input);
+    const { files = [], ...productData } = input;
+    if (files.length > 0) {
+      const uploadedImages = await uploadProductImagesAction(files);
+      productData.images = [...(productData.images ?? []), ...uploadedImages];
+    }
+
+    const parsedBody = createProductBodySchema.parse(productData);
     const product = await productsRepository.save(parsedBody);
 
     revalidateProductPaths(product.id);
@@ -91,7 +99,7 @@ export async function createProductAction(
 
 export async function updateProductAction(
   id: number,
-  input: unknown,
+  input: Partial<Product> & { files?: File[] },
 ): Promise<ProductMutationResult> {
   try {
     const authResult = await ensureAuthenticatedUser();
@@ -101,7 +109,14 @@ export async function updateProductAction(
     }
 
     const validatedId = productIdParamsSchema.parse({ id }).id;
-    const parsedBody = updateProductBodySchema.parse(input);
+
+    const { files = [], ...productData } = input;
+    if (files.length > 0) {
+      const uploadedImages = await uploadProductImagesAction(files);
+      productData.images = [...(productData.images ?? []), ...uploadedImages];
+    }
+
+    const parsedBody = updateProductBodySchema.parse(productData);
     const product = await productsRepository.updateById(
       validatedId,
       parsedBody,
