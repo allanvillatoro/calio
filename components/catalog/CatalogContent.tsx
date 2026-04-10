@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState, type KeyboardEvent } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { CATEGORIES, type Product } from '@/lib/types';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
 import { getProductsByQuery } from '@/lib/actions/get-products-by-query.action';
@@ -11,10 +11,12 @@ import { ProductsGrid } from '@/components/catalog/ProductsGrid';
 import { ProductDialog } from '../admin/ProductDialog';
 import { DeleteDialog } from '../admin/DeleteDialog';
 import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import { EMPTY_PRODUCT } from '@/lib/constants/product';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function CatalogContent() {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
@@ -23,12 +25,14 @@ export default function CatalogContent() {
   const {
     selectedCategories,
     selectedCategoriesParam,
+    query,
     currentPage,
     inStore,
     isAllSelected,
     onCategorySelectionChange,
     onPageChange,
     printView,
+    updateURL,
   } = useCatalogFilters(CATEGORIES);
 
   const normalizedCategory =
@@ -44,6 +48,7 @@ export default function CatalogContent() {
       'products',
       {
         category: normalizedCategory,
+        query: query ?? null,
         instore: inStore ?? null,
         page: currentPage,
       },
@@ -51,11 +56,32 @@ export default function CatalogContent() {
     queryFn: () =>
       getProductsByQuery({
         category: normalizedCategory ?? undefined,
+        query,
         instore: inStore,
         page: currentPage,
       }),
     staleTime: 1000 * 60 * 15,
   });
+
+  const submitSearch = () => {
+    const query = inputRef.current?.value?.trim();
+
+    if (!query) {
+      updateURL({ query: undefined, categorias: 'new in' });
+      return;
+    }
+
+    updateURL({
+      query,
+      categorias: undefined,
+      pagina: undefined,
+    });
+  };
+
+  const handleSearch = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return;
+    submitSearch();
+  };
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -84,6 +110,27 @@ export default function CatalogContent() {
         )}
 
         <div className="flex-1">
+          <div className="mb-8 flex justify-end">
+            <div className="flex w-full max-w-xl items-center gap-3">
+              <div className="relative flex-1">
+                <Search
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={18}
+                />
+                <Input
+                  ref={inputRef}
+                  defaultValue={query}
+                  onKeyDown={handleSearch}
+                  type="text"
+                  placeholder="Buscar piezas..."
+                  className="h-11 rounded-lg border-gray-300 bg-white pl-10 pr-4 shadow-sm focus-visible:border-gray-900 focus-visible:ring-gray-900/15"
+                />
+              </div>
+              <Button type="button" size="lg" onClick={submitSearch}>
+                Buscar
+              </Button>
+            </div>
+          </div>
           <ProductsGrid
             products={productsResponse?.data ?? []}
             totalProducts={productsResponse?.paging.totalItems ?? 0}
