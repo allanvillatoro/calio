@@ -11,16 +11,19 @@ interface UseCatalogFiltersReturn {
   isAllSelected: boolean;
   onCategorySelectionChange: (categories: Category[]) => void;
   onPageChange: (page: number) => void;
-  updateURL: (
-    updates: Partial<{
-      categorias: string | undefined;
-      pagina: string | undefined;
-      entienda: string | undefined;
-      modoprint: string | undefined;
-      query: string | undefined;
-    }>,
-  ) => void;
+  updateURL: (updates: CatalogFilterUpdates) => void;
 }
+
+type CatalogFilterKey =
+  | 'categorias'
+  | 'pagina'
+  | 'entienda'
+  | 'modoprint'
+  | 'query';
+
+type CatalogFilterUpdates = Partial<
+  Record<CatalogFilterKey, string | undefined>
+>;
 
 export function useCatalogFilters(
   categories: Category[],
@@ -54,54 +57,24 @@ export function useCatalogFilters(
   const isAllSelected = selectedCategories.length === 0;
 
   // Generic URL update function
-  const updateURL = (
-    updates: Partial<{
-      categorias: string | undefined;
-      pagina: string | undefined;
-      entienda: string | undefined;
-      modoprint: string | undefined;
-      query: string | undefined;
-    }>,
-  ) => {
+  const updateURL = (updates: CatalogFilterUpdates) => {
     const params = new URLSearchParams(searchParams.toString());
+    const keys: CatalogFilterKey[] = [
+      'categorias',
+      'pagina',
+      'entienda',
+      'modoprint',
+      'query',
+    ];
 
-    if ('categorias' in updates) {
-      if (updates.categorias === undefined) {
-        params.delete('categorias');
-      } else {
-        params.set('categorias', updates.categorias);
-      }
-    }
-
-    if ('pagina' in updates) {
-      if (updates.pagina === undefined) {
-        params.delete('pagina');
-      } else {
-        params.set('pagina', updates.pagina);
-      }
-    }
-
-    if ('entienda' in updates) {
-      if (updates.entienda === undefined) {
-        params.delete('entienda');
-      } else {
-        params.set('entienda', updates.entienda);
-      }
-    }
-
-    if ('modoprint' in updates) {
-      if (updates.modoprint === undefined) {
-        params.delete('modoprint');
-      } else {
-        params.set('modoprint', updates.modoprint);
-      }
-    }
-
-    if ('query' in updates) {
-      if (updates.query === undefined) {
-        params.delete('query');
-      } else {
-        params.set('query', updates.query);
+    for (const key of keys) {
+      if (key in updates) {
+        const value = updates[key];
+        if (value === undefined) {
+          params.delete(key);
+        } else {
+          params.set(key, value);
+        }
       }
     }
 
