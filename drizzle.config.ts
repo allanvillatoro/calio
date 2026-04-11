@@ -9,6 +9,9 @@ export default defineConfig({
   dbCredentials: {
     url: getDatabaseUrl(),
   },
+  migrations: {
+    schema: 'public',
+  },
   strict: true,
   verbose: true,
 });
