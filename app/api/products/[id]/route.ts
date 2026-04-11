@@ -1,9 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
-import {
-  getProductNameUniqueViolationResult,
-  isProductNameUniqueViolation,
-} from '@/lib/repositories/products/products-repository.errors';
+import { ProductConflictError } from '@/lib/errors';
 import { formatZodError } from '@/lib/zod';
 import { ZodError } from 'zod';
 import { productIdParamsSchema, updateProductBodySchema } from '../schemas';
@@ -73,10 +70,16 @@ export async function PUT(request: Request, context: ProductRouteContext) {
       });
     }
 
-    if (isProductNameUniqueViolation(error)) {
-      return NextResponse.json(getProductNameUniqueViolationResult(), {
-        status: StatusCodes.CONFLICT,
-      });
+    if (error instanceof ProductConflictError) {
+      return NextResponse.json(
+        {
+          error: error.message,
+          details: error.details,
+        },
+        {
+          status: StatusCodes.CONFLICT,
+        },
+      );
     }
 
     console.error('Failed to update product', error);

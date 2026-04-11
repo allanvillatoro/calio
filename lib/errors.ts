@@ -7,3 +7,17 @@ export class UserAuthenticationError extends Error {
     this.name = 'UserAuthenticationError';
   }
 }
+
+export class ProductConflictError extends Error {
+  constructor(
+    message: string,
+    public readonly code: 'PRODUCT_NAME_ALREADY_EXISTS',
+    public readonly details?: Array<{
+      path: string;
+      message: string;
+    }>,
+  ) {
+    super(message);
+    this.name = 'ProductConflictError';
+  }
+}

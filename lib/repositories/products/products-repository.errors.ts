@@ -1,3 +1,5 @@
+import { ProductConflictError } from '@/lib/errors';
+
 const POSTGRES_UNIQUE_VIOLATION_CODE = '23505';
 const PRODUCT_NAME_UNIQUE_CONSTRAINT = 'products_name_unique';
 const PRODUCT_NAME_UNIQUE_MESSAGE = 'Ya existe un producto con ese nombre';
@@ -32,14 +34,15 @@ export function isProductNameUniqueViolation(error: unknown): boolean {
   );
 }
 
-export function getProductNameUniqueViolationResult() {
-  return {
-    error: PRODUCT_NAME_UNIQUE_MESSAGE,
-    details: [
+export function getProductConflictError() {
+  return new ProductConflictError(
+    PRODUCT_NAME_UNIQUE_MESSAGE,
+    'PRODUCT_NAME_ALREADY_EXISTS',
+    [
       {
         path: 'name',
         message: PRODUCT_NAME_UNIQUE_MESSAGE,
       },
     ],
-  };
+  );
 }

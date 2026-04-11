@@ -17,6 +17,10 @@ import {
   normalizeFilters,
   requireProductField,
 } from './drizzle-products-repository.helpers';
+import {
+  getProductConflictError,
+  isProductNameUniqueViolation,
+} from './products-repository.errors';
 import { omitUndefined } from '../repository.helpers';
 import type { IProduct } from '@/lib/interfaces/product';
 
@@ -24,23 +28,31 @@ export class DrizzleProductsRepository implements IProductsRepository {
   constructor(private readonly database: AppDb) {}
 
   async save(input: ProductChanges): Promise<IProduct> {
-    const [product] = await this.database
-      .insert(products)
-      .values({
-        ...(input.id !== undefined ? { id: input.id } : {}),
-        name: requireProductField(input, 'name'),
-        description: requireProductField(input, 'description'),
-        price: requireProductField(input, 'price'),
-        quantity: requireProductField(input, 'quantity'),
-        images: requireProductField(input, 'images'),
-        category: requireProductField(input, 'category'),
-        inStore: input.inStore ?? false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-      .returning();
+    try {
+      const [product] = await this.database
+        .insert(products)
+        .values({
+          ...(input.id !== undefined ? { id: input.id } : {}),
+          name: requireProductField(input, 'name'),
+          description: requireProductField(input, 'description'),
+          price: requireProductField(input, 'price'),
+          quantity: requireProductField(input, 'quantity'),
+          images: requireProductField(input, 'images'),
+          category: requireProductField(input, 'category'),
+          inStore: input.inStore ?? false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .returning();
 
-    return mapRowToProduct(product);
+      return mapRowToProduct(product);
+    } catch (error) {
+      if (isProductNameUniqueViolation(error)) {
+        throw getProductConflictError();
+      }
+
+      throw error;
+    }
   }
 
   async findById(id: number): Promise<IProduct | null> {
@@ -87,16 +99,24 @@ export class DrizzleProductsRepository implements IProductsRepository {
     id: number,
     updates: ProductChanges,
   ): Promise<IProduct | null> {
-    const [product] = await this.database
-      .update(products)
-      .set({
-        ...omitUndefined(updates),
-        updatedAt: new Date(),
-      })
-      .where(eq(products.id, id))
-      .returning();
+    try {
+      const [product] = await this.database
+        .update(products)
+        .set({
+          ...omitUndefined(updates),
+          updatedAt: new Date(),
+        })
+        .where(eq(products.id, id))
+        .returning();
 
-    return product ? mapRowToProduct(product) : null;
+      return product ? mapRowToProduct(product) : null;
+    } catch (error) {
+      if (isProductNameUniqueViolation(error)) {
+        throw getProductConflictError();
+      }
+
+      throw error;
+    }
   }
 
   async deleteById(id: number): Promise<boolean> {
