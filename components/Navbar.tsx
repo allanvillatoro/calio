@@ -3,28 +3,29 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { LogOut, Menu, X } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 interface NavItem {
   href: string;
   label: string;
-  isActive: boolean;
+  category?: string;
 }
 
 export function Navbar() {
   const pathname = usePathname();
-  const isCollection = pathname === '/catalogo';
+  const searchParams = useSearchParams();
   const { isAuthenticated, isLoggingOut, logout } = useAuth();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const activeCategory = searchParams.get('categorias');
 
   const handleLogout = async (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     if (isLoggingOut) {
       return;
     }
-    setIsMobileMenuOpen(false);
+    setIsMenuOpen(false);
     await logout();
   };
 
@@ -42,27 +43,69 @@ export function Navbar() {
   const navItems: NavItem[] = [
     {
       href: '/',
-      label: 'Inicio',
-      isActive: pathname === '/',
+      label: 'INICIO',
     },
     {
       href: '/catalogo?categorias=new+in',
-      label: 'Colección',
-      isActive: isCollection,
+      label: 'NUEVA COLECCIÓN',
+      category: 'new in',
+    },
+    {
+      href: '/catalogo?categorias=aretes',
+      label: 'ARETES',
+      category: 'aretes',
+    },
+    {
+      href: '/catalogo?categorias=collares',
+      label: 'COLLARES',
+      category: 'collares',
+    },
+    {
+      href: '/catalogo?categorias=pulseras',
+      label: 'PULSERAS',
+      category: 'pulseras',
+    },
+    {
+      href: '/catalogo?categorias=anillos',
+      label: 'ANILLOS',
+      category: 'anillos',
+    },
+    {
+      href: '/catalogo?categorias=sets',
+      label: 'SETS',
+      category: 'sets',
+    },
+    {
+      href: '/catalogo?categorias=studs-cuffs',
+      label: 'STUDS/CUFFS',
+      category: 'studs-cuffs',
+    },
+    {
+      href: '/catalogo?categorias=accesorios',
+      label: 'ACCESORIOS',
+      category: 'accesorios',
     },
   ];
 
+  const isNavItemActive = ({ href, category }: NavItem) => {
+    if (href === '/') {
+      return pathname === '/';
+    }
+
+    return pathname === '/catalogo' && activeCategory === category;
+  };
+
   const getNavLinkClassName = (isActive: boolean) =>
     isActive
-      ? 'text-gray-900 font-semibold'
-      : 'text-gray-700 hover:text-gray-900';
+      ? 'rounded-lg bg-gray-900 px-3 py-0.5 font-semibold leading-tight text-white'
+      : 'rounded-lg px-3 py-0.5 leading-tight text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900';
 
   const renderNavLinks = (onNavigate?: () => void) =>
     navItems.map((item) => (
       <Link
         key={item.href}
         href={item.href}
-        className={getNavLinkClassName(item.isActive)}
+        className={getNavLinkClassName(isNavItemActive(item))}
         onClick={onNavigate}
       >
         {item.label}
@@ -76,50 +119,46 @@ export function Navbar() {
           <Link
             href="/"
             className="absolute left-1/2 -translate-x-1/2 shrink-0"
-            onClick={() => setIsMobileMenuOpen(false)}
+            onClick={() => setIsMenuOpen(false)}
           >
             {logoContent}
           </Link>
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 md:hidden"
-            aria-label={isMobileMenuOpen ? 'Cerrar menu' : 'Abrir menu'}
-            onClick={() => setIsMobileMenuOpen((current) => !current)}
+            className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+            aria-label={isMenuOpen ? 'Cerrar menu' : 'Abrir menu'}
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen((current) => !current)}
           >
-            {isMobileMenuOpen ? (
+            {isMenuOpen ? (
               <X className="size-5" />
             ) : (
               <Menu className="size-5" />
             )}
           </button>
-          <div className="hidden items-center gap-3 sm:gap-6 md:flex">
-            {renderNavLinks()}
-            {isAuthenticated && (
-              <Link
-                href="/login"
-                className="inline-flex items-center gap-1 text-gray-700 hover:text-gray-900"
-                aria-disabled={isLoggingOut}
-                onClick={handleLogout}
-              >
-                <LogOut className="size-4" />
-                {isLoggingOut ? 'Saliendo...' : 'Salir'}
-              </Link>
-            )}
-          </div>
         </div>
-        {isMobileMenuOpen && (
-          <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm md:hidden">
-            <div className="flex flex-col gap-3">
-              {renderNavLinks(() => setIsMobileMenuOpen(false))}
+        {isMenuOpen && (
+          <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+            <div className="flex flex-col gap-0.5">
+              {renderNavLinks(() => setIsMenuOpen(false))}
+              {isAuthenticated && (
+                <Link
+                  href="/admin"
+                  className="rounded-lg px-3 py-0.5 leading-tight text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  ADMIN
+                </Link>
+              )}
               {isAuthenticated && (
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-1 text-gray-700 hover:text-gray-900"
+                  className="inline-flex items-center gap-1 rounded-lg px-3 py-0.5 leading-tight text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
                   aria-disabled={isLoggingOut}
                   onClick={handleLogout}
                 >
                   <LogOut className="size-4" />
-                  {isLoggingOut ? 'Saliendo...' : 'Salir'}
+                  {isLoggingOut ? 'Saliendo...' : 'SALIR'}
                 </Link>
               )}
             </div>
