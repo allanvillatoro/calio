@@ -40,7 +40,7 @@ export default function Home() {
               href="/catalogo?categorias=new+in"
               className="bg-white text-black px-8 py-3 font-semibold tracking-wide hover:scale-105 transition-all duration-300"
             >
-              COLECCIONES
+              NUEVA COLECCIÓN
             </Link>
 
             <a
