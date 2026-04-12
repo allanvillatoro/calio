@@ -142,24 +142,24 @@ export function Navbar() {
             <div className="flex flex-col gap-0.5">
               {renderNavLinks(() => setIsMenuOpen(false))}
               {isAuthenticated && (
-                <Link
-                  href="/admin"
-                  className="rounded-lg px-3 py-0.5 leading-tight text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  ADMIN
-                </Link>
-              )}
-              {isAuthenticated && (
-                <Link
-                  href="/login"
-                  className="inline-flex items-center gap-1 rounded-lg px-3 py-0.5 leading-tight text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
-                  aria-disabled={isLoggingOut}
-                  onClick={handleLogout}
-                >
-                  <LogOut className="size-4" />
-                  {isLoggingOut ? 'Saliendo...' : 'SALIR'}
-                </Link>
+                <>
+                  <Link
+                    href="/admin"
+                    className={getNavLinkClassName(pathname === '/admin')}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    ADMIN
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="inline-flex items-center gap-1 rounded-lg px-3 py-0.5 leading-tight text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                    aria-disabled={isLoggingOut}
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="size-4" />
+                    {isLoggingOut ? 'Saliendo...' : 'SALIR'}
+                  </Link>
+                </>
               )}
             </div>
           </div>
