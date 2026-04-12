@@ -34,11 +34,12 @@ export function CatalogSearchBar({
             size={18}
           />
           <Input
+            key={defaultValue ?? ''}
             ref={inputRef}
             defaultValue={defaultValue}
             onKeyDown={handleKeyDown}
             type="text"
-            placeholder="Buscar piezas..."
+            placeholder="Buscar piezas por nombre..."
             className="h-11 rounded-lg border-gray-300 bg-white pl-10 pr-4 shadow-sm focus-visible:border-gray-900 focus-visible:ring-gray-900/15"
           />
         </div>
