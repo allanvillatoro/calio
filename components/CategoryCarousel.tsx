@@ -5,7 +5,11 @@ import Image from 'next/image';
 import { useRef, useState, useEffect } from 'react';
 
 const categories = [
-  { name: 'NEW IN', slug: 'new+in', link: '/images/categorias/new in.jpeg' },
+  {
+    name: 'NUEVA COLECCIÓN',
+    slug: 'new+in',
+    link: '/images/categorias/new in.jpeg',
+  },
   { name: 'ARETES', slug: 'aretes', link: '/images/categorias/aretes.jpeg' },
   {
     name: 'COLLARES',

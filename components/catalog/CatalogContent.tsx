@@ -6,7 +6,6 @@ import { Plus } from 'lucide-react';
 import { CATEGORIES, type Product } from '@/lib/types';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
 import { getProductsByQuery } from '@/lib/actions/get-products-by-query.action';
-import { FiltersSection } from '@/components/catalog/FiltersSection';
 import { CatalogSearchBar } from '@/components/catalog/CatalogSearchBar';
 import { ProductsGrid } from '@/components/catalog/ProductsGrid';
 import { ProductDialog } from '../admin/ProductDialog';
@@ -16,19 +15,16 @@ import { EMPTY_PRODUCT } from '@/lib/constants/product';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function CatalogContent() {
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  //const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
   const { isAuthenticated } = useAuth();
 
   const {
-    selectedCategories,
     selectedCategoriesParam,
     query,
     currentPage,
     inStore,
-    isAllSelected,
-    onCategorySelectionChange,
     onPageChange,
     printView,
     updateURL,
@@ -89,7 +85,7 @@ export default function CatalogContent() {
         </div>
       )}
       <div className="flex flex-col md:flex-row gap-8">
-        {!printView && (
+        {/*         {!printView && (
           <FiltersSection
             key={selectedCategoriesParam ?? 'all'}
             categories={CATEGORIES}
@@ -99,7 +95,7 @@ export default function CatalogContent() {
             onToggleOpen={() => setIsFiltersOpen(!isFiltersOpen)}
             onSelectionChange={onCategorySelectionChange}
           />
-        )}
+        )} */}
 
         <div className="flex-1">
           <CatalogSearchBar defaultValue={query} onSearch={handleSearch} />
