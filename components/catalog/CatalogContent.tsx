@@ -89,7 +89,7 @@ export default function CatalogContent() {
         </div>
       )}
       <div className="flex flex-col md:flex-row gap-8">
-        {!printView && (
+        {/*         {!printView && (
           <FiltersSection
             key={selectedCategoriesParam ?? 'all'}
             categories={CATEGORIES}
@@ -99,7 +99,7 @@ export default function CatalogContent() {
             onToggleOpen={() => setIsFiltersOpen(!isFiltersOpen)}
             onSelectionChange={onCategorySelectionChange}
           />
-        )}
+        )} */}
 
         <div className="flex-1">
           <CatalogSearchBar defaultValue={query} onSearch={handleSearch} />
