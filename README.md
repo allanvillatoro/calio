@@ -1,6 +1,6 @@
 # CALIO Joyería
 
-E-commerce application built with Next.js for the CALIO Joyería catalog. It includes a landing page, catalog, product detail pages, JWT authentication, and an admin panel for creating, editing, and deleting products.
+E-commerce application built with Next.js for the CALIO Joyería catalog. It includes a landing page, catalog, product detail pages, cookie-based JWT authentication, and an admin panel for creating, editing, and deleting products.
 
 ## Stack
 
@@ -51,8 +51,7 @@ lib/
   api/                    # Axios clients
   hooks/                  # Reusable hooks
   repositories/           # Data access with Drizzle
-  auth.ts                 # Server-side JWT helpers
-  auth-client.ts          # Client-side token helpers
+  auth.ts                 # Server-side JWT and cookie helpers
 
 db/
   schema.ts               # products and users tables
@@ -134,8 +133,10 @@ npm run db:studio
 ## Authentication
 
 - Login lives at `POST /api/users/login`
-- The backend generates a JWT and also stores it in an `httpOnly` cookie
-- On the client, the token is stored in `localStorage` for authenticated `Bearer` requests
+- The backend generates a JWT and stores it in an `httpOnly` cookie
+- The login response no longer exposes the token to the frontend
+- Client requests rely on the browser sending the cookie automatically
+- Client auth state is checked through `GET /api/users/session`
 - Product Server Actions validate authentication on the server
 - The `/admin` route is protected server-side using the JWT cookie
 
@@ -152,11 +153,11 @@ npm run db:studio
 
 - Product admin CRUD is implemented
 - Login and logout are implemented
+- Session check endpoint is implemented
 - `/admin` is protected
 - Navbar includes basic authentication-aware behavior
 - Catalog is connected to the backend with filters and pagination
 
 ## Notes
 
-- Client-side authentication state is a lightweight heuristic based on the locally stored JWT; real authorization still happens on the server.
-- If the client token expires, `auth-client.ts` clears it automatically.
+- Authentication is handled through `httpOnly` cookies, so the JWT is not readable from frontend JavaScript.

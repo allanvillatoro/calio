@@ -9,7 +9,6 @@ interface LoginCredentials {
 
 interface LoginResponse {
   user: IUser;
-  token: string;
 }
 
 export const login = async (

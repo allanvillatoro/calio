@@ -15,6 +15,10 @@ export const publicApiRoutes: PublicApiRoute[] = [
   },
   {
     method: 'GET',
+    path: '/api/users/session',
+  },
+  {
+    method: 'GET',
     path: '/api/products',
   },
   {

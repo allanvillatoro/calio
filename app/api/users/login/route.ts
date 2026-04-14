@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   try {
     const body = userCredentialsSchema.parse(await request.json());
     const loginResult = await usersRepository.login(body);
-    const response = NextResponse.json(loginResult);
+    const response = NextResponse.json({ user: loginResult.user });
 
     response.cookies.set({
       name: AUTH_TOKEN_COOKIE_NAME,

@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
-import { extractBearerToken, verifyAuthToken } from '@/lib/auth';
+import { getAuthenticatedUserFromCookies } from '@/lib/auth';
 import { ProductConflictError } from '@/lib/errors';
 import { formatZodError } from '@/lib/zod';
 import { ZodError } from 'zod';
@@ -10,8 +10,7 @@ import { productsRepository } from '@/lib/repositories/products/drizzle-products
 export async function GET(request: Request) {
   try {
     const searchParams = new URL(request.url).searchParams;
-    const token = extractBearerToken(request.headers.get('authorization'));
-    const authenticatedUser = token ? await verifyAuthToken(token) : null;
+    const authenticatedUser = await getAuthenticatedUserFromCookies();
     const parsedQuery = productsQuerySchema.parse({
       category: searchParams
         .getAll('category')
