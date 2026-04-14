@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { extractBearerToken, verifyAuthToken } from '@/lib/auth';
+import { AUTH_TOKEN_COOKIE_NAME, verifyAuthToken } from '@/lib/auth';
 import { isPublicApiRoute } from '@/lib/config/public-api-routes';
 import { StatusCodes } from 'http-status-codes';
 
@@ -10,7 +10,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const token = extractBearerToken(request.headers.get('authorization'));
+  const token = request.cookies.get(AUTH_TOKEN_COOKIE_NAME)?.value;
 
   if (!token) {
     return NextResponse.json(
