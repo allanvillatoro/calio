@@ -30,27 +30,27 @@ export default function CatalogContent() {
     updateURL,
   } = useCatalogFilters(CATEGORIES);
 
-  const normalizedCategory =
+  /*const normalizedCategory =
     selectedCategoriesParam
       ?.split(',')
       .map((category) => category.trim())
       .filter(Boolean)
       .sort()
-      .join(',') ?? null;
+      .join(',') ?? null;*/
 
   const { isLoading, data: productsResponse } = useQuery({
     queryKey: [
       'products',
       {
-        category: normalizedCategory,
-        query: query ?? null,
+        category: selectedCategoriesParam ?? null,
+        query: query?.toLowerCase() ?? null,
         instore: inStore ?? null,
         page: currentPage,
       },
     ],
     queryFn: () =>
       getProductsByQuery({
-        category: normalizedCategory ?? undefined,
+        category: selectedCategoriesParam ?? undefined,
         query,
         instore: inStore,
         page: currentPage,
@@ -71,8 +71,20 @@ export default function CatalogContent() {
     });
   };
 
+  const getCatalogTitle = () => {
+    if (selectedCategoriesParam) {
+      const upperCategory = selectedCategoriesParam.toUpperCase();
+      return upperCategory === 'NEW IN' ? 'NUEVA COLECCIÓN' : upperCategory;
+    }
+    if (query) return `Resultados para "${query}"`;
+    return 'Catálogo Completo';
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
+      <h2 className="text-2xl font-semibold text-center pb-6">
+        {getCatalogTitle()}
+      </h2>
       {isAuthenticated && !printView && (
         <div className="py-4 text-right">
           <Button
