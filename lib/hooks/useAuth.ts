@@ -3,13 +3,9 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { getSession } from '@/lib/actions/get-session.action';
 import { login } from '@/lib/actions/login.action';
 import { logout } from '@/lib/actions/logout.action';
-import {
-  clearStoredAuthToken,
-  getStoredAuthToken,
-  setStoredAuthToken,
-} from '@/lib/auth-client';
 
 interface LoginCredentials {
   email: string;
@@ -20,25 +16,50 @@ export function useAuth() {
   const router = useRouter();
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
-    setIsAuthenticated(Boolean(getStoredAuthToken()));
+    let isMounted = true;
+
+    const syncAuthState = async () => {
+      setIsCheckingAuth(true);
+
+      try {
+        const data = await getSession();
+
+        if (isMounted) {
+          setIsAuthenticated(data.authenticated);
+        }
+      } catch {
+        if (isMounted) {
+          setIsAuthenticated(false);
+        }
+      } finally {
+        if (isMounted) {
+          setIsCheckingAuth(false);
+        }
+      }
+    };
+
+    void syncAuthState();
+
+    return () => {
+      isMounted = false;
+    };
   }, [pathname]);
 
   const handleLogin = async (credentials: LoginCredentials) => {
     setIsLoggingIn(true);
 
     try {
-      const loginResult = await login(credentials);
-      setStoredAuthToken(loginResult.token);
+      await login(credentials);
       setIsAuthenticated(true);
       toast.success('Sesión iniciada correctamente');
       router.push('/admin');
       router.refresh();
     } catch (error) {
-      clearStoredAuthToken();
       throw error;
     } finally {
       setIsLoggingIn(false);
@@ -50,7 +71,6 @@ export function useAuth() {
 
     try {
       await logout();
-      clearStoredAuthToken();
       setIsAuthenticated(false);
       toast.success('Sesión cerrada correctamente');
       router.push('/login');
@@ -64,6 +84,7 @@ export function useAuth() {
 
   return {
     isAuthenticated,
+    isCheckingAuth,
     isLoggingIn,
     isLoggingOut,
     login: handleLogin,
