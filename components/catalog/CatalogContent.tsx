@@ -77,6 +77,7 @@ export default function CatalogContent() {
       return upperCategory === 'NEW IN' ? 'NUEVA COLECCIÓN' : upperCategory;
     }
     if (query) return `Resultados para "${query}"`;
+    if (inStore) return 'Catálogo en Tienda';
     return 'Catálogo Completo';
   };
 
@@ -110,7 +111,9 @@ export default function CatalogContent() {
         )} */}
 
         <div className="flex-1">
-          <CatalogSearchBar defaultValue={query} onSearch={handleSearch} />
+          {!printView && (
+            <CatalogSearchBar defaultValue={query} onSearch={handleSearch} />
+          )}
           <ProductsGrid
             products={productsResponse?.data ?? []}
             totalProducts={productsResponse?.paging.totalItems ?? 0}
