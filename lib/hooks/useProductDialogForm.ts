@@ -67,6 +67,7 @@ export function useProductDialogForm({
     setError,
     getValues,
     setValue,
+    trigger,
     formState: { errors },
   } = useForm<FormInputs>({
     defaultValues: { ...getEmptyFormValues(), files: [] },
@@ -129,13 +130,28 @@ export function useProductDialogForm({
     }) || [];
 
   const handleCategoryChange = (category: Category) => {
+    clearErrors('discount');
+
     if (category !== 'rebajas') {
       setValue('discount', 0, {
         shouldDirty: true,
         shouldValidate: true,
       });
-      clearErrors('discount');
+      return;
     }
+
+    setValue(
+      'discount',
+      product?.discount && product.discount > 0 ? product.discount : 0,
+      {
+        shouldDirty: true,
+        shouldValidate: true,
+      },
+    );
+  };
+
+  const handleDiscountChange = () => {
+    void trigger('discount');
   };
 
   const clearImagesErrorIfNeeded = (
@@ -331,6 +347,7 @@ export function useProductDialogForm({
     formVersion,
     handleDeleteCurrentImage,
     handleDeleteUploadImage,
+    handleDiscountChange,
     handleCategoryChange,
     handleDialogOpenChange,
     handleDrag,
