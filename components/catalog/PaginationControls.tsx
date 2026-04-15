@@ -63,7 +63,7 @@ export function PaginationControls({
       </div>
 
       <div className="text-center text-gray-600 text-sm mt-4">
-        Página {currentPage} de {totalPages} ({totalProducts} productos)
+        Página {currentPage} de {totalPages} ({totalProducts} piezas)
       </div>
     </>
   );
