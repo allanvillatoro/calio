@@ -1,6 +1,6 @@
 import { useEffect, useState, useTransition } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { EMPTY_PRODUCT } from '@/lib/constants/product';
@@ -16,6 +16,7 @@ interface ProductFormValues {
   name: string;
   description: string;
   price: number;
+  discount: number;
   quantity: number;
   inStore: boolean;
   category: Category;
@@ -39,6 +40,7 @@ function getEmptyFormValues(): ProductFormValues {
     name: EMPTY_PRODUCT.name,
     description: EMPTY_PRODUCT.description,
     price: EMPTY_PRODUCT.price,
+    discount: EMPTY_PRODUCT.discount,
     quantity: EMPTY_PRODUCT.quantity,
     inStore: EMPTY_PRODUCT.inStore ?? false,
     category: EMPTY_PRODUCT.category,
@@ -57,6 +59,7 @@ export function useProductDialogForm({
   const [shouldRefreshOnClose, setShouldRefreshOnClose] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const {
+    control,
     register,
     reset,
     handleSubmit,
@@ -64,7 +67,6 @@ export function useProductDialogForm({
     setError,
     getValues,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<FormInputs>({
     defaultValues: { ...getEmptyFormValues(), files: [] },
@@ -93,6 +95,7 @@ export function useProductDialogForm({
       name: product?.name ?? EMPTY_PRODUCT.name,
       description: product?.description ?? EMPTY_PRODUCT.description,
       price: product?.price ?? EMPTY_PRODUCT.price,
+      discount: product?.discount ?? EMPTY_PRODUCT.discount,
       quantity: product?.quantity ?? EMPTY_PRODUCT.quantity,
       inStore: product?.inStore ?? EMPTY_PRODUCT.inStore ?? false,
       category: product?.category ?? EMPTY_PRODUCT.category,
@@ -102,6 +105,20 @@ export function useProductDialogForm({
   }, [product, reset]);
 
   const isEditing = !!product?.id;
+  const selectedCategory = useWatch({
+    control,
+    name: 'category',
+  });
+
+  const handleCategoryChange = (category: Category) => {
+    if (category !== 'rebajas') {
+      setValue('discount', 0, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      clearErrors('discount');
+    }
+  };
 
   const clearImagesErrorIfNeeded = (
     files: File[] = getValues('files') || [],
@@ -130,6 +147,7 @@ export function useProductDialogForm({
       name: values.name,
       description: values.description,
       price: values.price,
+      discount: values.category === 'rebajas' ? values.discount : 0,
       quantity: values.quantity,
       inStore: values.inStore,
       category: values.category,
@@ -151,6 +169,7 @@ export function useProductDialogForm({
             'name',
             'description',
             'price',
+            'discount',
             'quantity',
             'category',
             'images',
@@ -286,9 +305,16 @@ export function useProductDialogForm({
     });
   };
 
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const currentImages = watch('images') || [];
-  const currentFiles = watch('files') || [];
+  const currentImages =
+    useWatch({
+      control,
+      name: 'images',
+    }) || [];
+  const currentFiles =
+    useWatch({
+      control,
+      name: 'files',
+    }) || [];
 
   return {
     currentFiles,
@@ -298,6 +324,7 @@ export function useProductDialogForm({
     formVersion,
     handleDeleteCurrentImage,
     handleDeleteUploadImage,
+    handleCategoryChange,
     handleDialogOpenChange,
     handleDrag,
     handleDrop,
@@ -307,6 +334,7 @@ export function useProductDialogForm({
     handleSubmit,
     isEditing,
     isPending,
+    selectedCategory,
     register,
     submitError,
     onSubmit,
