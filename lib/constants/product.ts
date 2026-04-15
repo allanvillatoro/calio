@@ -5,6 +5,8 @@ export const EMPTY_PRODUCT: Product = {
   name: '',
   description: '',
   price: 100,
+  discount: 0,
+  priceWithDiscount: 100,
   quantity: 1,
   inStore: false,
   category: CATEGORIES[0],
