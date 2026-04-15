@@ -1,6 +1,8 @@
 import type { IProduct } from '@/lib/interfaces/product';
 
-export type ProductChanges = Partial<IProduct>;
+export type ProductChanges = Partial<
+  Omit<IProduct, 'priceWithDiscount' | 'createdAt' | 'updatedAt'>
+>;
 
 export interface ProductFilters {
   categories?: string[];
