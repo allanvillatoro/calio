@@ -77,7 +77,7 @@ export default function CatalogContent() {
       return upperCategory === 'NEW IN' ? 'NUEVA COLECCIÓN' : upperCategory;
     }
     if (query) return `Resultados para "${query}"`;
-    if (inStore) return 'Catálogo en Tienda';
+    if (inStore) return 'Piezas en Tienda Física';
     return 'Catálogo Completo';
   };
 
