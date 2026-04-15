@@ -36,6 +36,7 @@ export class DrizzleProductsRepository implements IProductsRepository {
           name: requireProductField(input, 'name'),
           description: requireProductField(input, 'description'),
           price: requireProductField(input, 'price'),
+          discount: input.discount ?? 0,
           quantity: requireProductField(input, 'quantity'),
           images: requireProductField(input, 'images'),
           category: requireProductField(input, 'category'),
