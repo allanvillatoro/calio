@@ -34,6 +34,7 @@ export const ProductDialog = ({
     formVersion,
     handleDeleteCurrentImage,
     handleDeleteUploadImage,
+    handleCategoryChange,
     handleDialogOpenChange,
     handleDrag,
     handleDrop,
@@ -44,12 +45,29 @@ export const ProductDialog = ({
     isEditing,
     isPending,
     onSubmit,
+    selectedCategory,
     register,
     submitError,
   } = useProductDialogForm({
     product,
     onOpenChange,
   });
+
+  const validateDiscount = (value: number) => {
+    if (selectedCategory !== 'rebajas') {
+      return value === 0 || 'El descuento debe ser 0 fuera de Rebajas';
+    }
+
+    if (!Number.isInteger(value)) {
+      return 'El descuento debe ser un número entero';
+    }
+
+    if (value < 1 || value > 100) {
+      return 'El descuento debe estar entre 1 y 100';
+    }
+
+    return true;
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
@@ -106,31 +124,31 @@ export const ProductDialog = ({
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Precio (L.)
+                      Categoría
                     </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      {...register('price', {
-                        valueAsNumber: true,
-                        required: 'El precio es obligatorio',
-                        min: {
-                          value: 0,
-                          message: 'El precio no puede ser negativo',
-                        },
+                    <select
+                      {...register('category', {
+                        required: 'La categoría es obligatoria',
+                        onChange: (event) =>
+                          handleCategoryChange(event.target.value),
                       })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                    />
-                    {errors.price && (
+                    >
+                      {CATEGORIES.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.category && (
                       <p className="mt-1 text-xs text-red-600">
-                        {errors.price.message}
+                        {errors.category.message}
                       </p>
                     )}
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Cantidad
@@ -155,6 +173,56 @@ export const ProductDialog = ({
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Precio (L)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      {...register('price', {
+                        valueAsNumber: true,
+                        required: 'El precio es obligatorio',
+                        min: {
+                          value: 0,
+                          message: 'El precio no puede ser negativo',
+                        },
+                      })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                    />
+                    {errors.price && (
+                      <p className="mt-1 text-xs text-red-600">
+                        {errors.price.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {selectedCategory === 'rebajas' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        % Descuento
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="100"
+                        step="1"
+                        {...register('discount', {
+                          valueAsNumber: true,
+                          validate: validateDiscount,
+                        })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      />
+                      {errors.discount && (
+                        <p className="mt-1 text-xs text-red-600">
+                          {errors.discount.message}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -168,29 +236,6 @@ export const ProductDialog = ({
                   >
                     Disponible en tienda física
                   </label>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Categoría
-                  </label>
-                  <select
-                    {...register('category', {
-                      required: 'La categoría es obligatoria',
-                    })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                  >
-                    {CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.category && (
-                    <p className="mt-1 text-xs text-red-600">
-                      {errors.category.message}
-                    </p>
-                  )}
                 </div>
 
                 <div
