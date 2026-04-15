@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { CATEGORIES, type Product } from '@/lib/types';
-import { cn, getImageUrl } from '@/lib/utils';
+import { cn, formatPrice, getImageUrl } from '@/lib/utils';
 import { useProductDialogForm } from '@/lib/hooks/useProductDialogForm';
 
 interface ProductDialogProps {
@@ -32,6 +32,8 @@ export const ProductDialog = ({
     dragActive,
     errors,
     formVersion,
+    currentDiscount,
+    currentPrice,
     handleDeleteCurrentImage,
     handleDeleteUploadImage,
     handleCategoryChange,
@@ -68,6 +70,11 @@ export const ProductDialog = ({
 
     return true;
   };
+
+  const calculatedPriceWithDiscount =
+    Number.isFinite(currentPrice) && Number.isFinite(currentDiscount)
+      ? Number((currentPrice * (1 - currentDiscount / 100)).toFixed(2))
+      : null;
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
@@ -217,6 +224,12 @@ export const ProductDialog = ({
                       {errors.discount && (
                         <p className="mt-1 text-xs text-red-600">
                           {errors.discount.message}
+                        </p>
+                      )}
+                      {calculatedPriceWithDiscount && (
+                        <p className="mt-1 text-xs font-medium text-emerald-700">
+                          Precio con descuento:{' '}
+                          {formatPrice(calculatedPriceWithDiscount)}
                         </p>
                       )}
                     </div>
