@@ -45,7 +45,7 @@ export default function ProductCard({
           <p className="text-gray-600 text-sm mb-3 line-clamp-2">
             {product.description}
           </p>
-          <div className="flex items-end justify-between gap-3">
+          <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <span className="block text-2xl font-bold text-gray-900 leading-none">
                 {formatPrice(product.priceWithDiscount)}
@@ -57,14 +57,14 @@ export default function ProductCard({
                       {formatPrice(product.price)}
                     </span>
                     <span className="font-semibold uppercase tracking-wide text-rose-600">
-                      {product.discount}% OFF
+                      -{product.discount}%
                     </span>
                   </div>
                 ) : null}
               </div>
             </div>
             {isAdmin && (
-              <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
+              <span className="mt-0.5 text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
                 Stock: {product.quantity}
               </span>
             )}
