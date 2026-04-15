@@ -109,6 +109,24 @@ export function useProductDialogForm({
     control,
     name: 'category',
   });
+  const currentPrice = useWatch({
+    control,
+    name: 'price',
+  });
+  const currentDiscount = useWatch({
+    control,
+    name: 'discount',
+  });
+  const currentImages =
+    useWatch({
+      control,
+      name: 'images',
+    }) || [];
+  const currentFiles =
+    useWatch({
+      control,
+      name: 'files',
+    }) || [];
 
   const handleCategoryChange = (category: Category) => {
     if (category !== 'rebajas') {
@@ -305,17 +323,6 @@ export function useProductDialogForm({
     });
   };
 
-  const currentImages =
-    useWatch({
-      control,
-      name: 'images',
-    }) || [];
-  const currentFiles =
-    useWatch({
-      control,
-      name: 'files',
-    }) || [];
-
   return {
     currentFiles,
     currentImages,
@@ -334,6 +341,8 @@ export function useProductDialogForm({
     handleSubmit,
     isEditing,
     isPending,
+    currentDiscount,
+    currentPrice,
     selectedCategory,
     register,
     submitError,
