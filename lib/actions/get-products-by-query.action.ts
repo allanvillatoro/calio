@@ -23,6 +23,8 @@ export const getProductsByQuery = async (
       name: product.name,
       description: product.description,
       price: product.price,
+      discount: product.discount,
+      priceWithDiscount: product.priceWithDiscount,
       quantity: product.quantity,
       images: product.images,
       category: product.category as Category,
