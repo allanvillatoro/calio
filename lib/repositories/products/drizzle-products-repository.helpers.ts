@@ -37,6 +37,10 @@ export function mapRowToProduct(row: ProductRow): IProduct {
     name: row.name,
     description: row.description,
     price: row.price,
+    discount: row.discount,
+    priceWithDiscount: Number(
+      (row.price * (1 - row.discount / 100)).toFixed(2),
+    ),
     quantity: row.quantity,
     images: row.images,
     category: row.category,
