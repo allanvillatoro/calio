@@ -36,6 +36,7 @@ export const ProductDialog = ({
     currentPrice,
     handleDeleteCurrentImage,
     handleDeleteUploadImage,
+    handleDiscountChange,
     handleCategoryChange,
     handleDialogOpenChange,
     handleDrag,
@@ -64,8 +65,8 @@ export const ProductDialog = ({
       return 'El descuento debe ser un número entero';
     }
 
-    if (value < 1 || value > 100) {
-      return 'El descuento debe estar entre 1 y 100';
+    if (value < 1 || value > 99) {
+      return 'El descuento debe estar entre 1 y 99';
     }
 
     return true;
@@ -213,11 +214,12 @@ export const ProductDialog = ({
                       <input
                         type="number"
                         min="1"
-                        max="100"
+                        max="99"
                         step="1"
                         {...register('discount', {
                           valueAsNumber: true,
                           validate: validateDiscount,
+                          onChange: handleDiscountChange,
                         })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                       />
