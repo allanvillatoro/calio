@@ -51,11 +51,6 @@ export function Navbar() {
       category: 'new in',
     },
     {
-      href: '/catalogo?categorias=rebajas',
-      label: 'REBAJAS',
-      category: 'rebajas',
-    },
-    {
       href: '/catalogo?categorias=aretes',
       label: 'ARETES',
       category: 'aretes',
@@ -89,6 +84,11 @@ export function Navbar() {
       href: '/catalogo?categorias=accesorios',
       label: 'ACCESORIOS',
       category: 'accesorios',
+    },
+    {
+      href: '/catalogo?categorias=rebajas',
+      label: 'REBAJAS',
+      category: 'rebajas',
     },
   ];
 
