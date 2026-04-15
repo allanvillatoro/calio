@@ -3,7 +3,7 @@ import { PRODUCT_CATEGORIES } from '@/lib/constants/product-categories';
 
 const categorySchema = z.enum(PRODUCT_CATEGORIES);
 const imageSchema = z.string().trim().min(1);
-const discountSchema = z.number().int().min(0).max(100);
+const discountSchema = z.number().int().min(0).max(99);
 
 const productBodyShape = {
   name: z.string().trim().min(1),
@@ -21,12 +21,11 @@ function validateDiscountByCategory(
   ctx: z.RefinementCtx,
 ) {
   if (value.category === 'rebajas') {
-    if (value.discount < 1 || value.discount > 100) {
+    if (value.discount < 1 || value.discount > 99) {
       ctx.addIssue({
         code: 'custom',
         path: ['discount'],
-        message:
-          'Discount must be between 1 and 100 when category is "rebajas"',
+        message: 'Discount must be between 1 and 99 when category is "rebajas"',
       });
     }
 
@@ -37,8 +36,7 @@ function validateDiscountByCategory(
     ctx.addIssue({
       code: 'custom',
       path: ['discount'],
-      message:
-        'Discount must be 0 when category is different from "rebajas"',
+      message: 'Discount must be 0 when category is different from "rebajas"',
     });
   }
 }
