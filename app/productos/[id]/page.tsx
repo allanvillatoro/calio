@@ -66,6 +66,7 @@ export default async function ProductDetailPage({
   const phoneNumber = process.env.CONTACT_PHONE || '';
   const message = `Hola, quiero solicitar este producto: ${product.name} - ${productUrl}`;
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  const hasDiscount = product.discount > 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -82,9 +83,21 @@ export default async function ProductDetailPage({
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
                 {product.name}
               </h1>
-              <p className="text-3xl font-bold text-gray-900 mb-1">
-                {formatPrice(product.price)}
-              </p>
+              <div className="mb-2">
+                <p className="text-3xl font-bold text-gray-900">
+                  {formatPrice(product.priceWithDiscount)}
+                </p>
+                {hasDiscount && (
+                  <div className="mt-2 flex flex-wrap items-center gap-3">
+                    <span className="text-lg text-gray-400 line-through">
+                      {formatPrice(product.price)}
+                    </span>
+                    <span className="rounded-full bg-rose-100 px-3 py-1 text-sm font-semibold tracking-wide text-rose-700">
+                      {product.discount}% OFF
+                    </span>
+                  </div>
+                )}
+              </div>
               <p className="text-gray-600 leading-relaxed">
                 Envío local o nacional por un costo adicional
               </p>

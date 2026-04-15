@@ -85,6 +85,11 @@ export function Navbar() {
       label: 'ACCESORIOS',
       category: 'accesorios',
     },
+    {
+      href: '/catalogo?categorias=rebajas',
+      label: 'REBAJAS',
+      category: 'rebajas',
+    },
   ];
 
   const isNavItemActive = ({ href, category }: NavItem) => {
