@@ -8,7 +8,12 @@ export function getImageUrl(filename: string): string {
 }
 
 export function formatPrice(price: number): string {
-  return `L${price.toLocaleString('es-HN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+  const hasDecimals = !Number.isInteger(price);
+
+  return `L${price.toLocaleString('es-HN', {
+    minimumFractionDigits: hasDecimals ? 2 : 0,
+    maximumFractionDigits: hasDecimals ? 2 : 0,
+  })}`;
 }
 
 export function cn(...inputs: ClassValue[]) {
