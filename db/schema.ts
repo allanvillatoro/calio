@@ -26,6 +26,7 @@ export const products = pgTable(
       mode: 'number',
     }).notNull(),
     quantity: integer('quantity').notNull(),
+    discount: integer('discount').notNull().default(0),
     images: jsonb('images').$type<string[]>().notNull(),
     category: text('category').notNull(),
     inStore: boolean('in_store').notNull().default(false),
