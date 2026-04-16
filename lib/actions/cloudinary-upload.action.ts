@@ -2,6 +2,8 @@
 
 import { createHash } from 'node:crypto';
 import axios from 'axios';
+import dotenv from 'dotenv';
+dotenv.config();
 
 import {
   cloudinaryApi,
@@ -31,7 +33,8 @@ async function uploadImageToCloudinary(file: File): Promise<string> {
   const { apiKey, apiSecret } = getCloudinaryCredentials();
   const timestamp = Math.floor(Date.now() / 1000).toString();
   const signedParams = {
-    asset_folder: 'calio',
+    asset_folder:
+      process.env.DB_TARGET === 'production' ? 'calio' : 'caliotest',
     overwrite: 'false',
     timestamp,
     unique_filename: 'true',
