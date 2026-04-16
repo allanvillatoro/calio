@@ -55,7 +55,7 @@ lib/
 
 db/
   schema.ts               # products and users tables
-  config.ts               # local/production DB selection
+  config.ts               # test/production DB selection
 ```
 
 ## Environment Variables
@@ -63,8 +63,8 @@ db/
 Main environment variables currently used by the project:
 
 ```bash
-DB_TARGET=local
-LOCAL_DATABASE_URL=
+DB_TARGET=testing
+TEST_DATABASE_URL=
 DATABASE_URL=
 JWT_SECRET=
 NEXT_PUBLIC_SITE_URL=
