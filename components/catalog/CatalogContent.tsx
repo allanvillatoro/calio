@@ -12,13 +12,13 @@ import { ProductDialog } from '../admin/ProductDialog';
 import { DeleteDialog } from '../admin/DeleteDialog';
 import { Button } from '../ui/button';
 import { EMPTY_PRODUCT } from '@/lib/constants/product';
-import { useAuth } from '@/lib/hooks/useAuth';
+import { useAuthStore } from '@/lib/stores/auth.store';
 
 export default function CatalogContent() {
   //const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   const {
     selectedCategoriesParam,

@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { LogOut, Menu, X } from 'lucide-react';
-import { useAuth } from '@/lib/hooks/useAuth';
+import { toast } from 'sonner';
+import { useAuthStore } from '@/lib/stores/auth.store';
 
 interface NavItem {
   href: string;
@@ -14,9 +15,12 @@ interface NavItem {
 }
 
 export function Navbar() {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { isAuthenticated, isLoggingOut, logout } = useAuth();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoggingOut = useAuthStore((state) => state.isLoggingOut);
+  const logout = useAuthStore((state) => state.logout);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const activeCategory = searchParams.get('categorias');
 
@@ -26,7 +30,14 @@ export function Navbar() {
       return;
     }
     setIsMenuOpen(false);
-    await logout();
+    try {
+      await logout();
+      toast.success('Sesión cerrada correctamente');
+      router.push('/login');
+      router.refresh();
+    } catch {
+      toast.error('No se pudo cerrar la sesión');
+    }
   };
 
   const logoContent = (

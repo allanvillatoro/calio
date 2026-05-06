@@ -19,7 +19,8 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useAuth } from '@/lib/hooks/useAuth';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/stores/auth.store';
 
 interface LoginFormValues {
   email: string;
@@ -30,8 +31,10 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
+  const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const { login, isLoggingIn } = useAuth();
+  const login = useAuthStore((state) => state.login);
+  const isLoggingIn = useAuthStore((state) => state.isLoggingIn);
   const {
     register,
     handleSubmit,
@@ -49,6 +52,9 @@ export function LoginForm({
 
     try {
       await login(values);
+      toast.success('Sesión iniciada correctamente');
+      router.push('/admin');
+      router.refresh();
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'No se pudo iniciar sesión';
