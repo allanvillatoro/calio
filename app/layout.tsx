@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { AppChrome } from '@/components/AppChrome';
 import { Providers } from './providers';
+// @ts-ignore: Next.js global CSS import
 import './globals.css';
 import { cn } from '@/lib/utils';
 
