@@ -1,7 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, ShoppingCart, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import type { Product } from '@/lib/types';
+import { useCartStore } from '@/lib/stores/cart.store';
 import { formatPrice, getImageUrl } from '@/lib/utils';
 import { Button } from '../ui/button';
 
@@ -20,6 +24,18 @@ export default function ProductCard({
 }: ProductCardProps) {
   const mainImage = product.images[0];
   const hasDiscount = product.discount > 0;
+  const addProduct = useCartStore((state) => state.addProduct);
+
+  const handleAddToCart = () => {
+    const wasAdded = addProduct(product);
+
+    if (wasAdded) {
+      toast.success('Producto agregado al carrito');
+      return;
+    }
+
+    toast.error('Ya no se puede agregar más de este producto');
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
@@ -89,6 +105,15 @@ export default function ProductCard({
           </Button>
         </div>
       )}
+      <div className="px-4 pb-4">
+        <Button
+          className="w-full bg-gray-900 text-white hover:bg-gray-700"
+          onClick={handleAddToCart}
+          aria-label={`Agregar ${product.name} al carrito`}
+        >
+          <ShoppingCart className="size-4" />
+        </Button>
+      </div>
     </div>
   );
 }
