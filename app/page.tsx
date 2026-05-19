@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
 };
 export default function Home() {
-  const phoneNumber = process.env.CONTACT_PHONE || '';
+  const phoneNumber = process.env.NEXT_PUBLIC_CONTACT_PHONE || '';
   const whatsappUrl = `https://wa.me/${phoneNumber}`;
   const urlGrabados = `${whatsappUrl}?text=${encodeURIComponent(`Hola, quiero un grabado láser personalizado`)}`;
   const urlContactUs = `${whatsappUrl}?text=${encodeURIComponent(`Hola, quiero más información sobre sus joyas`)}`;

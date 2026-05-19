@@ -77,7 +77,7 @@ export default function RootLayout({
     description: 'Tienda de joyería en línea',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://caliojoyeria.com',
     image: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://caliojoyeria.com'}/og-image.jpg`,
-    telephone: process.env.CONTACT_PHONE,
+    telephone: process.env.NEXT_PUBLIC_CONTACT_PHONE,
     address: {
       '@type': 'PostalAddress',
       streetAddress: process.env.NEXT_PUBLIC_STREET_ADDRESS || 'San Pedro Sula',

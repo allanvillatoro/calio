@@ -64,7 +64,7 @@ export default async function ProductDetailPage({
     notFound();
   }
   const productUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/productos/${product.id}`;
-  const phoneNumber = process.env.CONTACT_PHONE || '';
+  const phoneNumber = process.env.NEXT_PUBLIC_CONTACT_PHONE || '';
   const message = `Hola, quiero solicitar este producto: ${product.name} - ${productUrl}`;
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
   const hasDiscount = product.discount > 0;
