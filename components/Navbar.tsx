@@ -155,10 +155,11 @@ export function Navbar() {
                 <Menu className="size-5" />
               )}
             </button>
-            <button
-              type="button"
+            <Link
+              href="/carrito"
               className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
               aria-label="Carrito"
+              onClick={() => setIsMenuOpen(false)}
             >
               <ShoppingCart className="size-5" />
               {cartItemCount > 0 && (
@@ -166,7 +167,7 @@ export function Navbar() {
                   {cartItemCount}
                 </span>
               )}
-            </button>
+            </Link>
           </div>
         </div>
         {isMenuOpen && (
