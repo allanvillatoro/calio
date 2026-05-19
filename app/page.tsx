@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { FaWhatsapp } from 'react-icons/fa';
-import CategoryCarousel from '@/components/CategoryCarousel';
+import CategoryCarousel from '@/components/home/CategoryCarousel';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
