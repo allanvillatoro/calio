@@ -127,7 +127,7 @@ export default function CartContent() {
         </div>
         <p className="text-sm text-gray-600">
           Descarga el PDF del pedido y adjúntalo en el mensaje a nuestro
-          WhatsApp o Instagram.
+          WhatsApp.
           <br />
           Envío local o nacional por un costo adicional.
         </p>
