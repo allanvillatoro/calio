@@ -1,13 +1,15 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { Minus, Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { toast } from 'sonner';
+import { CartItemRow } from './CartItemRow';
+import { createCartOrderPdfBlob } from './CartOrderPdf';
 import { useCartStore } from '@/lib/stores/cart.store';
-import { formatPrice, getImageUrl } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils';
 
 export default function CartContent() {
+  const [isRequestingOrder, setIsRequestingOrder] = useState(false);
   const items = useCartStore((state) => state.items);
   const incrementProduct = useCartStore((state) => state.incrementProduct);
   const decrementProduct = useCartStore((state) => state.decrementProduct);
@@ -17,11 +19,59 @@ export default function CartContent() {
     0,
   );
 
-  const handleAddProduct = (productId: number) => {
+  const handleIncrementProduct = (productId: number) => {
     const wasAdded = incrementProduct(productId);
 
     if (!wasAdded) {
       toast.error('Ya no se puede agregar más de este producto');
+    }
+  };
+
+  const getWhatsappMessage = () => {
+    const orderLines = items.map(
+      ({ product, quantity }) =>
+        `${quantity} x ${product.name} - ${formatPrice(
+          product.priceWithDiscount * quantity,
+        )}`,
+    );
+
+    return [
+      'Hola, quiero hacer este pedido',
+      '',
+      ...orderLines,
+      '',
+      `Subtotal: ${formatPrice(subtotal)}`,
+    ].join('\n');
+  };
+
+  const getWhatsappUrl = () => {
+    const phoneNumber = process.env.NEXT_PUBLIC_CONTACT_PHONE || '';
+    const message = encodeURIComponent(getWhatsappMessage());
+
+    return `https://wa.me/${phoneNumber}?text=${message}`;
+  };
+
+  const handleRequestOrder = async () => {
+    setIsRequestingOrder(true);
+    const loadingToast = toast.loading('Generando PDF del carrito...');
+
+    try {
+      const pdfBlob = await createCartOrderPdfBlob(items, subtotal);
+      const downloadUrl = URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = 'pedido-calio.pdf';
+      link.click();
+      URL.revokeObjectURL(downloadUrl);
+      toast.success('PDF descargado correctamente', {
+        id: loadingToast,
+      });
+    } catch {
+      toast.error('No se pudo generar el PDF del carrito', {
+        id: loadingToast,
+      });
+    } finally {
+      setIsRequestingOrder(false);
     }
   };
 
@@ -35,91 +85,50 @@ export default function CartContent() {
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white">
-      <div className="divide-y divide-gray-200">
-        {items.map(({ product, quantity }) => {
-          const canIncrease = quantity < product.quantity;
+      <div>
+        <div className="divide-y divide-gray-200">
+          {items.map((item) => (
+            <CartItemRow
+              key={item.product.id}
+              item={item}
+              onDecrement={decrementProduct}
+              onIncrement={handleIncrementProduct}
+              onRemove={removeProduct}
+            />
+          ))}
+        </div>
 
-          return (
-            <div
-              key={product.id}
-              className="grid grid-cols-[96px_1fr] gap-4 p-4 sm:grid-cols-[120px_1fr] sm:items-start md:gap-6 md:p-6"
-            >
-              <Link
-                href={`/productos/${product.id}`}
-                className="relative aspect-square w-full overflow-hidden rounded-lg bg-white"
-                aria-label={`Ver ${product.name}`}
-              >
-                <Image
-                  src={getImageUrl(product.images[0])}
-                  alt={product.name}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 640px) 96px, 120px"
-                />
-              </Link>
-
-              <div className="min-w-0 space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-start justify-between gap-3">
-                    <Link
-                      href={`/productos/${product.id}`}
-                      className="min-w-0 text-base font-semibold leading-snug text-gray-900 hover:text-gray-700 sm:text-lg"
-                    >
-                      {product.name}
-                    </Link>
-                    <p className="shrink-0 text-right text-lg font-bold text-gray-900 sm:text-xl">
-                      {formatPrice(product.priceWithDiscount)}
-                    </p>
-                  </div>
-                  <p className="line-clamp-3 text-sm leading-relaxed text-gray-600">
-                    {product.description}
-                  </p>
-                </div>
-
-                <div className="inline-flex h-10 items-center overflow-hidden rounded-full border-2 border-gray-900 bg-white">
-                  {quantity > 1 ? (
-                    <button
-                      type="button"
-                      className="flex size-10 items-center justify-center text-gray-900 transition-colors hover:bg-gray-100"
-                      onClick={() => decrementProduct(product.id)}
-                      aria-label={`Reducir cantidad de ${product.name}`}
-                    >
-                      <Minus className="size-4" />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="flex size-10 items-center justify-center text-gray-900 transition-colors hover:bg-gray-100"
-                      onClick={() => removeProduct(product.id)}
-                      aria-label={`Eliminar ${product.name} del carrito`}
-                    >
-                      <Trash2 className="size-4" />
-                    </button>
-                  )}
-
-                  <span className="flex min-w-10 items-center justify-center px-2 text-base font-semibold text-gray-900">
-                    {quantity}
-                  </span>
-
-                  <button
-                    type="button"
-                    className="flex size-10 items-center justify-center text-gray-900 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-white"
-                    onClick={() => handleAddProduct(product.id)}
-                    disabled={!canIncrease}
-                    aria-label={`Aumentar cantidad de ${product.name}`}
-                  >
-                    <Plus className="size-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        <div className="flex justify-end border-t border-gray-200 p-4 md:p-6">
+          <p className="text-xl font-bold text-gray-900">
+            Subtotal: {formatPrice(subtotal)}
+          </p>
+        </div>
       </div>
 
-      <div className="flex justify-end border-t border-gray-200 p-4 md:p-6">
-        <p className="text-xl font-bold text-gray-900">
-          Subtotal: {formatPrice(subtotal)}
+      <div className="space-y-3 border-t border-gray-200 p-4 md:p-6">
+        <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
+          <button
+            type="button"
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-gray-900 px-3 py-2.5 text-sm font-semibold leading-tight text-white transition-colors hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
+            onClick={handleRequestOrder}
+            disabled={isRequestingOrder}
+          >
+            {isRequestingOrder ? 'Generando...' : 'Descargar PDF'}
+          </button>
+          <a
+            href={getWhatsappUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-3 py-2.5 text-sm font-semibold leading-tight text-white transition-colors hover:bg-green-700 sm:text-base"
+          >
+            <FaWhatsapp className="size-5" />
+            Solicitar por WhatsApp
+          </a>
+        </div>
+        <p className="text-sm text-gray-600">
+          Descarga el PDF del pedido y adjúntalo en el mensaje de WhatsApp.
+          <br />
+          Envío local o nacional por un costo adicional.
         </p>
       </div>
     </div>
