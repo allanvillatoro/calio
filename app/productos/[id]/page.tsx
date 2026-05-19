@@ -4,6 +4,7 @@ import { formatPrice, toNumber } from '@/lib/utils';
 import { FaWhatsapp } from 'react-icons/fa';
 import ImageCarousel from '@/components/product/ImageCarousel';
 import BackButton from '@/components/product/BackButton';
+import AddToCartButton from '@/components/product/AddToCartButton';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 
 interface ProductDetailPageProps {
@@ -67,6 +68,9 @@ export default async function ProductDetailPage({
   const message = `Hola, quiero solicitar este producto: ${product.name} - ${productUrl}`;
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
   const hasDiscount = product.discount > 0;
+  const { createdAt, updatedAt, ...cartProduct } = product;
+  void createdAt;
+  void updatedAt;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -114,15 +118,18 @@ export default async function ProductDetailPage({
 
             <div className="pt-6">
               {product.quantity > 0 ? (
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-lg text-lg font-semibold transition-colors bg-green-600 text-white hover:bg-green-700"
-                >
-                  <FaWhatsapp className="w-6 h-6" />
-                  Solicitar por WhatsApp
-                </a>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-lg text-lg font-semibold transition-colors bg-green-600 text-white hover:bg-green-700"
+                  >
+                    <FaWhatsapp className="w-6 h-6" />
+                    Solicitar por WhatsApp
+                  </a>
+                  <AddToCartButton product={cartProduct} />
+                </div>
               ) : (
                 <div className="w-full py-4 px-6 rounded-lg text-lg font-semibold bg-gray-300 text-gray-500 text-center">
                   Agotado
