@@ -8,6 +8,7 @@ import {
   View,
   pdf,
 } from '@react-pdf/renderer';
+import { SOCIAL_PROFILE_LINKS } from '@/lib/constants/social-links';
 import type { CartItem } from '@/lib/stores/cart.store';
 import { formatPrice, getImageUrl } from '@/lib/utils';
 
@@ -15,20 +16,6 @@ const DEFAULT_SITE_URL = 'https://caliojoyeria.com';
 const IMAGE_LOAD_ERROR = 'No se pudo cargar la imagen para el PDF';
 const IMAGE_PREPARE_ERROR = 'No se pudo preparar la imagen para el PDF';
 const LOGO_PATH = '/images/logo.png';
-const SOCIAL_LINKS = [
-  {
-    href: 'https://instagram.com/calio.hnd',
-    label: 'Instagram',
-  },
-  {
-    href: 'https://tiktok.com/@calio.hnd',
-    label: 'TikTok',
-  },
-  {
-    href: 'https://facebook.com/caliojoyeria',
-    label: 'Facebook',
-  },
-];
 
 const styles = StyleSheet.create({
   page: {
@@ -190,7 +177,7 @@ function CartOrderPdf({
 
         <View style={styles.footer}>
           <View style={styles.socialLinks}>
-            {SOCIAL_LINKS.map((link) => (
+            {SOCIAL_PROFILE_LINKS.map((link) => (
               <Link key={link.href} src={link.href} style={styles.socialLink}>
                 {link.label}
               </Link>
