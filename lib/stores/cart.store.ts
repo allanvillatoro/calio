@@ -16,7 +16,8 @@ export interface CartItem {
 interface CartStoreState {
   items: CartItem[];
   addProduct: (product: CartProduct) => boolean;
-  decrementProduct: (productId: number) => void;
+  incrementProduct: (productId: number) => boolean;
+  decrementProduct: (productId: number) => boolean;
   removeProduct: (productId: number) => void;
   clearCart: () => void;
   getTotalItems: () => number;
@@ -48,16 +49,35 @@ export const useCartStore = create<CartStoreState>()(
 
         return true;
       },
+      incrementProduct: (productId) => {
+        const existingItem = get().items.find(
+          (item) => item.product.id === productId,
+        );
+
+        if (!existingItem) {
+          return false;
+        }
+
+        return get().addProduct(existingItem.product);
+      },
       decrementProduct: (productId) => {
+        const existingItem = get().items.find(
+          (item) => item.product.id === productId,
+        );
+
+        if (!existingItem || existingItem.quantity <= 1) {
+          return false;
+        }
+
         set((state) => ({
-          items: state.items
-            .map((item) =>
-              item.product.id === productId
-                ? { ...item, quantity: item.quantity - 1 }
-                : item,
-            )
-            .filter((item) => item.quantity > 0),
+          items: state.items.map((item) =>
+            item.product.id === productId
+              ? { ...item, quantity: item.quantity - 1 }
+              : item,
+          ),
         }));
+
+        return true;
       },
       removeProduct: (productId) => {
         set((state) => ({
