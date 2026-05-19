@@ -14,6 +14,21 @@ import { formatPrice, getImageUrl } from '@/lib/utils';
 const DEFAULT_SITE_URL = 'https://caliojoyeria.com';
 const IMAGE_LOAD_ERROR = 'No se pudo cargar la imagen para el PDF';
 const IMAGE_PREPARE_ERROR = 'No se pudo preparar la imagen para el PDF';
+const LOGO_PATH = '/images/logo.png';
+const SOCIAL_LINKS = [
+  {
+    href: 'https://instagram.com/calio.hnd',
+    label: 'Instagram',
+  },
+  {
+    href: 'https://tiktok.com/@calio.hnd',
+    label: 'TikTok',
+  },
+  {
+    href: 'https://facebook.com/caliojoyeria',
+    label: 'Facebook',
+  },
+];
 
 const styles = StyleSheet.create({
   page: {
@@ -21,6 +36,15 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#111827',
     fontFamily: 'Helvetica',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 18,
+  },
+  logo: {
+    height: 74,
+    objectFit: 'contain',
+    width: 140,
   },
   title: {
     fontSize: 22,
@@ -54,6 +78,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: 700,
     textDecoration: 'none',
+    color: 'black',
   },
   price: {
     fontSize: 13,
@@ -80,6 +105,29 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 700,
   },
+  footer: {
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
+    borderTopStyle: 'solid',
+    marginTop: 28,
+    paddingTop: 14,
+  },
+  socialLinks: {
+    flexDirection: 'row',
+    gap: 14,
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  socialLink: {
+    color: '#4b5563',
+    fontSize: 11,
+    textDecoration: 'none',
+  },
+  footerText: {
+    color: '#4b5563',
+    fontSize: 10,
+    textAlign: 'center',
+  },
 });
 
 type PdfCartItem = CartItem & {
@@ -88,6 +136,7 @@ type PdfCartItem = CartItem & {
 
 interface CartOrderPdfProps {
   items: PdfCartItem[];
+  logoSrc?: string;
   siteUrl: string;
   subtotal: number;
 }
@@ -96,11 +145,21 @@ function getProductUrl(siteUrl: string, productId: number) {
   return `${siteUrl.replace(/\/$/, '')}/productos/${productId}`;
 }
 
-function CartOrderPdf({ items, siteUrl, subtotal }: CartOrderPdfProps) {
+function CartOrderPdf({
+  items,
+  logoSrc,
+  siteUrl,
+  subtotal,
+}: CartOrderPdfProps) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.title}>Carrito de compra</Text>
+        {logoSrc ? (
+          <View style={styles.logoContainer}>
+            <PdfImage src={logoSrc} style={styles.logo} />
+          </View>
+        ) : null}
+        <Text style={styles.title}>Pedido</Text>
 
         {items.map(({ product, quantity, imageSrc }) => (
           <View key={product.id} style={styles.item}>
@@ -127,6 +186,20 @@ function CartOrderPdf({ items, siteUrl, subtotal }: CartOrderPdfProps) {
 
         <View style={styles.subtotalRow}>
           <Text style={styles.subtotal}>Subtotal: {formatPrice(subtotal)}</Text>
+        </View>
+
+        <View style={styles.footer}>
+          <View style={styles.socialLinks}>
+            {SOCIAL_LINKS.map((link) => (
+              <Link key={link.href} src={link.href} style={styles.socialLink}>
+                {link.label}
+              </Link>
+            ))}
+          </View>
+          <Text style={styles.footerText}>
+            © 2026 CALIO Joyería. Todos los derechos reservados.
+          </Text>
+          <Text style={styles.footerText}>San Pedro Sula, Honduras</Text>
         </View>
       </Page>
     </Document>
@@ -189,14 +262,30 @@ async function preparePdfItems(items: CartItem[]): Promise<PdfCartItem[]> {
   );
 }
 
+async function prepareLogoSrc() {
+  try {
+    return await loadImageAsPngDataUrl(LOGO_PATH);
+  } catch {
+    return undefined;
+  }
+}
+
 export async function createCartOrderPdfBlob(
   items: CartItem[],
   subtotal: number,
 ) {
-  const pdfItems = await preparePdfItems(items);
+  const [pdfItems, logoSrc] = await Promise.all([
+    preparePdfItems(items),
+    prepareLogoSrc(),
+  ]);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL;
 
   return pdf(
-    <CartOrderPdf items={pdfItems} siteUrl={siteUrl} subtotal={subtotal} />,
+    <CartOrderPdf
+      items={pdfItems}
+      logoSrc={logoSrc}
+      siteUrl={siteUrl}
+      subtotal={subtotal}
+    />,
   ).toBlob();
 }
