@@ -2,10 +2,7 @@
 
 import { ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
-import {
-  type CartProduct,
-  useCartStore,
-} from '@/lib/stores/cart.store';
+import { type CartProduct, useCartStore } from '@/lib/stores/cart.store';
 
 interface AddToCartButtonProps {
   product: CartProduct;
