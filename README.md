@@ -15,12 +15,16 @@ E-commerce application built with Next.js for the CALIO Joyería catalog. It inc
 - JWT with `jose`
 - Axios
 - Sonner
+- Zustand
+- `@react-pdf/renderer`
 
 ## Features
 
 - Public landing page
 - Catalog with filters, pagination, and print view
 - Product detail pages
+- Shopping cart persisted in `localStorage`
+- Cart page with quantity controls, subtotal, WhatsApp order message, and downloadable PDF order summary
 - JWT-based login
 - Server-side protection for the `/admin` route
 - Admin panel for product CRUD
@@ -36,12 +40,14 @@ app/
     products/             # Product REST endpoints
     users/                # Login and logout
   catalogo/               # Catalog page
+  carrito/                # Shopping cart page
   login/                  # Login page
   productos/[id]/         # Product detail page
 
 components/
   admin/                  # Create/edit/delete dialogs
   auth/                   # LoginForm
+  cart/                   # Cart content, cart rows, and PDF order document
   catalog/                # Grid, filters, cards, pagination
   product/                # Product detail components
   ui/                     # Base UI components
@@ -51,6 +57,7 @@ lib/
   api/                    # Axios clients
   hooks/                  # Reusable hooks
   repositories/           # Data access with Drizzle
+  stores/                 # Zustand stores for auth and cart state
   auth.ts                 # Server-side JWT and cookie helpers
 
 db/
@@ -80,6 +87,8 @@ Cloudinary notes:
 
 - `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` is public and used to resolve image URLs
 - `CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET` are server-only and used by Server Actions to upload product images
+- `NEXT_PUBLIC_SITE_URL` is used for canonical URLs and product links in generated cart PDFs
+- `NEXT_PUBLIC_CONTACT_PHONE` is used by client-side WhatsApp links, including the cart order message
 
 ## Local Development
 
@@ -149,6 +158,17 @@ npm run db:studio
 - The catalog uses React Query for reads
 - Create, update, and delete product flows use Server Actions
 
+## Shopping Cart
+
+- Cart state is managed with Zustand in `lib/stores/cart.store.ts`
+- Cart contents persist in browser `localStorage` under the `calio-cart` key
+- Products can be added from catalog cards and product detail pages
+- Cart quantity changes are capped by each product's available `quantity`
+- `/carrito` lists each cart product with image, title, description, quantity controls, price, and subtotal
+- The cart can generate and download a PDF order summary using `@react-pdf/renderer`
+- Product names in the generated PDF link to `NEXT_PUBLIC_SITE_URL/productos/{id}`
+- The WhatsApp button opens a prefilled order message; the user must manually attach the downloaded PDF
+
 ## Current Status
 
 - Product admin CRUD is implemented
@@ -157,6 +177,7 @@ npm run db:studio
 - `/admin` is protected
 - Navbar includes basic authentication-aware behavior
 - Catalog is connected to the backend with filters and pagination
+- Cart flow is implemented with persisted state, inventory-aware quantity controls, PDF download, and WhatsApp order message
 
 ## Notes
 
