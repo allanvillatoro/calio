@@ -1,4 +1,5 @@
 import { FaInstagram, FaTiktok, FaFacebook } from 'react-icons/fa';
+import { SOCIAL_LINKS } from '@/lib/constants/social-links';
 
 export function Footer() {
   return (
@@ -8,7 +9,7 @@ export function Footer() {
           {/* Social Links */}
           <div className="flex gap-6">
             <a
-              href="https://instagram.com/calio.hnd"
+              href={SOCIAL_LINKS.instagram.href}
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-pink-600 transition-colors"
@@ -17,7 +18,7 @@ export function Footer() {
               <FaInstagram className="w-6 h-6" />
             </a>
             <a
-              href="https://tiktok.com/@calio.hnd"
+              href={SOCIAL_LINKS.tiktok.href}
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-black transition-colors"
@@ -26,7 +27,7 @@ export function Footer() {
               <FaTiktok className="w-6 h-6" />
             </a>
             <a
-              href="https://facebook.com/caliojoyeria"
+              href={SOCIAL_LINKS.facebook.href}
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-blue-600 transition-colors"

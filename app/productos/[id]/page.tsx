@@ -1,9 +1,11 @@
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { formatPrice, toNumber } from '@/lib/utils';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import ImageCarousel from '@/components/product/ImageCarousel';
 import BackButton from '@/components/product/BackButton';
+import AddToCartButton from '@/components/product/AddToCartButton';
+import { SOCIAL_LINKS } from '@/lib/constants/social-links';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 
 interface ProductDetailPageProps {
@@ -63,10 +65,13 @@ export default async function ProductDetailPage({
     notFound();
   }
   const productUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/productos/${product.id}`;
-  const phoneNumber = process.env.CONTACT_PHONE || '';
+  const phoneNumber = process.env.NEXT_PUBLIC_CONTACT_PHONE || '';
   const message = `Hola, quiero solicitar este producto: ${product.name} - ${productUrl}`;
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
   const hasDiscount = product.discount > 0;
+  const { createdAt, updatedAt, ...cartProduct } = product;
+  void createdAt;
+  void updatedAt;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -114,15 +119,27 @@ export default async function ProductDetailPage({
 
             <div className="pt-6">
               {product.quantity > 0 ? (
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-lg text-lg font-semibold transition-colors bg-green-600 text-white hover:bg-green-700"
-                >
-                  <FaWhatsapp className="w-6 h-6" />
-                  Solicitar por WhatsApp
-                </a>
+                <div className="grid gap-3">
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-lg text-lg font-semibold transition-colors bg-green-600 text-white hover:bg-green-700"
+                  >
+                    <FaWhatsapp className="w-6 h-6" />
+                    Solicitar por WhatsApp
+                  </a>
+                  <a
+                    href={SOCIAL_LINKS.instagram.dmHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-lg text-lg font-semibold transition-colors bg-pink-600 text-white hover:bg-pink-700"
+                  >
+                    <FaInstagram className="w-6 h-6" />
+                    Solicitar por Instagram
+                  </a>
+                  <AddToCartButton product={cartProduct} />
+                </div>
               ) : (
                 <div className="w-full py-4 px-6 rounded-lg text-lg font-semibold bg-gray-300 text-gray-500 text-center">
                   Agotado

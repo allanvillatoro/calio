@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { FaWhatsapp } from 'react-icons/fa';
-import CategoryCarousel from '@/components/CategoryCarousel';
+import CategoryCarousel from '@/components/home/CategoryCarousel';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
 };
 export default function Home() {
-  const phoneNumber = process.env.CONTACT_PHONE || '';
+  const phoneNumber = process.env.NEXT_PUBLIC_CONTACT_PHONE || '';
   const whatsappUrl = `https://wa.me/${phoneNumber}`;
   const urlGrabados = `${whatsappUrl}?text=${encodeURIComponent(`Hola, quiero un grabado láser personalizado`)}`;
   const urlContactUs = `${whatsappUrl}?text=${encodeURIComponent(`Hola, quiero más información sobre sus joyas`)}`;

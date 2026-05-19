@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Playfair_Display, Inter, Geist } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { AppChrome } from '@/components/AppChrome';
+import { AppChrome } from '@/components/layout/AppChrome';
 import { Providers } from './providers';
 // @ts-ignore: Next.js global CSS import
 import './globals.css';
@@ -77,7 +77,7 @@ export default function RootLayout({
     description: 'Tienda de joyería en línea',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://caliojoyeria.com',
     image: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://caliojoyeria.com'}/og-image.jpg`,
-    telephone: process.env.CONTACT_PHONE,
+    telephone: process.env.NEXT_PUBLIC_CONTACT_PHONE,
     address: {
       '@type': 'PostalAddress',
       streetAddress: process.env.NEXT_PUBLIC_STREET_ADDRESS || 'San Pedro Sula',

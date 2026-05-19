@@ -4,9 +4,10 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { LogOut, Menu, X } from 'lucide-react';
+import { LogOut, Menu, ShoppingCart, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/lib/stores/auth.store';
+import { useCartStore } from '@/lib/stores/cart.store';
 
 interface NavItem {
   href: string;
@@ -21,6 +22,7 @@ export function Navbar() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoggingOut = useAuthStore((state) => state.isLoggingOut);
   const logout = useAuthStore((state) => state.logout);
+  const cartItemCount = useCartStore((state) => state.getTotalItems());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const activeCategory = searchParams.get('categorias');
 
@@ -139,19 +141,34 @@ export function Navbar() {
           >
             {logoContent}
           </Link>
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-            aria-label={isMenuOpen ? 'Cerrar menu' : 'Abrir menu'}
-            aria-expanded={isMenuOpen}
-            onClick={() => setIsMenuOpen((current) => !current)}
-          >
-            {isMenuOpen ? (
-              <X className="size-5" />
-            ) : (
-              <Menu className="size-5" />
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              aria-label={isMenuOpen ? 'Cerrar menu' : 'Abrir menu'}
+              aria-expanded={isMenuOpen}
+              onClick={() => setIsMenuOpen((current) => !current)}
+            >
+              {isMenuOpen ? (
+                <X className="size-5" />
+              ) : (
+                <Menu className="size-5" />
+              )}
+            </button>
+            <Link
+              href="/carrito"
+              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              aria-label="Carrito"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <ShoppingCart className="size-5" />
+              {cartItemCount > 0 && (
+                <span className="absolute -right-1 -top-1 inline-flex min-w-4 items-center justify-center rounded-full bg-gray-900 px-1 text-[10px] font-semibold leading-4 text-white">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
+          </div>
         </div>
         {isMenuOpen && (
           <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
