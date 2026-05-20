@@ -35,6 +35,12 @@ export function CartOrderPdfDocument({
         ) : null}
         <Text style={styles.title}>Pedido</Text>
 
+        <View style={styles.tableHeader}>
+          <Text style={styles.headerImage}>Imagen</Text>
+          <Text style={styles.headerDescription}>Descripción</Text>
+          <Text style={styles.headerPrice}>Precio</Text>
+        </View>
+
         {items.map(({ product, quantity, imageSrc }) => (
           <View key={product.id} style={styles.item}>
             {product.images[0] && imageSrc ? (
@@ -48,13 +54,13 @@ export function CartOrderPdfDocument({
                 >
                   {product.name}
                 </Link>
-                <Text style={styles.price}>
-                  {formatPrice(product.priceWithDiscount)}
-                </Text>
               </View>
               <Text style={styles.description}>{product.description}</Text>
               <Text style={styles.quantity}>Cantidad: {quantity}</Text>
             </View>
+            <Text style={styles.price}>
+              {formatPrice(product.priceWithDiscount)}
+            </Text>
           </View>
         ))}
 

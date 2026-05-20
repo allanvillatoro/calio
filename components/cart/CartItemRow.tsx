@@ -21,7 +21,7 @@ export function CartItemRow({
   const canIncrease = quantity < product.quantity;
 
   return (
-    <div className="grid grid-cols-[96px_1fr] gap-4 p-4 sm:grid-cols-[120px_1fr] sm:items-start md:gap-6 md:p-6">
+    <div className="grid grid-cols-[96px_1fr_auto] gap-4 p-4 sm:grid-cols-[120px_1fr_120px] sm:items-start md:gap-6 md:p-6">
       <Link
         href={`/productos/${product.id}`}
         className="relative aspect-square w-full overflow-hidden rounded-lg bg-white"
@@ -38,17 +38,12 @@ export function CartItemRow({
 
       <div className="min-w-0 space-y-4">
         <div className="space-y-2">
-          <div className="flex items-start justify-between gap-3">
-            <Link
-              href={`/productos/${product.id}`}
-              className="min-w-0 text-base font-semibold leading-snug text-gray-900 hover:text-gray-700 sm:text-lg"
-            >
-              {product.name}
-            </Link>
-            <p className="shrink-0 text-right text-lg font-bold text-gray-900 sm:text-xl">
-              {formatPrice(product.priceWithDiscount)}
-            </p>
-          </div>
+          <Link
+            href={`/productos/${product.id}`}
+            className="block text-base font-semibold leading-snug text-gray-900 hover:text-gray-700 sm:text-lg"
+          >
+            {product.name}
+          </Link>
           <p className="line-clamp-3 text-sm leading-relaxed text-gray-600">
             {product.description}
           </p>
@@ -90,6 +85,10 @@ export function CartItemRow({
           </button>
         </div>
       </div>
+
+      <p className="text-right text-lg font-bold text-gray-900 sm:text-xl">
+        {formatPrice(product.priceWithDiscount)}
+      </p>
     </div>
   );
 }

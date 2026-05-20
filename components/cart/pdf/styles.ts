@@ -21,6 +21,27 @@ export const cartOrderPdfStyles = StyleSheet.create({
     fontWeight: 700,
     marginBottom: 22,
   },
+  tableHeader: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+    borderBottomStyle: 'solid',
+    color: '#6b7280',
+    flexDirection: 'row',
+    fontSize: 9,
+    fontWeight: 700,
+    paddingBottom: 8,
+    textTransform: 'uppercase',
+  },
+  headerImage: {
+    width: 86,
+  },
+  headerDescription: {
+    flex: 1,
+  },
+  headerPrice: {
+    textAlign: 'right',
+    width: 78,
+  },
   item: {
     borderTopWidth: 1,
     borderTopColor: '#e5e7eb',
@@ -41,7 +62,6 @@ export const cartOrderPdfStyles = StyleSheet.create({
   itemHeader: {
     flexDirection: 'row',
     gap: 12,
-    justifyContent: 'space-between',
   },
   name: {
     flex: 1,
@@ -53,6 +73,8 @@ export const cartOrderPdfStyles = StyleSheet.create({
   price: {
     fontSize: 13,
     fontWeight: 700,
+    textAlign: 'right',
+    width: 78,
   },
   description: {
     color: '#4b5563',

@@ -86,6 +86,11 @@ export default function CartContent() {
   return (
     <div className="rounded-lg border border-gray-200 bg-white">
       <div>
+        <div className="grid grid-cols-[96px_1fr_auto] gap-4 border-b border-gray-200 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500 sm:grid-cols-[120px_1fr_120px] md:gap-6 md:px-6">
+          <span>Imagen</span>
+          <span>Descripción</span>
+          <span className="text-right">Precio</span>
+        </div>
         <div className="divide-y divide-gray-200">
           {items.map((item) => (
             <CartItemRow
