@@ -1,7 +1,7 @@
 import { it, expect, describe } from 'vitest';
 
 describe('FiltersSection', () => {
-  it('renders the component with categories and handles selection changes', () => {
+  it('test', () => {
     expect(true).toBe(true);
   });
 });
