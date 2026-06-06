@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://caliojoyeria.com';
+export const dynamic = 'force-dynamic';
 export const revalidate = 86400;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

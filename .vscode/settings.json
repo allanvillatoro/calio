@@ -1,0 +1,6 @@
+{
+  "jest.enable": false,
+  "vitest.rootConfig": "vitest.config.ts",
+  "vitest.watchOnStartup": false,
+  "testing.automaticallyOpenTestResults": "openOnTestFailure"
+}
