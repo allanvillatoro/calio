@@ -153,6 +153,34 @@ npm run test:watch
 npm run test:coverage
 ```
 
+VS Code is configured to use the Vitest extension in the Testing UI. The workspace recommends `vitest.explorer` and marks `orta.vscode-jest` as unwanted because this project no longer uses Jest.
+
+## VS Code Debugging
+
+The repository includes VS Code launch configurations for debugging the Next.js app:
+
+- `Next.js: debug server-side`
+- `Next.js: debug client-side`
+- `Next.js: debug full stack`
+
+Open the Run and Debug panel in VS Code, select one of these configurations, and press Run/F5.
+
+## GitHub Automation
+
+GitHub Actions runs the CI workflow on push and pull requests. The workflow uses Node.js 24 on Ubuntu 24.04 and runs:
+
+```bash
+npm run build
+npm run lint
+npm run format:check
+npm run test:coverage
+```
+
+Dependabot is configured for:
+
+- weekly npm dependency updates
+- monthly GitHub Actions dependency updates
+
 ## Authentication
 
 - Login lives at `POST /api/users/login`
