@@ -10,6 +10,7 @@ E-commerce application built with Next.js for the CALIO Joyería catalog. It inc
 - Tailwind CSS
 - React Hook Form
 - TanStack Query
+- Vitest
 - Drizzle ORM
 - PostgreSQL / Neon
 - JWT with `jose`
@@ -129,6 +130,9 @@ npm run dev
 npm run build
 npm run start
 npm run lint
+npm run test
+npm run test:watch
+npm run test:coverage
 npm run format
 npm run format:check
 npm run localdb:up
@@ -137,6 +141,16 @@ npm run db:generate
 npm run db:migrate
 npm run db:push
 npm run db:studio
+```
+
+## Testing
+
+Unit tests use Vitest.
+
+```bash
+npm run test
+npm run test:watch
+npm run test:coverage
 ```
 
 ## Authentication
