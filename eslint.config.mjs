@@ -6,7 +6,13 @@ import prettier from 'eslint-config-prettier';
 
 const eslintConfig = defineConfig([
   ...nextVitals,
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
+  globalIgnores([
+    '.next/**',
+    'coverage/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
+  ]),
   prettier,
   {
     files: ['**/*.ts', '**/*.tsx'],
