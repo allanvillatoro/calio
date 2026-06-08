@@ -12,6 +12,7 @@ This file is for coding-agent behavior. Use `README.md` for project overview, se
 - Follow SOLID for new code, especially Single Responsibility Principle.
 - Use dependency injection when it improves testability or keeps infrastructure details out of domain logic.
 - Follow DRY by reusing existing schemas, helpers, repositories, hooks, and UI primitives, but avoid premature abstractions.
+- Do not add `useMemo` or `useCallback` by default; React Compiler is enabled. Use them only when there is a specific correctness or performance reason that React Compiler does not cover.
 - Add comments only for non-obvious intent or constraints.
 
 ## Structure Decisions
