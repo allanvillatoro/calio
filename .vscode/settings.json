@@ -2,5 +2,25 @@
   "jest.enable": false,
   "vitest.rootConfig": "vitest.config.ts",
   "vitest.watchOnStartup": false,
-  "testing.automaticallyOpenTestResults": "openOnTestFailure"
+  "testing.automaticallyOpenTestResults": "openOnTestFailure",
+  "modelContextProtocol": {
+    "servers": {
+      "github": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "-e",
+          "GITHUB_PERSONAL_ACCESS_TOKEN",
+          "-e",
+          "GITHUB_TOOLSETS=default,pull_requests,actions,code_security",
+          "ghcr.io/github/github-mcp-server"
+        ],
+        "env": {
+          "GITHUB_PERSONAL_ACCESS_TOKEN": "${env:GITHUB_PERSONAL_ACCESS_TOKEN}"
+        }
+      }
+    }
+  }
 }
