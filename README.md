@@ -123,6 +123,38 @@ npm run dev
 http://localhost:3000
 ```
 
+## GitHub MCP Setup
+
+This repository includes a GitHub MCP server configuration for Codex and VS Code. It lets an MCP-capable assistant read repository context from GitHub, such as pull requests, changed files, GitHub Actions runs, checks, issues, releases, and code scanning alerts.
+
+To use it locally, you need:
+
+- Docker installed and running
+- Access to the `ghcr.io/github/github-mcp-server` container image
+- A GitHub personal access token available as `GITHUB_PERSONAL_ACCESS_TOKEN`
+- Token permissions that match the actions you want the assistant to perform, for example repository read access for private repos, pull request access, Actions read access, and code security access if you want code scanning alerts
+
+Set the token in your shell before starting Codex or VS Code:
+
+```bash
+export GITHUB_PERSONAL_ACCESS_TOKEN=<github_personal_access_token>
+```
+
+Do not commit the token or put it directly in tracked config files.
+
+Codex reads the GitHub MCP server from `.codex/config.toml`. VS Code reads the equivalent server definition from `.vscode/settings.json` under `modelContextProtocol.servers.github`.
+
+The configured server runs:
+
+```bash
+docker run -i --rm \
+  -e GITHUB_PERSONAL_ACCESS_TOKEN \
+  -e GITHUB_TOOLSETS=default,pull_requests,actions,code_security \
+  ghcr.io/github/github-mcp-server
+```
+
+After the environment variable is set and Docker is running, restart the MCP client so it can load the GitHub tools.
+
 ## Useful Scripts
 
 ```bash
