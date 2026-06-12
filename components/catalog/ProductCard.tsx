@@ -6,8 +6,21 @@ import { Pencil, ShoppingCart, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Product } from '@/lib/types';
 import { useCartStore } from '@/lib/stores/cart.store';
-import { formatPrice, getImageUrl } from '@/lib/utils';
+import { cn, formatPrice, getImageUrl } from '@/lib/utils';
 import { Button } from '../ui/button';
+
+const PRODUCT_CARD_STYLES =
+  'group bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer';
+
+const ADD_TO_CART_ACTION_STYLES = cn(
+  'px-4 transition-opacity duration-200',
+  '[@media(hover:hover)_and_(pointer:fine)]:pointer-events-none',
+  '[@media(hover:hover)_and_(pointer:fine)]:opacity-0',
+  '[@media(hover:hover)_and_(pointer:fine)]:group-hover:pointer-events-auto',
+  '[@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100',
+  '[@media(hover:hover)_and_(pointer:fine)]:group-focus-within:pointer-events-auto',
+  '[@media(hover:hover)_and_(pointer:fine)]:group-focus-within:opacity-100',
+);
 
 interface ProductCardProps {
   product: Product;
@@ -38,7 +51,7 @@ export default function ProductCard({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+    <div className={PRODUCT_CARD_STYLES}>
       <Link href={`/productos/${product.id}`}>
         <div className="relative w-full aspect-square bg-white">
           <Image
@@ -54,11 +67,11 @@ export default function ProductCard({
             </div>
           )}
         </div>
-        <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <div className="px-4 pt-4 pb-2">
+          <h3 className="mb-2 truncate text-lg font-semibold text-gray-900">
             {product.name}
           </h3>
-          <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+          <p className="mb-3 h-10 line-clamp-2 text-sm leading-5 text-gray-600">
             {product.description}
           </p>
           <div className="flex items-start justify-between gap-3">
@@ -87,6 +100,15 @@ export default function ProductCard({
           </div>
         </div>
       </Link>
+      <div className={cn(ADD_TO_CART_ACTION_STYLES, isAdmin ? 'pb-2' : 'pb-4')}>
+        <Button
+          className="w-full bg-gray-900 text-white hover:bg-gray-700"
+          onClick={handleAddToCart}
+          aria-label={`Agregar ${product.name} al carrito`}
+        >
+          <ShoppingCart className="size-4" />
+        </Button>
+      </div>
       {isAdmin && (
         <div className="flex justify-center gap-2 px-4 pb-4">
           <Button
@@ -105,15 +127,6 @@ export default function ProductCard({
           </Button>
         </div>
       )}
-      <div className="px-4 pb-4">
-        <Button
-          className="w-full bg-gray-900 text-white hover:bg-gray-700"
-          onClick={handleAddToCart}
-          aria-label={`Agregar ${product.name} al carrito`}
-        >
-          <ShoppingCart className="size-4" />
-        </Button>
-      </div>
     </div>
   );
 }
