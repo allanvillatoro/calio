@@ -15,6 +15,15 @@ This file is for coding-agent behavior. Use `README.md` for project overview, se
 - Do not add `useMemo` or `useCallback` by default; React Compiler is enabled. Use them only when there is a specific correctness or performance reason that React Compiler does not cover.
 - Add comments only for non-obvious intent or constraints.
 
+## Planning And Approval
+
+- For non-trivial code changes, provide a concise implementation plan in chat before editing files.
+- Wait for the user to approve the plan or request changes before modifying files.
+- If the user requests changes to the plan, revise it in chat and wait for approval again.
+- Do not create planning files by default; use chat for review and iteration.
+- If the user explicitly asks for an editable plan file, create it in a separate planning document before making code changes.
+- For trivial changes, read-only analysis, or commands that do not modify files, a plan is not required.
+
 ## Structure Decisions
 
 - Follow Next.js App Router conventions for routes, layouts, metadata, route handlers, and Server/Client Component boundaries.
@@ -61,6 +70,7 @@ This file is for coding-agent behavior. Use `README.md` for project overview, se
 - When refactoring existing behavior, use TDD: write tests for current expected behavior first, refactor second, then verify tests still pass.
 - Use AAA test structure: Arrange, Act, Assert.
 - Test names should describe behavior, for example `it('returns false when product quantity is exhausted')`.
+- New unit test files should use the `.test.ts` or `.test.tsx` suffix, not `.spec.ts` or `.spec.tsx`.
 - Prefer unit tests for pure helpers, hooks, stores, validation schemas, and repository/domain logic with injected dependencies.
 - Mock external dependencies such as Cloudinary, network clients, cookies, and database calls.
 - Never use production services or production databases in tests.
@@ -92,6 +102,7 @@ This file is for coding-agent behavior. Use `README.md` for project overview, se
 - Preserve Spanish labels and the current retail tone in user-facing UI.
 - New customer-facing UI text should be Spanish unless the surrounding UI is already English.
 - Prefer existing components and patterns before introducing new UI libraries.
+- Prefer existing shadcn/ui controls in `components/ui` before building custom controls with Tailwind classes.
 - Use `cn` from `lib/utils.ts` for class merging.
 - Use lucide-react icons where icons are already part of a control.
 - Keep forms consistent with `react-hook-form` patterns used by `ProductDialog` and `useProductDialogForm`.
