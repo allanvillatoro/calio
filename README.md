@@ -8,6 +8,7 @@ E-commerce application built with Next.js for the CALIO Joyería catalog. It inc
 - React 19
 - TypeScript
 - Tailwind CSS
+- shadcn/ui
 - React Hook Form
 - TanStack Query
 - Vitest
@@ -51,7 +52,7 @@ components/
   cart/                   # Cart content, cart rows, and PDF order document
   catalog/                # Grid, filters, cards, pagination
   product/                # Product detail components
-  ui/                     # Base UI components
+  ui/                     # shadcn/ui base components
 
 lib/
   actions/                # Client actions and server actions
