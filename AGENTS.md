@@ -70,6 +70,7 @@ This file is for coding-agent behavior. Use `README.md` for project overview, se
 - When refactoring existing behavior, use TDD: write tests for current expected behavior first, refactor second, then verify tests still pass.
 - Use AAA test structure: Arrange, Act, Assert.
 - Test names should describe behavior, for example `it('returns false when product quantity is exhausted')`.
+- New unit test files should use the `.test.ts` or `.test.tsx` suffix, not `.spec.ts` or `.spec.tsx`.
 - Prefer unit tests for pure helpers, hooks, stores, validation schemas, and repository/domain logic with injected dependencies.
 - Mock external dependencies such as Cloudinary, network clients, cookies, and database calls.
 - Never use production services or production databases in tests.
