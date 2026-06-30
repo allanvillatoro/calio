@@ -155,8 +155,12 @@ describe('ProductsGrid', () => {
       onPageChange,
     });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Editar Collar Perla' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Eliminar Anillo Luna' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Editar Collar Perla' }),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Eliminar Anillo Luna' }),
+    );
     fireEvent.click(screen.getByRole('button', { name: 'Ir a página 2' }));
 
     expect(onEdit).toHaveBeenCalledWith(products[0]);

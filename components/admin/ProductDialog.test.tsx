@@ -16,13 +16,8 @@ vi.mock('next/image', () => ({
 }));
 
 vi.mock('@/components/ui/dialog', () => ({
-  Dialog: ({
-    open,
-    children,
-  }: {
-    open: boolean;
-    children: React.ReactNode;
-  }) => (open ? <div>{children}</div> : null),
+  Dialog: ({ open, children }: { open: boolean; children: React.ReactNode }) =>
+    open ? <div>{children}</div> : null,
   DialogClose: ({ render }: { render: React.ReactNode }) => render,
   DialogContent: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
@@ -118,10 +113,16 @@ describe('ProductDialog', () => {
   it('renders create mode fields and submits through the hook', () => {
     render(<ProductDialog product={null} open onOpenChange={vi.fn()} />);
 
-    expect(screen.getByRole('heading', { name: 'Agregar nuevo producto' })).toBeVisible();
-    expect(screen.getByText('Ingrese todos los detalles del producto')).toBeVisible();
+    expect(
+      screen.getByRole('heading', { name: 'Agregar nuevo producto' }),
+    ).toBeVisible();
+    expect(
+      screen.getByText('Ingrese todos los detalles del producto'),
+    ).toBeVisible();
 
-    const form = screen.getByRole('button', { name: 'Agregar' }).closest('form');
+    const form = screen
+      .getByRole('button', { name: 'Agregar' })
+      .closest('form');
     expect(form).not.toBeNull();
 
     fireEvent.submit(form as HTMLFormElement);
@@ -133,7 +134,9 @@ describe('ProductDialog', () => {
   });
 
   it('does not render dialog content when closed', () => {
-    render(<ProductDialog product={null} open={false} onOpenChange={vi.fn()} />);
+    render(
+      <ProductDialog product={null} open={false} onOpenChange={vi.fn()} />,
+    );
 
     expect(
       screen.queryByRole('heading', { name: 'Agregar nuevo producto' }),
@@ -151,12 +154,16 @@ describe('ProductDialog', () => {
 
     render(<ProductDialog product={product} open onOpenChange={vi.fn()} />);
 
-    expect(screen.getByRole('heading', { name: 'Editar producto' })).toBeVisible();
+    expect(
+      screen.getByRole('heading', { name: 'Editar producto' }),
+    ).toBeVisible();
     expect(screen.getByText('Nombre del Producto (ID: 12)')).toBeVisible();
     expect(screen.getByText('Precio con descuento: L200')).toBeVisible();
     expect(screen.getByText('collar-perla.jpg')).toBeVisible();
     expect(screen.getByText('collar-perla-2.jpg')).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Guardar cambios' })).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: 'Guardar cambios' }),
+    ).toBeVisible();
   });
 
   it('hides discount controls outside the rebajas category', () => {
@@ -207,7 +214,9 @@ describe('ProductDialog', () => {
     expect(screen.getByText('La categoría es obligatoria')).toBeVisible();
     expect(screen.getByText('La cantidad no puede ser negativa')).toBeVisible();
     expect(screen.getByText('El precio no puede ser negativo')).toBeVisible();
-    expect(screen.getByText('El descuento debe estar entre 1 y 99')).toBeVisible();
+    expect(
+      screen.getByText('El descuento debe estar entre 1 y 99'),
+    ).toBeVisible();
     expect(screen.getByText('Debe agregar al menos una imagen')).toBeVisible();
   });
 
@@ -269,7 +278,9 @@ describe('ProductDialog', () => {
     ).validate;
 
     expect(validateDiscount(20)).toBe(true);
-    expect(validateDiscount(20.5)).toBe('El descuento debe ser un número entero');
+    expect(validateDiscount(20.5)).toBe(
+      'El descuento debe ser un número entero',
+    );
     expect(validateDiscount(0)).toBe('El descuento debe estar entre 1 y 99');
     expect(validateDiscount(100)).toBe('El descuento debe estar entre 1 y 99');
   });

@@ -109,9 +109,9 @@ describe('CartContent', () => {
       'href',
       expect.stringContaining('https://wa.me/50499999999?text='),
     );
-    expect(decodeURIComponent(whatsappLink.getAttribute('href') ?? '')).toContain(
-      'Subtotal: L500',
-    );
+    expect(
+      decodeURIComponent(whatsappLink.getAttribute('href') ?? ''),
+    ).toContain('Subtotal: L500');
   });
 
   it('increments cart item quantities and updates the subtotal', async () => {
@@ -185,16 +185,21 @@ describe('CartContent', () => {
     await waitFor(() => {
       expect(createCartOrderPdfBlob).toHaveBeenCalledWith([item], 200);
       expect(click).toHaveBeenCalled();
-      expect(toast.success).toHaveBeenCalledWith('PDF descargado correctamente', {
-        id: 'toast-id',
-      });
+      expect(toast.success).toHaveBeenCalledWith(
+        'PDF descargado correctamente',
+        {
+          id: 'toast-id',
+        },
+      );
     });
   });
 
   it('shows an error when PDF generation fails', async () => {
     setCartItems([item]);
     vi.mocked(toast.loading).mockReturnValue('toast-id');
-    vi.mocked(createCartOrderPdfBlob).mockRejectedValue(new Error('PDF failed'));
+    vi.mocked(createCartOrderPdfBlob).mockRejectedValue(
+      new Error('PDF failed'),
+    );
 
     render(<CartContent />);
 

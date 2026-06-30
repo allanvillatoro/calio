@@ -63,10 +63,7 @@ describe('POST /api/users/register', () => {
 
   it('returns conflict when the user already exists', async () => {
     vi.mocked(usersRepository.register).mockRejectedValue(
-      new UserAuthenticationError(
-        'User already exists',
-        'USER_ALREADY_EXISTS',
-      ),
+      new UserAuthenticationError('User already exists', 'USER_ALREADY_EXISTS'),
     );
 
     const response = await POST(createRegisterRequest(credentials));

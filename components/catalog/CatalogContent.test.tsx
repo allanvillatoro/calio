@@ -278,7 +278,9 @@ describe('CatalogContent', () => {
 
     render(<CatalogContent />);
 
-    expect(screen.queryByRole('button', { name: /Agregar/ })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /Agregar/ }),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText('search:')).not.toBeInTheDocument();
     expect(screen.getByText('grid-admin:false')).toBeVisible();
   });

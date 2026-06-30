@@ -148,7 +148,9 @@ describe('GET /api/products', () => {
 
   it('returns internal server error when fetching products fails unexpectedly', async () => {
     vi.mocked(getAuthenticatedUserFromCookies).mockResolvedValue(null);
-    vi.mocked(productsRepository.findAll).mockRejectedValue(new Error('DB down'));
+    vi.mocked(productsRepository.findAll).mockRejectedValue(
+      new Error('DB down'),
+    );
     const consoleError = vi
       .spyOn(console, 'error')
       .mockImplementation(() => undefined);

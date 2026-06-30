@@ -131,7 +131,10 @@ describe('PUT /api/products/[id]', () => {
   it('updates a product by id', async () => {
     vi.mocked(productsRepository.updateById).mockResolvedValue(product);
 
-    const response = await PUT(createRequest(validProductBody), createContext());
+    const response = await PUT(
+      createRequest(validProductBody),
+      createContext(),
+    );
 
     expect(response.status).toBe(StatusCodes.OK);
     await expect(response.json()).resolves.toEqual(productJson);
@@ -144,7 +147,10 @@ describe('PUT /api/products/[id]', () => {
   it('returns not found when the product to update does not exist', async () => {
     vi.mocked(productsRepository.updateById).mockResolvedValue(null);
 
-    const response = await PUT(createRequest(validProductBody), createContext());
+    const response = await PUT(
+      createRequest(validProductBody),
+      createContext(),
+    );
 
     expect(response.status).toBe(StatusCodes.NOT_FOUND);
     await expect(response.json()).resolves.toEqual({
@@ -181,7 +187,10 @@ describe('PUT /api/products/[id]', () => {
     );
     vi.mocked(productsRepository.updateById).mockRejectedValue(conflict);
 
-    const response = await PUT(createRequest(validProductBody), createContext());
+    const response = await PUT(
+      createRequest(validProductBody),
+      createContext(),
+    );
 
     expect(response.status).toBe(StatusCodes.CONFLICT);
     await expect(response.json()).resolves.toEqual({
@@ -198,7 +207,10 @@ describe('PUT /api/products/[id]', () => {
       .spyOn(console, 'error')
       .mockImplementation(() => undefined);
 
-    const response = await PUT(createRequest(validProductBody), createContext());
+    const response = await PUT(
+      createRequest(validProductBody),
+      createContext(),
+    );
 
     expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
     await expect(response.json()).resolves.toEqual({

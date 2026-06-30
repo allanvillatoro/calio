@@ -7,13 +7,8 @@ import type { Product } from '@/lib/types';
 import { DeleteDialog } from './DeleteDialog';
 
 vi.mock('@/components/ui/dialog', () => ({
-  Dialog: ({
-    open,
-    children,
-  }: {
-    open: boolean;
-    children: React.ReactNode;
-  }) => (open ? <div>{children}</div> : null),
+  Dialog: ({ open, children }: { open: boolean; children: React.ReactNode }) =>
+    open ? <div>{children}</div> : null,
   DialogClose: ({ render }: { render: React.ReactNode }) => render,
   DialogContent: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
@@ -71,11 +66,11 @@ describe('DeleteDialog', () => {
   });
 
   it('renders the delete confirmation for the selected product', () => {
-    render(
-      <DeleteDialog product={product} open onOpenChange={vi.fn()} />,
-    );
+    render(<DeleteDialog product={product} open onOpenChange={vi.fn()} />);
 
-    expect(screen.getByRole('heading', { name: 'Eliminar producto' })).toBeVisible();
+    expect(
+      screen.getByRole('heading', { name: 'Eliminar producto' }),
+    ).toBeVisible();
     expect(
       screen.getByText(
         '¿Está seguro que desea eliminar el producto "Collar Perla"?',
@@ -104,9 +99,7 @@ describe('DeleteDialog', () => {
       error: 'No se pudo eliminar el producto',
     });
 
-    render(
-      <DeleteDialog product={product} open onOpenChange={onOpenChange} />,
-    );
+    render(<DeleteDialog product={product} open onOpenChange={onOpenChange} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Eliminar' }));
 
@@ -124,9 +117,7 @@ describe('DeleteDialog', () => {
       success: true,
     });
 
-    render(
-      <DeleteDialog product={product} open onOpenChange={onOpenChange} />,
-    );
+    render(<DeleteDialog product={product} open onOpenChange={onOpenChange} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Eliminar' }));
 

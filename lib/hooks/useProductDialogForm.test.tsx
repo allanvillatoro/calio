@@ -441,7 +441,8 @@ describe('useProductDialogForm', () => {
   });
 
   it('closes the dialog without refreshing when no product was saved', () => {
-    const { result, invalidateQueries, onOpenChange } = renderProductDialogForm();
+    const { result, invalidateQueries, onOpenChange } =
+      renderProductDialogForm();
 
     act(() => {
       result.current.handleDialogOpenChange(false);

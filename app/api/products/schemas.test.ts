@@ -86,7 +86,8 @@ describe('product body schemas', () => {
         expect.arrayContaining([
           expect.objectContaining({
             path: ['discount'],
-            message: 'Discount must be 0 when category is different from "rebajas"',
+            message:
+              'Discount must be 0 when category is different from "rebajas"',
           }),
         ]),
       );

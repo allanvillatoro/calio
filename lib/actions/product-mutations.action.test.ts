@@ -321,7 +321,9 @@ describe('updateProductAction', () => {
 
   it('updates a product without uploading images when no files are provided', async () => {
     authenticate();
-    vi.mocked(productsRepository.updateById).mockResolvedValue(persistedProduct);
+    vi.mocked(productsRepository.updateById).mockResolvedValue(
+      persistedProduct,
+    );
 
     const result = await updateProductAction(12, validProductInput);
 

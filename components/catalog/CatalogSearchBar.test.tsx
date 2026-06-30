@@ -6,9 +6,9 @@ describe('CatalogSearchBar', () => {
   it('renders the search input with the default value', () => {
     render(<CatalogSearchBar defaultValue="perla" onSearch={vi.fn()} />);
 
-    expect(screen.getByPlaceholderText('Buscar piezas por nombre...')).toHaveValue(
-      'perla',
-    );
+    expect(
+      screen.getByPlaceholderText('Buscar piezas por nombre...'),
+    ).toHaveValue('perla');
     expect(screen.getByRole('button', { name: 'Buscar' })).toBeVisible();
   });
 
@@ -16,9 +16,12 @@ describe('CatalogSearchBar', () => {
     const onSearch = vi.fn();
     render(<CatalogSearchBar onSearch={onSearch} />);
 
-    fireEvent.change(screen.getByPlaceholderText('Buscar piezas por nombre...'), {
-      target: { value: '  collar perla  ' },
-    });
+    fireEvent.change(
+      screen.getByPlaceholderText('Buscar piezas por nombre...'),
+      {
+        target: { value: '  collar perla  ' },
+      },
+    );
     fireEvent.click(screen.getByRole('button', { name: 'Buscar' }));
 
     expect(onSearch).toHaveBeenCalledWith('collar perla');
@@ -43,9 +46,12 @@ describe('CatalogSearchBar', () => {
     const onSearch = vi.fn();
     render(<CatalogSearchBar onSearch={onSearch} />);
 
-    fireEvent.keyDown(screen.getByPlaceholderText('Buscar piezas por nombre...'), {
-      key: 'Escape',
-    });
+    fireEvent.keyDown(
+      screen.getByPlaceholderText('Buscar piezas por nombre...'),
+      {
+        key: 'Escape',
+      },
+    );
 
     expect(onSearch).not.toHaveBeenCalled();
   });
@@ -63,8 +69,8 @@ describe('CatalogSearchBar', () => {
 
     rerender(<CatalogSearchBar defaultValue="anillo" onSearch={vi.fn()} />);
 
-    expect(screen.getByPlaceholderText('Buscar piezas por nombre...')).toHaveValue(
-      'anillo',
-    );
+    expect(
+      screen.getByPlaceholderText('Buscar piezas por nombre...'),
+    ).toHaveValue('anillo');
   });
 });

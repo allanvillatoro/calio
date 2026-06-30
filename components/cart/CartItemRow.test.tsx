@@ -58,10 +58,9 @@ describe('CartItemRow', () => {
   it('renders product details and unit price', () => {
     renderCartItemRow();
 
-    expect(screen.getByRole('link', { name: 'Ver Collar Perla' })).toHaveAttribute(
-      'href',
-      '/productos/12',
-    );
+    expect(
+      screen.getByRole('link', { name: 'Ver Collar Perla' }),
+    ).toHaveAttribute('href', '/productos/12');
     expect(screen.getByText('Collar Perla')).toBeVisible();
     expect(screen.getByText('Collar dorado con dije de perla')).toBeVisible();
     expect(screen.getByText('L250')).toBeVisible();

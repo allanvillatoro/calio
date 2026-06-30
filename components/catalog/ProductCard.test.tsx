@@ -132,7 +132,9 @@ describe('ProductCard', () => {
     });
 
     expect(screen.getByText('Stock: 1')).toBeVisible();
-    fireEvent.click(screen.getByRole('button', { name: 'Editar Collar Perla' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Editar Collar Perla' }),
+    );
     fireEvent.click(
       screen.getByRole('button', { name: 'Eliminar Collar Perla' }),
     );

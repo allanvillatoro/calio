@@ -67,9 +67,9 @@ describe('user repository helpers', () => {
     await expect(validatePassword('password123', passwordHash)).resolves.toBe(
       true,
     );
-    await expect(validatePassword('wrong-password', passwordHash)).resolves.toBe(
-      false,
-    );
+    await expect(
+      validatePassword('wrong-password', passwordHash),
+    ).resolves.toBe(false);
     expect(passwordHash).not.toBe('password123');
   });
 });

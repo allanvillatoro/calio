@@ -79,9 +79,7 @@ describe('LoginForm', () => {
         password: 'password123',
       });
     });
-    expect(toast.success).toHaveBeenCalledWith(
-      'Sesión iniciada correctamente',
-    );
+    expect(toast.success).toHaveBeenCalledWith('Sesión iniciada correctamente');
     expect(push).toHaveBeenCalledWith('/admin');
     expect(refresh).toHaveBeenCalled();
   });
@@ -109,6 +107,8 @@ describe('LoginForm', () => {
 
     renderLoginForm();
 
-    expect(screen.getByRole('button', { name: 'Ingresando...' })).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Ingresando...' }),
+    ).toBeDisabled();
   });
 });

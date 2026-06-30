@@ -19,9 +19,12 @@ describe('isPublicApiRoute', () => {
     ['DELETE', '/api/products/12'],
     ['GET', '/api/products/12/images'],
     ['GET', '/api/admin/products'],
-  ])('returns false for protected or unknown %s %s routes', (method, pathname) => {
-    expect(isPublicApiRoute(pathname, method)).toBe(false);
-  });
+  ])(
+    'returns false for protected or unknown %s %s routes',
+    (method, pathname) => {
+      expect(isPublicApiRoute(pathname, method)).toBe(false);
+    },
+  );
 
   it('treats methods as already-normalized uppercase values', () => {
     expect(isPublicApiRoute('/api/products', 'get')).toBe(false);
