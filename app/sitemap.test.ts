@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { IProduct } from '@/lib/interfaces/product';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
-import sitemap, { dynamic, revalidate } from './sitemap';
+import sitemap, { dynamic, getSitemapBaseUrl, revalidate } from './sitemap';
 
 vi.mock('@/lib/repositories/products/drizzle-products-repository', () => ({
   productsRepository: {
@@ -28,6 +28,16 @@ describe('sitemap', () => {
   it('is generated dynamically so CI builds do not require a live database', () => {
     expect(dynamic).toBe('force-dynamic');
     expect(revalidate).toBe(86400);
+  });
+
+  it('uses configured and fallback sitemap base URLs', () => {
+    vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'http://localhost:3000');
+    expect(getSitemapBaseUrl()).toBe('http://localhost:3000');
+
+    vi.stubEnv('NEXT_PUBLIC_SITE_URL', '');
+    expect(getSitemapBaseUrl()).toBe('https://caliojoyeria.com');
+
+    vi.unstubAllEnvs();
   });
 
   it('generates static pages and product pages', async () => {
