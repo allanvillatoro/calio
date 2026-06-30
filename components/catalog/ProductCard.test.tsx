@@ -8,17 +8,20 @@ import ProductCard from './ProductCard';
 vi.mock('next/image', () => ({
   default: ({
     alt,
-    fill: _fill,
     src,
-    unoptimized: _unoptimized,
     ...props
   }: React.ImgHTMLAttributes<HTMLImageElement> & {
     fill?: boolean;
     unoptimized?: boolean;
-  }) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img alt={alt} src={src} {...props} />
-  ),
+  }) => {
+    delete props.fill;
+    delete props.unoptimized;
+
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img alt={alt} src={src} {...props} />
+    );
+  },
 }));
 
 vi.mock('sonner', () => ({
