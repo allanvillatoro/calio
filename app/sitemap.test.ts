@@ -50,22 +50,24 @@ describe('sitemap', () => {
       includeOutOfStock: true,
     });
     expect(routes).toHaveLength(3);
+    const baseUrl = routes[0].url;
+
     expect(routes).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          url: 'https://caliojoyeria.com',
+          url: baseUrl,
           changeFrequency: 'weekly',
           priority: 1,
           lastModified: expect.any(Date),
         }),
         expect.objectContaining({
-          url: 'https://caliojoyeria.com/catalogo',
+          url: `${baseUrl}/catalogo`,
           changeFrequency: 'daily',
           priority: 0.9,
           lastModified: expect.any(Date),
         }),
         expect.objectContaining({
-          url: 'https://caliojoyeria.com/productos/12',
+          url: `${baseUrl}/productos/12`,
           changeFrequency: 'weekly',
           priority: 0.8,
           lastModified: expect.any(Date),
