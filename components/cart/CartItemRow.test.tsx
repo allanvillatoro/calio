@@ -104,4 +104,16 @@ describe('CartItemRow', () => {
 
     expect(onIncrement).not.toHaveBeenCalled();
   });
+
+  it('increments when cart quantity is below available stock', () => {
+    const { onIncrement } = renderCartItemRow({
+      quantity: 2,
+    });
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Aumentar cantidad de Collar Perla' }),
+    );
+
+    expect(onIncrement).toHaveBeenCalledWith(12);
+  });
 });

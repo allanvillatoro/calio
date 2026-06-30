@@ -290,4 +290,76 @@ describe('CatalogContent', () => {
 
     expect(onPageChange).toHaveBeenCalledWith(2);
   });
+
+  it('passes loading state and fallback paging while products are unavailable', () => {
+    vi.mocked(useQuery).mockReturnValue({
+      isLoading: true,
+      data: undefined,
+    } as never);
+
+    render(<CatalogContent />);
+
+    expect(screen.getByText('grid-loading:true')).toBeVisible();
+    expect(screen.getByText('grid-total:0')).toBeVisible();
+    expect(screen.getByText('grid-page:1/1')).toBeVisible();
+  });
+
+  it('renders the search results title when querying without a category', () => {
+    mockCatalogFilters({
+      query: 'perla',
+    });
+
+    render(<CatalogContent />);
+
+    expect(screen.getByText('Resultados para "perla"')).toBeVisible();
+  });
+
+  it('renders the in-store title when filtering physical store products', () => {
+    mockCatalogFilters({
+      inStore: true,
+    });
+
+    render(<CatalogContent />);
+
+    expect(screen.getByText('Productos en Tienda Física')).toBeVisible();
+  });
+
+  it('renders the complete catalog title by default', () => {
+    render(<CatalogContent />);
+
+    expect(screen.getByText('Catálogo Completo')).toBeVisible();
+  });
+
+  it('renders the new collection title for the new in category', () => {
+    mockCatalogFilters({
+      selectedCategoriesParam: 'new in',
+    });
+
+    render(<CatalogContent />);
+
+    expect(screen.getByText('NUEVA COLECCIÓN')).toBeVisible();
+  });
+
+  it('closes product and delete dialogs through their open change handlers', () => {
+    mockAuthStore(true);
+    render(<CatalogContent />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Editar grid' }));
+    expect(screen.getByTestId('product-dialog')).toHaveTextContent(
+      'product-dialog:true:Collar Perla',
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Cerrar producto' }));
+    expect(screen.getByTestId('product-dialog')).toHaveTextContent(
+      'product-dialog:false',
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Eliminar grid' }));
+    expect(screen.getByTestId('delete-dialog')).toHaveTextContent(
+      'delete-dialog:true:Collar Perla',
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Cerrar eliminar' }));
+    expect(screen.getByTestId('delete-dialog')).toHaveTextContent(
+      'delete-dialog:false',
+    );
+  });
 });

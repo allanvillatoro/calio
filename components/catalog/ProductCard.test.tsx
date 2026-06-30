@@ -77,6 +77,24 @@ describe('ProductCard', () => {
     expect(screen.getAllByText('-20%')).toHaveLength(2);
   });
 
+  it('renders products without discount pricing details', () => {
+    render(
+      <ProductCard
+        product={{
+          ...product,
+          discount: 0,
+          priceWithDiscount: 250,
+        }}
+        isAdmin={false}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText('L250')).toBeVisible();
+    expect(screen.queryByText('-20%')).not.toBeInTheDocument();
+  });
+
   it('adds a product to the cart from the card action', () => {
     renderProductCard();
 
@@ -89,6 +107,19 @@ describe('ProductCard', () => {
       quantity: 1,
     });
     expect(toast.success).toHaveBeenCalledWith('Producto agregado al carrito');
+  });
+
+  it('shows an error when the product cannot be added to the cart', () => {
+    useCartStore.getState().addProduct(product);
+    renderProductCard();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Agregar Collar Perla al carrito' }),
+    );
+
+    expect(toast.error).toHaveBeenCalledWith(
+      'Ya no se puede agregar más de este producto',
+    );
   });
 
   it('shows admin controls and calls edit/delete handlers', () => {

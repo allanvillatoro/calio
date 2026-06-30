@@ -49,10 +49,19 @@ function setCartItems(items: CartItem[]) {
   useCartStore.setState({ items });
 }
 
+const originalCartActions = {
+  incrementProduct: useCartStore.getState().incrementProduct,
+  decrementProduct: useCartStore.getState().decrementProduct,
+  removeProduct: useCartStore.getState().removeProduct,
+};
+
 describe('CartContent', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    setCartItems([]);
+    useCartStore.setState({
+      items: [],
+      ...originalCartActions,
+    });
     vi.stubEnv('NEXT_PUBLIC_CONTACT_PHONE', '50499999999');
     vi.stubGlobal('URL', {
       createObjectURL: vi.fn(() => 'blob:pedido'),
@@ -117,6 +126,36 @@ describe('CartContent', () => {
     expect(toast.error).not.toHaveBeenCalled();
   });
 
+  it('shows an error when incrementing beyond available stock', async () => {
+    const incrementProduct = vi.fn(() => false);
+    useCartStore.setState({
+      items: [item],
+      incrementProduct,
+    });
+    render(<CartContent />);
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Aumentar cantidad de Collar Perla' }),
+    );
+
+    expect(toast.error).toHaveBeenCalledWith(
+      'Ya no se puede agregar más de este producto',
+    );
+    expect(incrementProduct).toHaveBeenCalledWith(item.product.id);
+    expect(screen.getByText('Subtotal: L200')).toBeVisible();
+  });
+
+  it('uses an empty WhatsApp phone number when the contact env var is missing', () => {
+    vi.stubEnv('NEXT_PUBLIC_CONTACT_PHONE', '');
+    setCartItems([item]);
+
+    render(<CartContent />);
+
+    expect(
+      screen.getByRole('link', { name: /Solicitar por WhatsApp/ }),
+    ).toHaveAttribute('href', expect.stringContaining('https://wa.me/?text='));
+  });
+
   it('downloads the generated PDF order', async () => {
     setCartItems([item]);
     const click = vi.fn();
@@ -150,5 +189,27 @@ describe('CartContent', () => {
         id: 'toast-id',
       });
     });
+  });
+
+  it('shows an error when PDF generation fails', async () => {
+    setCartItems([item]);
+    vi.mocked(toast.loading).mockReturnValue('toast-id');
+    vi.mocked(createCartOrderPdfBlob).mockRejectedValue(new Error('PDF failed'));
+
+    render(<CartContent />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Descargar PDF' }));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        'No se pudo generar el PDF del carrito',
+        {
+          id: 'toast-id',
+        },
+      );
+    });
+    expect(
+      screen.getByRole('button', { name: 'Descargar PDF' }),
+    ).not.toBeDisabled();
   });
 });

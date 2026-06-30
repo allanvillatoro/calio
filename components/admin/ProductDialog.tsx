@@ -21,6 +21,25 @@ interface ProductDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+export function validateProductDiscount(
+  value: number,
+  selectedCategory: Product['category'],
+) {
+  if (selectedCategory !== 'rebajas') {
+    return value === 0 || 'El descuento debe ser 0 fuera de Rebajas';
+  }
+
+  if (!Number.isInteger(value)) {
+    return 'El descuento debe ser un número entero';
+  }
+
+  if (value < 1 || value > 99) {
+    return 'El descuento debe estar entre 1 y 99';
+  }
+
+  return true;
+}
+
 export const ProductDialog = ({
   product,
   open,
@@ -55,22 +74,6 @@ export const ProductDialog = ({
     product,
     onOpenChange,
   });
-
-  const validateDiscount = (value: number) => {
-    if (selectedCategory !== 'rebajas') {
-      return value === 0 || 'El descuento debe ser 0 fuera de Rebajas';
-    }
-
-    if (!Number.isInteger(value)) {
-      return 'El descuento debe ser un número entero';
-    }
-
-    if (value < 1 || value > 99) {
-      return 'El descuento debe estar entre 1 y 99';
-    }
-
-    return true;
-  };
 
   const calculatedPriceWithDiscount =
     Number.isFinite(currentPrice) && Number.isFinite(currentDiscount)
@@ -218,7 +221,8 @@ export const ProductDialog = ({
                         step="1"
                         {...register('discount', {
                           valueAsNumber: true,
-                          validate: validateDiscount,
+                          validate: (value) =>
+                            validateProductDiscount(value, selectedCategory),
                           onChange: handleDiscountChange,
                         })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
