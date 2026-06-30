@@ -145,6 +145,27 @@ describe('GET /api/products', () => {
     });
     expect(productsRepository.findAll).not.toHaveBeenCalled();
   });
+
+  it('returns internal server error when fetching products fails unexpectedly', async () => {
+    vi.mocked(getAuthenticatedUserFromCookies).mockResolvedValue(null);
+    vi.mocked(productsRepository.findAll).mockRejectedValue(new Error('DB down'));
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    const response = await GET(createGetRequest());
+
+    expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
+    await expect(response.json()).resolves.toEqual({
+      error: 'Failed to fetch products',
+    });
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to fetch products',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
+  });
 });
 
 describe('POST /api/products', () => {
@@ -201,5 +222,25 @@ describe('POST /api/products', () => {
       error: conflict.message,
       details: conflict.details,
     });
+  });
+
+  it('returns internal server error when creating products fails unexpectedly', async () => {
+    vi.mocked(productsRepository.save).mockRejectedValue(new Error('DB down'));
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    const response = await POST(createPostRequest(validProductBody));
+
+    expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
+    await expect(response.json()).resolves.toEqual({
+      error: 'Failed to create product',
+    });
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to create product',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
   });
 });

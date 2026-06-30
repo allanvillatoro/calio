@@ -119,6 +119,42 @@ describe('createProductAction', () => {
     });
   });
 
+  it('creates a product with only uploaded image names when no existing images are provided', async () => {
+    authenticate();
+    const files = [createImageFile('new-image.jpg')];
+    vi.mocked(uploadProductImagesAction).mockResolvedValue(['uploaded.jpg']);
+    vi.mocked(productsRepository.save).mockResolvedValue({
+      ...persistedProduct,
+      images: ['uploaded.jpg'],
+    });
+
+    const result = await createProductAction({
+      ...validProductInput,
+      images: undefined,
+      files,
+    });
+
+    expect(productsRepository.save).toHaveBeenCalledWith({
+      ...validProductInput,
+      images: ['uploaded.jpg'],
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('creates a product without uploading images when no files are provided', async () => {
+    authenticate();
+    vi.mocked(productsRepository.save).mockResolvedValue(persistedProduct);
+
+    const result = await createProductAction(validProductInput);
+
+    expect(uploadProductImagesAction).not.toHaveBeenCalled();
+    expect(productsRepository.save).toHaveBeenCalledWith(validProductInput);
+    expect(result).toEqual({
+      success: true,
+      product: persistedProduct,
+    });
+  });
+
   it('returns validation details when product input is invalid', async () => {
     authenticate();
 
@@ -160,6 +196,54 @@ describe('createProductAction', () => {
       error: 'Ya existe un producto con ese nombre',
       details: conflict.details,
     });
+  });
+
+  it('returns a generic create error when image upload fails unexpectedly', async () => {
+    authenticate();
+    vi.mocked(uploadProductImagesAction).mockRejectedValue(
+      new Error('Upload failed'),
+    );
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    const result = await createProductAction({
+      ...validProductInput,
+      files: [createImageFile('new-image.jpg')],
+    });
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Failed to create product',
+    });
+    expect(productsRepository.save).not.toHaveBeenCalled();
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to create product from server action',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
+  });
+
+  it('returns a generic create error when saving fails unexpectedly', async () => {
+    authenticate();
+    vi.mocked(productsRepository.save).mockRejectedValue(new Error('DB down'));
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    const result = await createProductAction(validProductInput);
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Failed to create product',
+    });
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to create product from server action',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
   });
 });
 
@@ -211,6 +295,47 @@ describe('updateProductAction', () => {
     });
   });
 
+  it('updates a product with only uploaded image names when no existing images are provided', async () => {
+    authenticate();
+    const files = [createImageFile('updated-image.jpg')];
+    vi.mocked(uploadProductImagesAction).mockResolvedValue([
+      'updated-upload.jpg',
+    ]);
+    vi.mocked(productsRepository.updateById).mockResolvedValue({
+      ...persistedProduct,
+      images: ['updated-upload.jpg'],
+    });
+
+    const result = await updateProductAction(12, {
+      ...validProductInput,
+      images: undefined,
+      files,
+    });
+
+    expect(productsRepository.updateById).toHaveBeenCalledWith(12, {
+      ...validProductInput,
+      images: ['updated-upload.jpg'],
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('updates a product without uploading images when no files are provided', async () => {
+    authenticate();
+    vi.mocked(productsRepository.updateById).mockResolvedValue(persistedProduct);
+
+    const result = await updateProductAction(12, validProductInput);
+
+    expect(uploadProductImagesAction).not.toHaveBeenCalled();
+    expect(productsRepository.updateById).toHaveBeenCalledWith(
+      12,
+      validProductInput,
+    );
+    expect(result).toEqual({
+      success: true,
+      product: persistedProduct,
+    });
+  });
+
   it('returns product not found when the repository cannot update the product', async () => {
     authenticate();
     vi.mocked(productsRepository.updateById).mockResolvedValue(null);
@@ -232,6 +357,72 @@ describe('updateProductAction', () => {
     expect(result.success).toBe(false);
     expect(result.error).toBe('Validation failed');
     expect(productsRepository.updateById).not.toHaveBeenCalled();
+  });
+
+  it('returns validation details when the update body is invalid', async () => {
+    authenticate();
+
+    const result = await updateProductAction(12, {
+      ...validProductInput,
+      images: [],
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('Validation failed');
+    expect(result.details).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: 'images',
+        }),
+      ]),
+    );
+    expect(productsRepository.updateById).not.toHaveBeenCalled();
+  });
+
+  it('returns conflict details when the repository rejects a duplicate update name', async () => {
+    authenticate();
+    const conflict = new ProductConflictError(
+      'Ya existe un producto con ese nombre',
+      'PRODUCT_NAME_ALREADY_EXISTS',
+      [
+        {
+          path: 'name',
+          message: 'Ya existe un producto con ese nombre',
+        },
+      ],
+    );
+    vi.mocked(productsRepository.updateById).mockRejectedValue(conflict);
+
+    const result = await updateProductAction(12, validProductInput);
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Ya existe un producto con ese nombre',
+      details: conflict.details,
+    });
+  });
+
+  it('returns a generic update error when updating fails unexpectedly', async () => {
+    authenticate();
+    vi.mocked(productsRepository.updateById).mockRejectedValue(
+      new Error('DB down'),
+    );
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    const result = await updateProductAction(12, validProductInput);
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Failed to update product',
+    });
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to update product from server action',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
   });
 });
 
@@ -294,5 +485,42 @@ describe('deleteProductAction', () => {
       error: 'Product not found',
     });
     expect(revalidatePath).not.toHaveBeenCalled();
+  });
+
+  it('returns validation failed when the product id is invalid', async () => {
+    authenticate();
+
+    const result = await deleteProductAction(0);
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Validation failed',
+    });
+    expect(productsRepository.findById).not.toHaveBeenCalled();
+    expect(productsRepository.deleteById).not.toHaveBeenCalled();
+  });
+
+  it('returns a generic delete error when deleting fails unexpectedly', async () => {
+    authenticate();
+    vi.mocked(productsRepository.findById).mockResolvedValue(persistedProduct);
+    vi.mocked(productsRepository.deleteById).mockRejectedValue(
+      new Error('DB down'),
+    );
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    const result = await deleteProductAction(12);
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Failed to delete product',
+    });
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to delete product from server action',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
   });
 });

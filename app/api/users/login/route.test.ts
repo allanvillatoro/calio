@@ -85,4 +85,24 @@ describe('POST /api/users/login', () => {
       error: 'Invalid credentials',
     });
   });
+
+  it('returns internal server error when login fails unexpectedly', async () => {
+    vi.mocked(usersRepository.login).mockRejectedValue(new Error('DB down'));
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    const response = await POST(createLoginRequest(loginCredentials));
+
+    expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
+    await expect(response.json()).resolves.toEqual({
+      error: 'Failed to login user',
+    });
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to login user',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
+  });
 });

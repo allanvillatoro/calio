@@ -195,6 +195,18 @@ describe('productsQuerySchema', () => {
     }
   });
 
+  it('passes non-string instore values through to boolean validation', () => {
+    const result = productsQuerySchema.safeParse({ instore: 1 });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects unsupported instore string values', () => {
+    const result = productsQuerySchema.safeParse({ instore: 'maybe' });
+
+    expect(result.success).toBe(false);
+  });
+
   it('rejects empty queries after trimming', () => {
     const result = productsQuerySchema.safeParse({ query: '   ' });
 
