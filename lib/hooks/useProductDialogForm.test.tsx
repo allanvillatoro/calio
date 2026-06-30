@@ -95,6 +95,25 @@ function createFileChangeEvent(files: File[]) {
   } as unknown as React.ChangeEvent<HTMLInputElement>;
 }
 
+function createEmptyFileChangeEvent() {
+  return {
+    target: {
+      files: null,
+    },
+  } as unknown as React.ChangeEvent<HTMLInputElement>;
+}
+
+function createDragEvent(type: string, files: File[] | null = []) {
+  return {
+    type,
+    preventDefault: vi.fn(),
+    stopPropagation: vi.fn(),
+    dataTransfer: {
+      files,
+    },
+  } as unknown as React.DragEvent;
+}
+
 function createSubmitValues(overrides: Partial<Product> & { files?: File[] }) {
   return {
     id: overrides.id,
@@ -164,6 +183,33 @@ describe('useProductDialogForm', () => {
     });
   });
 
+  it('uses zero discount when changing to rebajas without a positive product discount', async () => {
+    const { result } = renderProductDialogForm({
+      ...baseProduct,
+      discount: 0,
+    });
+
+    act(() => {
+      result.current.handleCategoryChange('rebajas');
+    });
+
+    await waitFor(() => {
+      expect(result.current.currentDiscount).toBe(0);
+    });
+  });
+
+  it('treats products without a positive id as create mode', async () => {
+    const { result } = renderProductDialogForm({
+      ...baseProduct,
+      id: 0,
+    });
+
+    await waitFor(() => {
+      expect(result.current.isEditing).toBe(false);
+      expect(result.current.currentImages).toEqual(baseProduct.images);
+    });
+  });
+
   it('deduplicates selected files by name and rejects files larger than one megabyte', async () => {
     const firstFile = createFile('collar.jpg');
     const duplicateFile = createFile('collar.jpg');
@@ -193,6 +239,105 @@ describe('useProductDialogForm', () => {
     );
   });
 
+  it('ignores file input changes without files or without valid files', async () => {
+    const oversizedFile = createFile('pesada.jpg', 1024 * 1024 + 1);
+    const { result } = renderProductDialogForm();
+
+    act(() => {
+      result.current.handleFileChange(createEmptyFileChangeEvent());
+    });
+
+    expect(result.current.currentFiles).toEqual([]);
+
+    act(() => {
+      result.current.handleFileChange(createFileChangeEvent([oversizedFile]));
+    });
+
+    await waitFor(() => {
+      expect(result.current.currentFiles).toEqual([]);
+    });
+    expect(toast.error).toHaveBeenCalledWith(
+      'Cada imagen debe pesar menos de 1 MB',
+    );
+  });
+
+  it('sets and clears drag active state from drag events', async () => {
+    const { result } = renderProductDialogForm();
+
+    act(() => {
+      result.current.handleDrag(createDragEvent('dragover'));
+    });
+
+    await waitFor(() => {
+      expect(result.current.dragActive).toBe(true);
+    });
+
+    act(() => {
+      result.current.handleDrag(createDragEvent('dragleave'));
+    });
+
+    await waitFor(() => {
+      expect(result.current.dragActive).toBe(false);
+    });
+  });
+
+  it('triggers discount validation when discount changes', async () => {
+    const { result } = renderProductDialogForm();
+
+    act(() => {
+      result.current.handleDiscountChange();
+    });
+
+    await waitFor(() => {
+      expect(result.current.errors.discount).toBeUndefined();
+    });
+  });
+
+  it('ignores drops without files or valid files', async () => {
+    const oversizedFile = createFile('pesada.jpg', 1024 * 1024 + 1);
+    const { result } = renderProductDialogForm();
+
+    act(() => {
+      result.current.handleDrag(createDragEvent('dragenter'));
+    });
+    await waitFor(() => {
+      expect(result.current.dragActive).toBe(true);
+    });
+
+    act(() => {
+      result.current.handleDrop(createDragEvent('drop', null));
+    });
+
+    await waitFor(() => {
+      expect(result.current.dragActive).toBe(false);
+      expect(result.current.currentFiles).toEqual([]);
+    });
+
+    act(() => {
+      result.current.handleDrop(createDragEvent('drop', [oversizedFile]));
+    });
+
+    await waitFor(() => {
+      expect(result.current.currentFiles).toEqual([]);
+    });
+    expect(toast.error).toHaveBeenCalledWith(
+      'Cada imagen debe pesar menos de 1 MB',
+    );
+  });
+
+  it('adds dropped files and clears image errors when files are available', async () => {
+    const droppedFile = createFile('drop.jpg');
+    const { result } = renderProductDialogForm();
+
+    act(() => {
+      result.current.handleDrop(createDragEvent('drop', [droppedFile]));
+    });
+
+    await waitFor(() => {
+      expect(result.current.currentFiles).toEqual([droppedFile]);
+    });
+  });
+
   it('removes and reorders current product images', async () => {
     const { result } = renderProductDialogForm(baseProduct);
 
@@ -217,6 +362,38 @@ describe('useProductDialogForm', () => {
 
     await waitFor(() => {
       expect(result.current.currentImages).toEqual(['collar-perla-2.jpg']);
+    });
+  });
+
+  it('removes and reorders uploaded images', async () => {
+    const firstFile = createFile('primera.jpg');
+    const secondFile = createFile('segunda.jpg');
+    const { result } = renderProductDialogForm();
+
+    act(() => {
+      result.current.handleFileChange(
+        createFileChangeEvent([firstFile, secondFile]),
+      );
+    });
+
+    await waitFor(() => {
+      expect(result.current.currentFiles).toEqual([firstFile, secondFile]);
+    });
+
+    act(() => {
+      result.current.handleMoveUploadImage(0, 1);
+    });
+
+    await waitFor(() => {
+      expect(result.current.currentFiles).toEqual([secondFile, firstFile]);
+    });
+
+    act(() => {
+      result.current.handleDeleteUploadImage('primera.jpg');
+    });
+
+    await waitFor(() => {
+      expect(result.current.currentFiles).toEqual([secondFile]);
     });
   });
 
@@ -263,6 +440,17 @@ describe('useProductDialogForm', () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it('closes the dialog without refreshing when no product was saved', () => {
+    const { result, invalidateQueries, onOpenChange } = renderProductDialogForm();
+
+    act(() => {
+      result.current.handleDialogOpenChange(false);
+    });
+
+    expect(invalidateQueries).not.toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it('maps server validation details to form field errors', async () => {
     const { result } = renderProductDialogForm();
     vi.mocked(createProductAction).mockResolvedValue({
@@ -285,6 +473,51 @@ describe('useProductDialogForm', () => {
       expect(result.current.errors.name?.message).toBe('Name is required');
     });
     expect(toast.error).toHaveBeenCalledWith('Validation failed');
+  });
+
+  it('falls back to default submit errors when server errors do not include a message', async () => {
+    const { result } = renderProductDialogForm();
+    vi.mocked(createProductAction).mockResolvedValue({
+      success: false,
+    });
+
+    act(() => {
+      result.current.onSubmit(createSubmitValues({}));
+    });
+
+    await waitFor(() => {
+      expect(result.current.submitError).toBe('No se pudo guardar el producto');
+    });
+    expect(toast.error).toHaveBeenCalledWith(
+      'No se pudo guardar el producto Collar Perla',
+    );
+  });
+
+  it('shows unexpected error feedback when product creation throws', async () => {
+    const { result } = renderProductDialogForm();
+    vi.mocked(createProductAction).mockRejectedValue(new Error('Network down'));
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    act(() => {
+      result.current.onSubmit(createSubmitValues({}));
+    });
+
+    await waitFor(() => {
+      expect(result.current.submitError).toBe(
+        'Ocurrió un error inesperado al guardar el producto',
+      );
+    });
+    expect(toast.error).toHaveBeenCalledWith(
+      'Ocurrió un error inesperado al guardar el producto',
+    );
+    expect(consoleError).toHaveBeenCalledWith(
+      'Unexpected error while submitting product form',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
   });
 
   it('updates an edited product, refreshes products, and closes the dialog', async () => {

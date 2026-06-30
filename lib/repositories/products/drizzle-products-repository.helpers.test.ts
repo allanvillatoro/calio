@@ -1,8 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import type { SQL } from 'drizzle-orm';
+import type { AppDb } from '@/db';
 import type { ProductRow } from '@/db/schema';
 import { PRODUCTS_PER_PAGE } from '@/lib/constants/product';
 import {
   buildProductsWhereClause,
+  countProductsWithDb,
+  findProductRowsWithDb,
   getPagination,
   mapRowToProduct,
   normalizeFilters,
@@ -231,5 +235,108 @@ describe('requireProductField', () => {
     expect(() => requireProductField({}, 'name')).toThrow(
       'Missing required field: product.name',
     );
+  });
+});
+
+describe('database helpers', () => {
+  it('counts products with a where clause', async () => {
+    const whereClause = {} as SQL;
+    const where = vi.fn().mockResolvedValue([{ totalItems: 7 }]);
+    const from = vi.fn(() => ({
+      where,
+    }));
+    const select = vi.fn(() => ({
+      from,
+    }));
+    const db = {
+      select,
+    } as unknown as AppDb;
+
+    await expect(countProductsWithDb(db, whereClause)).resolves.toBe(7);
+
+    expect(select).toHaveBeenCalled();
+    expect(from).toHaveBeenCalled();
+    expect(where).toHaveBeenCalledWith(whereClause);
+  });
+
+  it('counts products without a where clause', async () => {
+    const from = vi.fn().mockResolvedValue([{ totalItems: 3 }]);
+    const select = vi.fn(() => ({
+      from,
+    }));
+    const db = {
+      select,
+    } as unknown as AppDb;
+
+    await expect(countProductsWithDb(db)).resolves.toBe(3);
+
+    expect(from).toHaveBeenCalled();
+  });
+
+  it('finds product rows with a where clause', async () => {
+    const rows = [createProductRow()];
+    const whereClause = {} as SQL;
+    const offset = vi.fn().mockResolvedValue(rows);
+    const limit = vi.fn(() => ({
+      offset,
+    }));
+    const orderBy = vi.fn(() => ({
+      limit,
+    }));
+    const where = vi.fn(() => ({
+      orderBy,
+    }));
+    const from = vi.fn(() => ({
+      where,
+    }));
+    const select = vi.fn(() => ({
+      from,
+    }));
+    const db = {
+      select,
+    } as unknown as AppDb;
+
+    await expect(
+      findProductRowsWithDb(db, {
+        whereClause,
+        limit: 10,
+        offset: 20,
+      }),
+    ).resolves.toEqual(rows);
+
+    expect(where).toHaveBeenCalledWith(whereClause);
+    expect(limit).toHaveBeenCalledWith(10);
+    expect(offset).toHaveBeenCalledWith(20);
+  });
+
+  it('finds product rows without a where clause', async () => {
+    const rows = [createProductRow({ id: 9 })];
+    const offset = vi.fn().mockResolvedValue(rows);
+    const limit = vi.fn(() => ({
+      offset,
+    }));
+    const orderBy = vi.fn(() => ({
+      limit,
+    }));
+    const from = vi.fn(() => ({
+      orderBy,
+    }));
+    const select = vi.fn(() => ({
+      from,
+    }));
+    const db = {
+      select,
+    } as unknown as AppDb;
+
+    await expect(
+      findProductRowsWithDb(db, {
+        limit: 8,
+        offset: 0,
+      }),
+    ).resolves.toEqual(rows);
+
+    expect(orderBy).toHaveBeenCalled();
+    expect(limit).toHaveBeenCalledWith(8);
+    expect(offset).toHaveBeenCalledWith(0);
   });
 });
