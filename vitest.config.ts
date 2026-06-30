@@ -16,7 +16,6 @@ export default defineConfig({
     include: ['**/*.{test,spec}.{ts,tsx}'],
     exclude: ['node_modules/**', '.next/**', 'dist/**', 'build/**'],
     coverage: {
-      all: true,
       include: [
         'app/**/*.{ts,tsx}',
         'components/**/*.{ts,tsx}',
