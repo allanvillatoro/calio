@@ -24,6 +24,12 @@ export default defineConfig({
         'proxy.ts',
       ],
       reporter: ['text', 'html'],
+      thresholds: {
+        statements: 74.59,
+        branches: 74.44,
+        functions: 71.73,
+        lines: 74.65,
+      },
       exclude: [
         '.next/**',
         '**/*.test.{ts,tsx}',
