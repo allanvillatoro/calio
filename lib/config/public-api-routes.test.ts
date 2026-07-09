@@ -8,6 +8,8 @@ describe('isPublicApiRoute', () => {
     ['GET', '/api/users/session'],
     ['GET', '/api/products'],
     ['GET', '/api/products/12'],
+    ['GET', '/api/laser-engravings'],
+    ['GET', '/api/laser-engravings/12'],
   ])('returns true for public %s %s routes', (method, pathname) => {
     expect(isPublicApiRoute(pathname, method)).toBe(true);
   });
@@ -17,7 +19,11 @@ describe('isPublicApiRoute', () => {
     ['POST', '/api/products'],
     ['PUT', '/api/products/12'],
     ['DELETE', '/api/products/12'],
+    ['POST', '/api/laser-engravings'],
+    ['PUT', '/api/laser-engravings/12'],
+    ['DELETE', '/api/laser-engravings/12'],
     ['GET', '/api/products/12/images'],
+    ['GET', '/api/laser-engravings/12/images'],
     ['GET', '/api/admin/products'],
   ])(
     'returns false for protected or unknown %s %s routes',

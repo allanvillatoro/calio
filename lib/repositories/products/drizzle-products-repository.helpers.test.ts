@@ -25,6 +25,7 @@ function createProductRow(overrides: Partial<ProductRow> = {}): ProductRow {
     quantity: 4,
     discount: 0,
     images: ['anillo-aurora.jpg'],
+    slug: null,
     category: 'anillos',
     inStore: true,
     createdAt,

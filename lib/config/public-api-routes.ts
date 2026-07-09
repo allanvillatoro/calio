@@ -25,6 +25,14 @@ export const publicApiRoutes: PublicApiRoute[] = [
     method: 'GET',
     pattern: /^\/api\/products\/[^/]+$/,
   },
+  {
+    method: 'GET',
+    path: '/api/laser-engravings',
+  },
+  {
+    method: 'GET',
+    pattern: /^\/api\/laser-engravings\/[^/]+$/,
+  },
 ];
 
 export function isPublicApiRoute(pathname: string, method: string): boolean {

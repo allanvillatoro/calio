@@ -21,3 +21,17 @@ export class ProductConflictError extends Error {
     this.name = 'ProductConflictError';
   }
 }
+
+export class LaserEngravingConflictError extends Error {
+  constructor(
+    message: string,
+    public readonly code: 'LASER_ENGRAVING_SLUG_ALREADY_EXISTS',
+    public readonly details?: Array<{
+      path: string;
+      message: string;
+    }>,
+  ) {
+    super(message);
+    this.name = 'LaserEngravingConflictError';
+  }
+}
