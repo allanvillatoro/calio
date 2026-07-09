@@ -15,6 +15,13 @@
       "when": 1776209208234,
       "tag": "0001_round_saracen",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1783639195814,
+      "tag": "0002_lumpy_guardian",
+      "breakpoints": true
     }
   ]
 }
