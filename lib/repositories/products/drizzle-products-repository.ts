@@ -66,6 +66,16 @@ export class DrizzleProductsRepository implements IProductsRepository {
     return product ? mapRowToProduct(product) : null;
   }
 
+  async findBySlug(slug: string): Promise<IProduct | null> {
+    const [product] = await this.database
+      .select()
+      .from(products)
+      .where(eq(products.slug, slug))
+      .limit(1);
+
+    return product ? mapRowToProduct(product) : null;
+  }
+
   async findAll(
     filters?: ProductFilters | URLSearchParams,
   ): Promise<FindAllProductsResult> {

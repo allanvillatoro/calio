@@ -67,6 +67,16 @@ export class DrizzleLaserEngravingsRepository
     return laserEngraving ? mapRowToLaserEngraving(laserEngraving) : null;
   }
 
+  async findBySlug(slug: string): Promise<ILaserEngraving | null> {
+    const [laserEngraving] = await this.database
+      .select()
+      .from(laserEngravings)
+      .where(eq(laserEngravings.slug, slug))
+      .limit(1);
+
+    return laserEngraving ? mapRowToLaserEngraving(laserEngraving) : null;
+  }
+
   async findAll(
     filters?: LaserEngravingFilters | URLSearchParams,
   ): Promise<FindAllLaserEngravingsResult> {

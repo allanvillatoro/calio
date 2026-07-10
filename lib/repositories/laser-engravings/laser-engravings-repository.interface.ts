@@ -23,6 +23,7 @@ export type FindAllLaserEngravingsResult =
 export interface ILaserEngravingsRepository {
   save(input: LaserEngravingChanges): Promise<ILaserEngraving>;
   findById(id: number): Promise<ILaserEngraving | null>;
+  findBySlug(slug: string): Promise<ILaserEngraving | null>;
   findAll(
     filters?: LaserEngravingFilters | URLSearchParams,
   ): Promise<FindAllLaserEngravingsResult>;
