@@ -66,10 +66,7 @@ export function assertValidLaserEngravings(
 
     const slug = laserEngraving.slug.trim();
 
-    if (
-      !LASER_ENGRAVING_SLUG_PATTERN.test(slug) ||
-      /^\d+$/.test(slug)
-    ) {
+    if (!LASER_ENGRAVING_SLUG_PATTERN.test(slug) || /^\d+$/.test(slug)) {
       throw new Error(`Invalid laser engraving slug at index ${index}`);
     }
   }
