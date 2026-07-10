@@ -85,6 +85,25 @@ describe('ProductCard', () => {
     expect(screen.getAllByText('-20%')).toHaveLength(2);
   });
 
+  it('uses the product slug for the public link when present', () => {
+    render(
+      <ProductCard
+        product={{
+          ...product,
+          slug: 'collar-perla',
+        }}
+        isAdmin={false}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      '/productos/collar-perla',
+    );
+  });
+
   it('renders products without discount pricing details', () => {
     render(
       <ProductCard
@@ -128,6 +147,24 @@ describe('ProductCard', () => {
     expect(toast.error).toHaveBeenCalledWith(
       'Ya no se puede agregar más de este producto',
     );
+  });
+
+  it('can hide the cart action for catalog items that are not cart-ready yet', () => {
+    render(
+      <ProductCard
+        product={product}
+        isAdmin={false}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+        enableCartAction={false}
+      />,
+    );
+
+    expect(
+      screen.queryByRole('button', {
+        name: 'Agregar Collar Perla al carrito',
+      }),
+    ).not.toBeInTheDocument();
   });
 
   it('shows admin controls and calls edit/delete handlers', () => {

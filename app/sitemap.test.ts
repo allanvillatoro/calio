@@ -59,7 +59,7 @@ describe('sitemap', () => {
       limit: 500,
       includeOutOfStock: true,
     });
-    expect(routes).toHaveLength(3);
+    expect(routes).toHaveLength(4);
     const baseUrl = routes[0].url;
 
     expect(routes).toEqual(
@@ -74,6 +74,12 @@ describe('sitemap', () => {
           url: `${baseUrl}/catalogo`,
           changeFrequency: 'daily',
           priority: 0.9,
+          lastModified: expect.any(Date),
+        }),
+        expect.objectContaining({
+          url: `${baseUrl}/grabados`,
+          changeFrequency: 'weekly',
+          priority: 0.8,
           lastModified: expect.any(Date),
         }),
         expect.objectContaining({

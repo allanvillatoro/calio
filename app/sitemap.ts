@@ -23,6 +23,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
       lastModified: new Date(),
     },
+    {
+      url: `${baseUrl}/grabados`,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+      lastModified: new Date(),
+    },
   ];
 
   const { data: products } = await productsRepository.findAll({

@@ -9,15 +9,18 @@ vi.mock('@/components/catalog/ProductCard', () => ({
     isAdmin,
     onEdit,
     onDelete,
+    enableCartAction,
   }: {
     product: Product;
     isAdmin: boolean;
     onEdit: (product: Product) => void;
     onDelete: (product: Product) => void;
+    enableCartAction?: boolean;
   }) => (
     <article>
       <span>{product.name}</span>
       <span>admin:{String(isAdmin)}</span>
+      <span>cart:{String(enableCartAction)}</span>
       <button type="button" onClick={() => onEdit(product)}>
         Editar {product.name}
       </button>
@@ -142,7 +145,16 @@ describe('ProductsGrid', () => {
     expect(screen.getByText('Collar Perla')).toBeVisible();
     expect(screen.getByText('Anillo Luna')).toBeVisible();
     expect(screen.getAllByText('admin:true')).toHaveLength(2);
+    expect(screen.getAllByText('cart:true')).toHaveLength(2);
     expect(screen.getByText('pagination:2/4:32')).toBeVisible();
+  });
+
+  it('passes cart action visibility to product cards', () => {
+    renderProductsGrid({
+      enableCartAction: false,
+    });
+
+    expect(screen.getAllByText('cart:false')).toHaveLength(2);
   });
 
   it('delegates product and pagination actions to the provided handlers', () => {
