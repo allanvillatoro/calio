@@ -11,7 +11,7 @@ El catalogo publico de grabados debe titularse: `Explora nuestros grabados`.
 ## Decision recomendada
 
 Crear una tabla separada para los grabados laser.
-w
+
 Motivos:
 
 - Los grabados no son una categoria de joyeria y no deben aparecer en el menu de joyas.
@@ -337,20 +337,29 @@ Imagenes:
 
 ## Pasos de implementacion sugeridos
 
-1. Crear tipos neutrales de catalogo/carrito.
-2. Migrar el carrito a claves compuestas y agregar migracion de localStorage.
-3. Extraer helpers backend reutilizables para entidades vendibles.
-4. Extraer componentes de catalogo reutilizables sin cambiar comportamiento de `/catalogo`.
-5. Agregar tabla, repositorio, schemas y API de grabados.
-6. Crear busqueda y paginacion para grabados con los mismos query params base.
-7. Crear `getLaserEngravingsByQuery`.
-8. Crear pagina `/grabados` usando el catalogo reusable con titulo `Explora nuestros grabados`.
-9. Actualizar `/productos/[id]` para resolver productos por ID numerico, productos por slug y grabados por slug.
-10. Actualizar `/admin`: renombrar `Administrar catálogo` a `Administrar piezas joyería` y agregar `Administrar grabados laser`.
-11. Reutilizar o extraer `ProductDialog` para que pueda manejar productos y grabados con configuracion.
-12. Agregar boton `Ver muestras de grabado` en la home.
-13. Agregar o adaptar tests.
-14. Ejecutar verificacion.
+1. Crear tipos neutrales de catalogo/carrito. Estado: hecho en `d1e813c`.
+2. Agregar tabla y migracion de grabados. Estado: hecho en `d1e813c`.
+3. Extraer helpers backend reutilizables para entidades vendibles. Estado: hecho en `08f7365`.
+4. Agregar repositorio, schemas y API de grabados. Estado: hecho en `08f7365`.
+5. Crear `getLaserEngravingsByQuery`. Estado: hecho en `08f7365`.
+6. Crear pagina `/grabados` usando el catalogo reusable con titulo `Explora nuestros grabados`. Estado: hecho en `6affb6f`.
+7. Agregar boton `Ver muestras de grabado` en la home. Estado: hecho en `6affb6f`.
+8. Actualizar `/productos/[id]` para resolver productos por ID numerico, productos por slug y grabados por slug. Estado: hecho en `51da915`.
+9. Migrar el carrito a claves compuestas y agregar migracion de localStorage. Estado: hecho en `d04fe64`.
+10. Actualizar `/admin`: renombrar `Administrar catálogo` a `Administrar piezas joyería` y agregar `Administrar grabados laser`. Estado: en progreso.
+11. Crear administracion CRUD de grabados. Estado: pendiente.
+12. Reutilizar o extraer `ProductDialog` para que pueda manejar productos y grabados con configuracion. Estado: pendiente.
+13. Crear datos iniciales o seed de grabados. Estado: pendiente.
+14. Ejecutar migracion cuando se confirme el ambiente objetivo. Estado: pendiente.
+15. Ejecutar verificacion final. Estado: pendiente.
+
+## Bitacora de commits
+
+- `d1e813c` - Add laser engraving schema and base types.
+- `08f7365` - Add laser engraving repository and API.
+- `6affb6f` - Add public laser engraving catalog.
+- `51da915` - Resolve product details by slug.
+- `d04fe64` - Support mixed cart items.
 
 ## Pruebas recomendadas
 
