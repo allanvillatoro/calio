@@ -65,7 +65,8 @@ This file is for coding-agent behavior. Use `README.md` for project overview, se
 
 - Vitest is the unit test runner.
 - Use `npm run test`, `npm run test:watch`, and `npm run test:coverage`.
-- There is no minimum coverage threshold yet; do not add one unless requested.
+- Coverage thresholds are enforced in `vitest.config.ts`; keep new and changed code covered enough for `npm run test:coverage` to pass.
+- Do not lower coverage thresholds to make a change pass unless the user explicitly asks for a threshold policy change.
 - Every new feature, behavior change, bug fix, or refactor should include corresponding unit tests in the same change.
 - When refactoring existing behavior, use TDD: write tests for current expected behavior first, refactor second, then verify tests still pass.
 - Use AAA test structure: Arrange, Act, Assert.
@@ -112,4 +113,5 @@ This file is for coding-agent behavior. Use `README.md` for project overview, se
 
 - For code changes, run the narrowest useful checks first, then broader checks when risk warrants it.
 - Prefer `npm run test` for logic changes, `npm run lint` for TypeScript/React edits, and `npm run build` for routing, server/client boundary, or Next.js behavior changes.
-- If a requested change cannot include tests yet, state why and identify the missing coverage.
+- When the pipeline enforces coverage, run `npm run test:coverage` before finishing feature or refactor work, especially after adding files included by coverage.
+- If a requested change cannot include tests yet, state why, identify the missing coverage, and call out whether `npm run test:coverage` was skipped or fails.
