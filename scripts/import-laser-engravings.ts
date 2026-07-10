@@ -1,0 +1,94 @@
+import 'dotenv/config';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
+import { laserEngravingsRepository } from '../lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
+import {
+  assertValidLaserEngravings,
+  compareLaserEngravings,
+  normalizeLaserEngraving,
+  type LaserEngravingSeed,
+} from './laser-engravings-import.helpers';
+
+const DATA_FILE_PATH = path.resolve(
+  process.cwd(),
+  'scripts/laser-engravings-data.json',
+);
+const INSERT_DELAY_MS = 500;
+
+async function sleep(milliseconds: number): Promise<void> {
+  await new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
+}
+
+async function loadAndSortLaserEngravings(): Promise<LaserEngravingSeed[]> {
+  const fileContent = await fs.readFile(DATA_FILE_PATH, 'utf8');
+  const parsedData: unknown = JSON.parse(fileContent);
+
+  assertValidLaserEngravings(parsedData);
+
+  const sortedLaserEngravings = [...parsedData].sort(compareLaserEngravings);
+
+  await fs.writeFile(
+    DATA_FILE_PATH,
+    `${JSON.stringify(sortedLaserEngravings, null, 2)}\n`,
+    'utf8',
+  );
+
+  return sortedLaserEngravings;
+}
+
+async function importLaserEngravings(
+  laserEngravings: LaserEngravingSeed[],
+): Promise<void> {
+  let insertedCount = 0;
+  let skippedCount = 0;
+
+  for (let index = 0; index < laserEngravings.length; index += 1) {
+    const laserEngraving = laserEngravings[index];
+    const existingLaserEngraving = await laserEngravingsRepository.findById(
+      laserEngraving.id,
+    );
+
+    if (existingLaserEngraving) {
+      skippedCount += 1;
+      console.log(
+        `Skipping laser engraving ${laserEngraving.id}: already exists`,
+      );
+      continue;
+    }
+
+    const savedLaserEngraving = await laserEngravingsRepository.save(
+      normalizeLaserEngraving(laserEngraving),
+    );
+    insertedCount += 1;
+    console.log(
+      `Inserted laser engraving ${savedLaserEngraving.id}: ${savedLaserEngraving.name}`,
+    );
+
+    if (index < laserEngravings.length - 1) {
+      await sleep(INSERT_DELAY_MS);
+    }
+  }
+
+  console.log(
+    `Import finished. Inserted: ${insertedCount}. Skipped existing: ${skippedCount}.`,
+  );
+}
+
+async function main(): Promise<void> {
+  const sortedLaserEngravings = await loadAndSortLaserEngravings();
+  console.log(
+    `Sorted ${sortedLaserEngravings.length} laser engravings in ${path.relative(
+      process.cwd(),
+      DATA_FILE_PATH,
+    )}.`,
+  );
+  await importLaserEngravings(sortedLaserEngravings);
+}
+
+main().catch((error: unknown) => {
+  console.error('Failed to import laser engravings.');
+  console.error(error);
+  process.exit(1);
+});
