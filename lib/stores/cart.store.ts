@@ -2,11 +2,16 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Product } from '@/lib/types';
+import type { CatalogItem, CatalogItemKind, Product } from '@/lib/types';
 
 export type CartProduct = Omit<Product, 'category'> & {
-  category: string;
+  cartId: string;
+  sourceId: string;
+  kind: CatalogItemKind;
+  category?: string;
 };
+
+export type CartInputItem = Product | CatalogItem | CartProduct;
 
 export interface CartItem {
   product: CartProduct;
@@ -15,7 +20,11 @@ export interface CartItem {
 
 interface CartStoreState {
   items: CartItem[];
-  addProduct: (product: CartProduct) => boolean;
+  addItem: (product: CartInputItem) => boolean;
+  addProduct: (product: CartInputItem) => boolean;
+  incrementItem: (cartId: string) => boolean;
+  decrementItem: (cartId: string) => boolean;
+  removeItem: (cartId: string) => void;
   incrementProduct: (productId: number) => boolean;
   decrementProduct: (productId: number) => boolean;
   removeProduct: (productId: number) => void;
@@ -23,13 +32,57 @@ interface CartStoreState {
   getTotalItems: () => number;
 }
 
+function getProductCartId(productId: number | string) {
+  return `product:${productId}`;
+}
+
+function normalizeCartProduct(product: CartInputItem): CartProduct {
+  if ('cartId' in product) {
+    return product;
+  }
+
+  if ('kind' in product) {
+    return {
+      id: Number(product.sourceId),
+      cartId: product.id,
+      sourceId: product.sourceId,
+      kind: product.kind,
+      slug: product.slug,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      discount: product.discount,
+      priceWithDiscount: product.priceWithDiscount,
+      quantity: product.quantity,
+      images: product.images,
+      category: product.category,
+      inStore: product.inStore,
+    };
+  }
+
+  return {
+    ...product,
+    cartId: getProductCartId(product.id),
+    sourceId: String(product.id),
+    kind: 'product',
+  };
+}
+
+function normalizePersistedItems(items: CartItem[]): CartItem[] {
+  return items.map((item) => ({
+    ...item,
+    product: normalizeCartProduct(item.product),
+  }));
+}
+
 export const useCartStore = create<CartStoreState>()(
   persist(
     (set, get) => ({
       items: [],
-      addProduct: (product) => {
+      addItem: (input) => {
+        const product = normalizeCartProduct(input);
         const existingItem = get().items.find(
-          (item) => item.product.id === product.id,
+          (item) => item.product.cartId === product.cartId,
         );
         const currentQuantity = existingItem?.quantity ?? 0;
 
@@ -40,7 +93,7 @@ export const useCartStore = create<CartStoreState>()(
         set((state) => ({
           items: existingItem
             ? state.items.map((item) =>
-                item.product.id === product.id
+                item.product.cartId === product.cartId
                   ? { ...item, product, quantity: item.quantity + 1 }
                   : item,
               )
@@ -49,20 +102,21 @@ export const useCartStore = create<CartStoreState>()(
 
         return true;
       },
-      incrementProduct: (productId) => {
+      addProduct: (product) => get().addItem(product),
+      incrementItem: (cartId) => {
         const existingItem = get().items.find(
-          (item) => item.product.id === productId,
+          (item) => item.product.cartId === cartId,
         );
 
         if (!existingItem) {
           return false;
         }
 
-        return get().addProduct(existingItem.product);
+        return get().addItem(existingItem.product);
       },
-      decrementProduct: (productId) => {
+      decrementItem: (cartId) => {
         const existingItem = get().items.find(
-          (item) => item.product.id === productId,
+          (item) => item.product.cartId === cartId,
         );
 
         if (!existingItem || existingItem.quantity <= 1) {
@@ -71,7 +125,7 @@ export const useCartStore = create<CartStoreState>()(
 
         set((state) => ({
           items: state.items.map((item) =>
-            item.product.id === productId
+            item.product.cartId === cartId
               ? { ...item, quantity: item.quantity - 1 }
               : item,
           ),
@@ -79,11 +133,16 @@ export const useCartStore = create<CartStoreState>()(
 
         return true;
       },
-      removeProduct: (productId) => {
+      removeItem: (cartId) => {
         set((state) => ({
-          items: state.items.filter((item) => item.product.id !== productId),
+          items: state.items.filter((item) => item.product.cartId !== cartId),
         }));
       },
+      incrementProduct: (productId) =>
+        get().incrementItem(getProductCartId(productId)),
+      decrementProduct: (productId) =>
+        get().decrementItem(getProductCartId(productId)),
+      removeProduct: (productId) => get().removeItem(getProductCartId(productId)),
       clearCart: () => {
         set({ items: [] });
       },
@@ -92,6 +151,15 @@ export const useCartStore = create<CartStoreState>()(
     }),
     {
       name: 'calio-cart',
+      version: 1,
+      migrate: (persistedState) => {
+        const state = persistedState as CartStoreState;
+
+        return {
+          ...state,
+          items: normalizePersistedItems(state.items ?? []),
+        };
+      },
     },
   ),
 );

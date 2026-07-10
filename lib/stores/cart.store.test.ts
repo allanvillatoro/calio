@@ -4,6 +4,9 @@ import { useCartStore, type CartProduct } from './cart.store';
 function createCartProduct(overrides: Partial<CartProduct> = {}): CartProduct {
   return {
     id: 1,
+    cartId: 'product:1',
+    sourceId: '1',
+    kind: 'product',
     name: 'Anillo Aurora',
     description: 'Anillo ajustable con detalle dorado',
     price: 250,
@@ -108,6 +111,8 @@ describe('useCartStore', () => {
     const firstProduct = createCartProduct({ id: 1 });
     const secondProduct = createCartProduct({
       id: 2,
+      cartId: 'product:2',
+      sourceId: '2',
       name: 'Collar Perla',
       category: 'collares',
     });
@@ -135,7 +140,12 @@ describe('useCartStore', () => {
 
   it('returns the total quantity of cart items', () => {
     const firstProduct = createCartProduct({ id: 1, quantity: 3 });
-    const secondProduct = createCartProduct({ id: 2, quantity: 2 });
+    const secondProduct = createCartProduct({
+      id: 2,
+      cartId: 'product:2',
+      sourceId: '2',
+      quantity: 2,
+    });
 
     useCartStore.getState().addProduct(firstProduct);
     useCartStore.getState().addProduct(firstProduct);
@@ -161,5 +171,30 @@ describe('useCartStore', () => {
         ],
       },
     });
+  });
+
+  it('keeps products and laser engravings with the same source id as separate cart items', () => {
+    const product = createCartProduct({ id: 1 });
+    const laserEngraving = {
+      id: 'laser-engraving:1',
+      sourceId: '1',
+      slug: 'grabado-nombre-fecha',
+      kind: 'laser-engraving' as const,
+      name: 'Nombre y fecha',
+      description: 'Grabado laser con nombre y fecha especial',
+      price: 150,
+      discount: 0,
+      priceWithDiscount: 150,
+      quantity: 2,
+      images: ['grabado-nombre-fecha.jpg'],
+    };
+
+    useCartStore.getState().addProduct(product);
+    useCartStore.getState().addProduct(laserEngraving);
+
+    expect(useCartStore.getState().items).toHaveLength(2);
+    expect(
+      useCartStore.getState().items.map((item) => item.product.cartId),
+    ).toEqual(['product:1', 'laser-engraving:1']);
   });
 });

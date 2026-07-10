@@ -6,9 +6,9 @@ import { formatPrice, getImageUrl } from '@/lib/utils';
 
 interface CartItemRowProps {
   item: CartItem;
-  onDecrement: (productId: number) => void;
-  onIncrement: (productId: number) => void;
-  onRemove: (productId: number) => void;
+  onDecrement: (cartId: string) => void;
+  onIncrement: (cartId: string) => void;
+  onRemove: (cartId: string) => void;
 }
 
 export function CartItemRow({
@@ -19,11 +19,12 @@ export function CartItemRow({
 }: CartItemRowProps) {
   const { product, quantity } = item;
   const canIncrease = quantity < product.quantity;
+  const productHref = `/productos/${product.slug || product.sourceId}`;
 
   return (
     <div className="grid grid-cols-[96px_1fr_auto] gap-4 p-4 sm:grid-cols-[120px_1fr_120px] sm:items-start md:gap-6 md:p-6">
       <Link
-        href={`/productos/${product.id}`}
+        href={productHref}
         className="relative aspect-square w-full overflow-hidden rounded-lg bg-white"
         aria-label={`Ver ${product.name}`}
       >
@@ -39,7 +40,7 @@ export function CartItemRow({
       <div className="min-w-0 space-y-4">
         <div className="space-y-2">
           <Link
-            href={`/productos/${product.id}`}
+            href={productHref}
             className="block text-base font-semibold leading-snug text-gray-900 hover:text-gray-700 sm:text-lg"
           >
             {product.name}
@@ -54,7 +55,7 @@ export function CartItemRow({
             <button
               type="button"
               className="flex size-10 items-center justify-center text-gray-900 transition-colors hover:bg-gray-100"
-              onClick={() => onDecrement(product.id)}
+              onClick={() => onDecrement(product.cartId)}
               aria-label={`Reducir cantidad de ${product.name}`}
             >
               <Minus className="size-4" />
@@ -63,7 +64,7 @@ export function CartItemRow({
             <button
               type="button"
               className="flex size-10 items-center justify-center text-gray-900 transition-colors hover:bg-gray-100"
-              onClick={() => onRemove(product.id)}
+              onClick={() => onRemove(product.cartId)}
               aria-label={`Eliminar ${product.name} del carrito`}
             >
               <Trash2 className="size-4" />
@@ -77,7 +78,7 @@ export function CartItemRow({
           <button
             type="button"
             className="flex size-10 items-center justify-center text-gray-900 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-white"
-            onClick={() => onIncrement(product.id)}
+            onClick={() => onIncrement(product.cartId)}
             disabled={!canIncrease}
             aria-label={`Aumentar cantidad de ${product.name}`}
           >

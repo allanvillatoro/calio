@@ -42,14 +42,17 @@ export function CartOrderPdfDocument({
         </View>
 
         {items.map(({ product, quantity, imageSrc }) => (
-          <View key={product.id} style={styles.item}>
+          <View key={product.cartId} style={styles.item}>
             {product.images[0] && imageSrc ? (
               <PdfImage src={imageSrc} style={styles.image} />
             ) : null}
             <View style={styles.info}>
               <View style={styles.itemHeader}>
                 <Link
-                  src={getProductUrl(siteUrl, product.id)}
+                  src={getProductUrl(
+                    siteUrl,
+                    product.slug || product.sourceId,
+                  )}
                   style={styles.name}
                 >
                   {product.name}

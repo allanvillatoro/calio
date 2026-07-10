@@ -40,6 +40,9 @@ vi.mock('./CartOrderPdf', () => ({
 const item: CartItem = {
   product: {
     id: 12,
+    cartId: 'product:12',
+    sourceId: '12',
+    kind: 'product',
     name: 'Collar Perla',
     description: 'Collar dorado con dije de perla',
     price: 250,
@@ -58,9 +61,9 @@ function setCartItems(items: CartItem[]) {
 }
 
 const originalCartActions = {
-  incrementProduct: useCartStore.getState().incrementProduct,
-  decrementProduct: useCartStore.getState().decrementProduct,
-  removeProduct: useCartStore.getState().removeProduct,
+  incrementItem: useCartStore.getState().incrementItem,
+  decrementItem: useCartStore.getState().decrementItem,
+  removeItem: useCartStore.getState().removeItem,
 };
 
 describe('CartContent', () => {
@@ -97,6 +100,8 @@ describe('CartContent', () => {
         product: {
           ...item.product,
           id: 13,
+          cartId: 'product:13',
+          sourceId: '13',
           name: 'Aretes Luna',
           priceWithDiscount: 150,
         },
@@ -135,10 +140,10 @@ describe('CartContent', () => {
   });
 
   it('shows an error when incrementing beyond available stock', async () => {
-    const incrementProduct = vi.fn(() => false);
+    const incrementItem = vi.fn(() => false);
     useCartStore.setState({
       items: [item],
-      incrementProduct,
+      incrementItem,
     });
     render(<CartContent />);
 
@@ -149,7 +154,7 @@ describe('CartContent', () => {
     expect(toast.error).toHaveBeenCalledWith(
       'Ya no se puede agregar más de este producto',
     );
-    expect(incrementProduct).toHaveBeenCalledWith(item.product.id);
+    expect(incrementItem).toHaveBeenCalledWith(item.product.cartId);
     expect(screen.getByText('Subtotal: L200')).toBeVisible();
   });
 

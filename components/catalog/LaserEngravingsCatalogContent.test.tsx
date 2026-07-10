@@ -194,11 +194,11 @@ describe('LaserEngravingsCatalogContent', () => {
     });
   });
 
-  it('passes pagination and disables cart/admin actions for laser engravings', () => {
+  it('passes pagination and enables cart actions for laser engravings', () => {
     render(<LaserEngravingsCatalogContent />);
 
     expect(screen.getByText('grid-admin:false')).toBeVisible();
-    expect(screen.getByText('grid-cart:false')).toBeVisible();
+    expect(screen.getByText('grid-cart:true')).toBeVisible();
     fireEvent.click(screen.getByRole('button', { name: 'Ir página 2' }));
 
     expect(onPageChange).toHaveBeenCalledWith(2);

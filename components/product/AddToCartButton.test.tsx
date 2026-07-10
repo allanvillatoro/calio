@@ -13,6 +13,9 @@ vi.mock('sonner', () => ({
 
 const product: CartProduct = {
   id: 12,
+  cartId: 'product:12',
+  sourceId: '12',
+  kind: 'product',
   name: 'Collar Perla',
   description: 'Collar dorado con dije de perla',
   price: 250,

@@ -79,7 +79,7 @@ export default function LaserEngravingsCatalogContent() {
             isAdmin={false}
             onEdit={() => undefined}
             onDelete={() => undefined}
-            enableCartAction={false}
+            enableCartAction
           />
         </div>
       </div>

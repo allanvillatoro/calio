@@ -25,6 +25,9 @@ vi.mock('next/image', () => ({
 const item: CartItem = {
   product: {
     id: 12,
+    cartId: 'product:12',
+    sourceId: '12',
+    kind: 'product',
     name: 'Collar Perla',
     description: 'Collar dorado con dije de perla',
     price: 250,
@@ -81,7 +84,7 @@ describe('CartItemRow', () => {
       screen.getByRole('button', { name: 'Reducir cantidad de Collar Perla' }),
     );
 
-    expect(onDecrement).toHaveBeenCalledWith(12);
+    expect(onDecrement).toHaveBeenCalledWith('product:12');
     expect(onRemove).not.toHaveBeenCalled();
   });
 
@@ -94,7 +97,7 @@ describe('CartItemRow', () => {
       screen.getByRole('button', { name: 'Eliminar Collar Perla del carrito' }),
     );
 
-    expect(onRemove).toHaveBeenCalledWith(12);
+    expect(onRemove).toHaveBeenCalledWith('product:12');
     expect(onDecrement).not.toHaveBeenCalled();
   });
 
@@ -121,6 +124,6 @@ describe('CartItemRow', () => {
       screen.getByRole('button', { name: 'Aumentar cantidad de Collar Perla' }),
     );
 
-    expect(onIncrement).toHaveBeenCalledWith(12);
+    expect(onIncrement).toHaveBeenCalledWith('product:12');
   });
 });

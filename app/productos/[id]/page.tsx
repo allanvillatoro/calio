@@ -8,6 +8,7 @@ import AddToCartButton from '@/components/product/AddToCartButton';
 import { SOCIAL_LINKS } from '@/lib/constants/social-links';
 import type { ILaserEngraving } from '@/lib/interfaces/laser-engraving';
 import type { IProduct } from '@/lib/interfaces/product';
+import type { CartInputItem } from '@/lib/stores/cart.store';
 import { laserEngravingsRepository } from '@/lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 
@@ -87,6 +88,27 @@ function getAbsoluteProductUrl(detailItem: ProductDetailItem) {
   return `${siteUrl}${getItemPath(detailItem)}`;
 }
 
+function getCartItem(detailItem: ProductDetailItem): CartInputItem {
+  if (detailItem.kind === 'product') {
+    const { createdAt, updatedAt, ...productForCart } = detailItem.item;
+    void createdAt;
+    void updatedAt;
+
+    return productForCart;
+  }
+
+  const { createdAt, updatedAt, ...laserEngravingForCart } = detailItem.item;
+  void createdAt;
+  void updatedAt;
+
+  return {
+    ...laserEngravingForCart,
+    id: `laser-engraving:${detailItem.item.id}`,
+    sourceId: String(detailItem.item.id),
+    kind: 'laser-engraving',
+  };
+}
+
 export async function generateMetadata({ params }: ProductDetailPageProps) {
   const { id } = await params;
   const detailItem = await getProductDetailItem(id);
@@ -144,16 +166,7 @@ export default async function ProductDetailPage({
   const message = `Hola, quiero solicitar este ${itemLabel}: ${item.name} - ${productUrl}`;
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
   const hasDiscount = item.discount > 0;
-  const cartProduct =
-    detailItem.kind === 'product'
-      ? (() => {
-          const { createdAt, updatedAt, ...productForCart } = detailItem.item;
-          void createdAt;
-          void updatedAt;
-
-          return productForCart;
-        })()
-      : null;
+  const cartProduct = getCartItem(detailItem);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -220,9 +233,7 @@ export default async function ProductDetailPage({
                     <FaInstagram className="w-6 h-6" />
                     Solicitar por Instagram
                   </a>
-                  {cartProduct && (
-                    <AddToCartButton product={cartProduct} />
-                  )}
+                  <AddToCartButton product={cartProduct} />
                 </div>
               ) : (
                 <div className="w-full py-4 px-6 rounded-lg text-lg font-semibold bg-gray-300 text-gray-500 text-center">

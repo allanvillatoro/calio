@@ -50,6 +50,9 @@ function createCartItem(overrides: Partial<CartItem> = {}): CartItem {
   return {
     product: {
       id: 1,
+      cartId: 'product:1',
+      sourceId: '1',
+      kind: 'product',
       name: 'Collar Perla',
       description: 'Collar dorado con dije de perla',
       price: 250,

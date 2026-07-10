@@ -130,7 +130,12 @@ describe('ProductCard', () => {
     );
 
     expect(useCartStore.getState().items[0]).toEqual({
-      product,
+      product: {
+        ...product,
+        cartId: 'product:12',
+        sourceId: '12',
+        kind: 'product',
+      },
       quantity: 1,
     });
     expect(toast.success).toHaveBeenCalledWith('Producto agregado al carrito');

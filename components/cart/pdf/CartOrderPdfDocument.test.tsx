@@ -13,6 +13,9 @@ function createPdfItem(overrides: Partial<PdfCartItem> = {}): PdfCartItem {
   return {
     product: {
       id: 12,
+      cartId: 'product:12',
+      sourceId: '12',
+      kind: 'product',
       name: 'Collar Perla',
       description: 'Collar dorado con dije de perla',
       price: 250,
@@ -111,6 +114,8 @@ describe('CartOrderPdfDocument', () => {
           product: {
             ...createPdfItem().product,
             id: 18,
+            cartId: 'product:18',
+            sourceId: '18',
             name: 'Anillo Luna',
             description: 'Anillo plateado ajustable',
             price: 180,
@@ -143,6 +148,8 @@ describe('CartOrderPdfDocument', () => {
           product: {
             ...createPdfItem().product,
             id: 18,
+            cartId: 'product:18',
+            sourceId: '18',
             name: 'Anillo Luna',
             images: ['anillo-luna.jpg'],
           },

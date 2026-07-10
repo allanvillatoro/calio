@@ -11,16 +11,16 @@ import { formatPrice } from '@/lib/utils';
 export default function CartContent() {
   const [isRequestingOrder, setIsRequestingOrder] = useState(false);
   const items = useCartStore((state) => state.items);
-  const incrementProduct = useCartStore((state) => state.incrementProduct);
-  const decrementProduct = useCartStore((state) => state.decrementProduct);
-  const removeProduct = useCartStore((state) => state.removeProduct);
+  const incrementItem = useCartStore((state) => state.incrementItem);
+  const decrementItem = useCartStore((state) => state.decrementItem);
+  const removeItem = useCartStore((state) => state.removeItem);
   const subtotal = items.reduce(
     (total, item) => total + item.product.priceWithDiscount * item.quantity,
     0,
   );
 
-  const handleIncrementProduct = (productId: number) => {
-    const wasAdded = incrementProduct(productId);
+  const handleIncrementItem = (cartId: string) => {
+    const wasAdded = incrementItem(cartId);
 
     if (!wasAdded) {
       toast.error('Ya no se puede agregar más de este producto');
@@ -94,11 +94,11 @@ export default function CartContent() {
         <div className="divide-y divide-gray-200">
           {items.map((item) => (
             <CartItemRow
-              key={item.product.id}
+              key={item.product.cartId}
               item={item}
-              onDecrement={decrementProduct}
-              onIncrement={handleIncrementProduct}
-              onRemove={removeProduct}
+              onDecrement={decrementItem}
+              onIncrement={handleIncrementItem}
+              onRemove={removeItem}
             />
           ))}
         </div>

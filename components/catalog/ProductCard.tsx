@@ -50,7 +50,7 @@ export default function ProductCard<TProduct extends ProductCardItem = Product>(
   const addProduct = useCartStore((state) => state.addProduct);
 
   const handleAddToCart = () => {
-    const wasAdded = addProduct(product as Product);
+    const wasAdded = addProduct(product);
 
     if (wasAdded) {
       toast.success('Producto agregado al carrito');
