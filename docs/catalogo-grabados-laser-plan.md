@@ -354,7 +354,7 @@ Imagenes:
 15. Validar conflictos de slug publico entre joyas y grabados. Estado: hecho en `f33e78d`.
 16. Ejecutar migracion cuando se confirme el ambiente objetivo. Estado: hecho en testing.
 17. Ejecutar import seed de grabados. Estado: hecho en testing.
-18. Ejecutar verificacion final. Estado: pendiente.
+18. Ejecutar verificacion final. Estado: hecho parcialmente; `npm run lint` y `npm run test` pasan, `npm run build` queda no concluyente porque se queda en `Creating an optimized production build ...`.
 
 ## Bitacora de commits
 
@@ -425,6 +425,12 @@ npm run test
 npm run lint
 npm run build
 ```
+
+Resultado final de verificacion:
+
+- `npm run lint`: pasa.
+- `npm run test`: pasa con 47 archivos y 349 tests.
+- `npm run build`: intentado, pero se detuvo manualmente porque no avanzó despues de 60 segundos en `Creating an optimized production build ...`.
 
 ## Riesgos y decisiones abiertas
 
