@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { AdminLaserEngravingsContent } from '@/components/admin/AdminLaserEngravingsContent';
 import { getAuthenticatedUserFromCookies } from '@/lib/auth';
 
 export default async function AdminLaserEngravingsPage() {
@@ -27,10 +28,7 @@ export default async function AdminLaserEngravingsPage() {
           público.
         </p>
 
-        <div className="mt-8 rounded-lg border border-gray-200 bg-white p-6 text-gray-600">
-          El formulario de administración de grabados se agregará en el
-          siguiente corte.
-        </div>
+        <AdminLaserEngravingsContent />
       </div>
     </div>
   );

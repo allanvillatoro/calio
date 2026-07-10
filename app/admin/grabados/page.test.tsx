@@ -12,6 +12,12 @@ vi.mock('@/lib/auth', () => ({
   getAuthenticatedUserFromCookies: vi.fn(),
 }));
 
+vi.mock('@/components/admin/AdminLaserEngravingsContent', () => ({
+  AdminLaserEngravingsContent: () => (
+    <div>Contenido administrativo de grabados</div>
+  ),
+}));
+
 describe('AdminLaserEngravingsPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -40,5 +46,8 @@ describe('AdminLaserEngravingsPage', () => {
       'href',
       '/admin',
     );
+    expect(
+      screen.getByText('Contenido administrativo de grabados'),
+    ).toBeVisible();
   });
 });

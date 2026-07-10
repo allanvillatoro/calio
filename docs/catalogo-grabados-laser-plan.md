@@ -347,9 +347,9 @@ Imagenes:
 8. Actualizar `/productos/[id]` para resolver productos por ID numerico, productos por slug y grabados por slug. Estado: hecho en `51da915`.
 9. Migrar el carrito a claves compuestas y agregar migracion de localStorage. Estado: hecho en `d04fe64`.
 10. Actualizar `/admin`: renombrar `Administrar catálogo` a `Administrar piezas joyería` y agregar `Administrar grabados laser`. Estado: hecho en `dd3c036`.
-11. Crear server actions de administracion CRUD de grabados. Estado: en revision en el corte actual.
-12. Crear UI de administracion CRUD de grabados. Estado: pendiente.
-13. Reutilizar o extraer `ProductDialog` para que pueda manejar productos y grabados con configuracion. Estado: pendiente.
+11. Crear server actions de administracion CRUD de grabados. Estado: hecho en `17e7a4a`.
+12. Crear UI de administracion CRUD de grabados. Estado: en revision en el corte actual.
+13. Reutilizar o extraer `ProductDialog` para que pueda manejar productos y grabados con configuracion. Estado: en revision en el corte actual.
 14. Crear datos iniciales o seed de grabados. Estado: pendiente.
 15. Ejecutar migracion cuando se confirme el ambiente objetivo. Estado: pendiente.
 16. Ejecutar verificacion final. Estado: pendiente.
@@ -362,7 +362,8 @@ Imagenes:
 - `51da915` - Resolve product details by slug.
 - `d04fe64` - Support mixed cart items.
 - `dd3c036` - Add laser engraving admin entry point.
-- Corte actual sin commit - Add laser engraving server actions.
+- `17e7a4a` - Add laser engraving server actions.
+- Corte actual sin commit - Add reusable sellable item admin CRUD UI.
 
 ## Pruebas recomendadas
 

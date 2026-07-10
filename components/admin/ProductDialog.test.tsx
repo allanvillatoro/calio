@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Product } from '@/lib/types';
-import { useProductDialogForm } from '@/lib/hooks/useProductDialogForm';
+import { useSellableItemDialogForm } from '@/lib/hooks/useSellableItemDialogForm';
 import { ProductDialog, validateProductDiscount } from './ProductDialog';
 
 vi.mock('next/image', () => ({
@@ -44,8 +44,13 @@ vi.mock('@/components/ui/dialog', () => ({
   ),
 }));
 
-vi.mock('@/lib/hooks/useProductDialogForm', () => ({
-  useProductDialogForm: vi.fn(),
+vi.mock('@/lib/hooks/useSellableItemDialogForm', () => ({
+  useSellableItemDialogForm: vi.fn(),
+}));
+
+vi.mock('@/lib/actions/product-mutations.action', () => ({
+  createProductAction: vi.fn(),
+  updateProductAction: vi.fn(),
 }));
 
 const product: Product = {
@@ -84,9 +89,9 @@ const hookHandlers = {
 };
 
 function mockProductDialogForm(
-  overrides: Partial<ReturnType<typeof useProductDialogForm>> = {},
+  overrides: Partial<ReturnType<typeof useSellableItemDialogForm>> = {},
 ) {
-  vi.mocked(useProductDialogForm).mockReturnValue({
+  vi.mocked(useSellableItemDialogForm).mockReturnValue({
     currentFiles: [],
     currentImages: [],
     dragActive: false,
