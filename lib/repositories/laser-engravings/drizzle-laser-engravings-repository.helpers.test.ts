@@ -193,10 +193,7 @@ describe('buildLaserEngravingsWhereClause', () => {
 
 describe('requireLaserEngravingField', () => {
   it('returns present laser engraving fields', () => {
-    const value = requireLaserEngravingField(
-      { name: 'Placa corazon' },
-      'name',
-    );
+    const value = requireLaserEngravingField({ name: 'Placa corazon' }, 'name');
 
     expect(value).toBe('Placa corazon');
   });

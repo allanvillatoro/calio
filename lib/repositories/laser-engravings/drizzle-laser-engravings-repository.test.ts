@@ -282,7 +282,7 @@ describe('DrizzleLaserEngravingsRepository.findAll', () => {
       totalItems: 0,
       totalPages: 0,
       currentPage: 1,
-        limit: PRODUCTS_PER_PAGE,
+      limit: PRODUCTS_PER_PAGE,
       hasNextPage: false,
       hasPreviousPage: false,
     });
@@ -343,7 +343,9 @@ describe('DrizzleLaserEngravingsRepository.updateById', () => {
       update,
     } as unknown as AppDb);
 
-    await expect(repository.updateById(99, { name: 'Missing' })).resolves.toBeNull();
+    await expect(
+      repository.updateById(99, { name: 'Missing' }),
+    ).resolves.toBeNull();
   });
 
   it('throws a field-level conflict when the new slug already exists', async () => {
