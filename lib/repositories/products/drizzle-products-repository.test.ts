@@ -134,6 +134,30 @@ describe('DrizzleProductsRepository.save', () => {
     );
   });
 
+  it('passes explicit ids when provided', async () => {
+    const returning = vi.fn().mockResolvedValue([createProductRow()]);
+    const values = vi.fn(() => ({
+      returning,
+    }));
+    const insert = vi.fn(() => ({
+      values,
+    }));
+    const repository = new DrizzleProductsRepository({
+      insert,
+    } as unknown as AppDb);
+
+    await repository.save({
+      ...validInput,
+      id: 1001,
+    });
+
+    expect(values).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: 1001,
+      }),
+    );
+  });
+
   it('throws a field-level conflict when the product name already exists', async () => {
     const returning = vi.fn().mockRejectedValue(createUniqueViolation());
     const values = vi.fn(() => ({
@@ -149,6 +173,22 @@ describe('DrizzleProductsRepository.save', () => {
     await expect(repository.save(validInput)).rejects.toBeInstanceOf(
       ProductConflictError,
     );
+  });
+
+  it('rethrows unexpected insert errors', async () => {
+    const error = new Error('database failed');
+    const returning = vi.fn().mockRejectedValue(error);
+    const values = vi.fn(() => ({
+      returning,
+    }));
+    const insert = vi.fn(() => ({
+      values,
+    }));
+    const repository = new DrizzleProductsRepository({
+      insert,
+    } as unknown as AppDb);
+
+    await expect(repository.save(validInput)).rejects.toBe(error);
   });
 });
 
@@ -371,6 +411,27 @@ describe('DrizzleProductsRepository.updateById', () => {
     await expect(
       repository.updateById(7, { name: 'Anillo Aurora' }),
     ).rejects.toBeInstanceOf(ProductConflictError);
+  });
+
+  it('rethrows unexpected update errors', async () => {
+    const error = new Error('database failed');
+    const returning = vi.fn().mockRejectedValue(error);
+    const where = vi.fn(() => ({
+      returning,
+    }));
+    const set = vi.fn(() => ({
+      where,
+    }));
+    const update = vi.fn(() => ({
+      set,
+    }));
+    const repository = new DrizzleProductsRepository({
+      update,
+    } as unknown as AppDb);
+
+    await expect(
+      repository.updateById(7, { name: 'Anillo Aurora' }),
+    ).rejects.toBe(error);
   });
 });
 

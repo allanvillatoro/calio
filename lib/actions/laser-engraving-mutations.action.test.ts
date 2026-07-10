@@ -152,6 +152,39 @@ describe('createLaserEngravingAction', () => {
     });
   });
 
+  it('creates a laser engraving using only uploaded images when no existing images are provided', async () => {
+    authenticate();
+    const files = [createImageFile('uploaded-only.jpg')];
+    vi.mocked(uploadProductImagesAction).mockResolvedValue([
+      'uploaded-only.jpg',
+    ]);
+    vi.mocked(laserEngravingsRepository.save).mockResolvedValue(
+      persistedLaserEngraving,
+    );
+
+    const inputWithoutImages = {
+      slug: validLaserEngravingInput.slug,
+      name: validLaserEngravingInput.name,
+      description: validLaserEngravingInput.description,
+      price: validLaserEngravingInput.price,
+      discount: validLaserEngravingInput.discount,
+      quantity: validLaserEngravingInput.quantity,
+    };
+    const result = await createLaserEngravingAction({
+      ...inputWithoutImages,
+      files,
+    });
+
+    expect(laserEngravingsRepository.save).toHaveBeenCalledWith({
+      ...inputWithoutImages,
+      images: ['uploaded-only.jpg'],
+    });
+    expect(result).toEqual({
+      success: true,
+      laserEngraving: persistedLaserEngraving,
+    });
+  });
+
   it('returns validation details when laser engraving input is invalid', async () => {
     authenticate();
 
@@ -371,6 +404,32 @@ describe('updateLaserEngravingAction', () => {
     ).not.toHaveBeenCalled();
     expect(laserEngravingsRepository.updateById).not.toHaveBeenCalled();
   });
+
+  it('returns a generic update error when updating fails unexpectedly', async () => {
+    authenticate();
+    vi.mocked(laserEngravingsRepository.updateById).mockRejectedValue(
+      new Error('DB down'),
+    );
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    const result = await updateLaserEngravingAction(
+      25,
+      validLaserEngravingInput,
+    );
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Failed to update laser engraving',
+    });
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to update laser engraving from server action',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
+  });
 });
 
 describe('deleteLaserEngravingAction', () => {
@@ -426,6 +485,22 @@ describe('deleteLaserEngravingAction', () => {
     expect(laserEngravingsRepository.deleteById).not.toHaveBeenCalled();
   });
 
+  it('returns laser engraving not found when delete does not remove a row', async () => {
+    authenticate();
+    vi.mocked(laserEngravingsRepository.findById).mockResolvedValue(
+      persistedLaserEngraving,
+    );
+    vi.mocked(laserEngravingsRepository.deleteById).mockResolvedValue(false);
+
+    const result = await deleteLaserEngravingAction(25);
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Laser engraving not found',
+    });
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
+
   it('returns validation failed when the laser engraving id is invalid', async () => {
     authenticate();
 
@@ -437,5 +512,28 @@ describe('deleteLaserEngravingAction', () => {
     });
     expect(laserEngravingsRepository.findById).not.toHaveBeenCalled();
     expect(laserEngravingsRepository.deleteById).not.toHaveBeenCalled();
+  });
+
+  it('returns a generic delete error when deleting fails unexpectedly', async () => {
+    authenticate();
+    vi.mocked(laserEngravingsRepository.findById).mockRejectedValue(
+      new Error('DB down'),
+    );
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    const result = await deleteLaserEngravingAction(25);
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Failed to delete laser engraving',
+    });
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to delete laser engraving from server action',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
   });
 });

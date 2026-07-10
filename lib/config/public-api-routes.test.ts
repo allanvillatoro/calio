@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isPublicApiRoute } from './public-api-routes';
+import { isPublicApiRoute, publicApiRoutes } from './public-api-routes';
 
 describe('isPublicApiRoute', () => {
   it.each([
@@ -34,5 +34,15 @@ describe('isPublicApiRoute', () => {
 
   it('treats methods as already-normalized uppercase values', () => {
     expect(isPublicApiRoute('/api/products', 'get')).toBe(false);
+  });
+
+  it('returns false for malformed public route definitions without path or pattern', () => {
+    publicApiRoutes.push({ method: 'GET' });
+
+    try {
+      expect(isPublicApiRoute('/api/malformed', 'GET')).toBe(false);
+    } finally {
+      publicApiRoutes.pop();
+    }
   });
 });

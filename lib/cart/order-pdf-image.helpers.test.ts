@@ -112,6 +112,14 @@ describe('order PDF image helpers', () => {
     ).rejects.toThrow('No se pudo preparar la imagen para el PDF');
   });
 
+  it('rejects when the canvas context cannot be created', async () => {
+    getContext.mockReturnValueOnce(null);
+
+    await expect(
+      loadImageAsPngDataUrl('https://cdn.test/no-context.jpg'),
+    ).rejects.toThrow('No se pudo preparar la imagen para el PDF');
+  });
+
   it('adds imageSrc to cart items with images', async () => {
     const item = createCartItem();
 

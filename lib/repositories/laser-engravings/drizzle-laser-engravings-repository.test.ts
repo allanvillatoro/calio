@@ -131,6 +131,30 @@ describe('DrizzleLaserEngravingsRepository.save', () => {
     );
   });
 
+  it('passes explicit ids when provided', async () => {
+    const returning = vi.fn().mockResolvedValue([createLaserEngravingRow()]);
+    const values = vi.fn(() => ({
+      returning,
+    }));
+    const insert = vi.fn(() => ({
+      values,
+    }));
+    const repository = new DrizzleLaserEngravingsRepository({
+      insert,
+    } as unknown as AppDb);
+
+    await repository.save({
+      ...validInput,
+      id: 1001,
+    });
+
+    expect(values).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: 1001,
+      }),
+    );
+  });
+
   it('throws a field-level conflict when the slug already exists', async () => {
     const returning = vi.fn().mockRejectedValue(createUniqueViolation());
     const values = vi.fn(() => ({
@@ -146,6 +170,22 @@ describe('DrizzleLaserEngravingsRepository.save', () => {
     await expect(repository.save(validInput)).rejects.toBeInstanceOf(
       LaserEngravingConflictError,
     );
+  });
+
+  it('rethrows unexpected insert errors', async () => {
+    const error = new Error('database failed');
+    const returning = vi.fn().mockRejectedValue(error);
+    const values = vi.fn(() => ({
+      returning,
+    }));
+    const insert = vi.fn(() => ({
+      values,
+    }));
+    const repository = new DrizzleLaserEngravingsRepository({
+      insert,
+    } as unknown as AppDb);
+
+    await expect(repository.save(validInput)).rejects.toBe(error);
   });
 });
 
@@ -366,6 +406,27 @@ describe('DrizzleLaserEngravingsRepository.updateById', () => {
     await expect(
       repository.updateById(17, { slug: 'placa-corazon' }),
     ).rejects.toBeInstanceOf(LaserEngravingConflictError);
+  });
+
+  it('rethrows unexpected update errors', async () => {
+    const error = new Error('database failed');
+    const returning = vi.fn().mockRejectedValue(error);
+    const where = vi.fn(() => ({
+      returning,
+    }));
+    const set = vi.fn(() => ({
+      where,
+    }));
+    const update = vi.fn(() => ({
+      set,
+    }));
+    const repository = new DrizzleLaserEngravingsRepository({
+      update,
+    } as unknown as AppDb);
+
+    await expect(
+      repository.updateById(17, { slug: 'placa-corazon' }),
+    ).rejects.toBe(error);
   });
 });
 
