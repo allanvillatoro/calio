@@ -4,12 +4,14 @@ import { LaserEngravingConflictError } from '@/lib/errors';
 import type { ILaserEngraving } from '@/lib/interfaces/laser-engraving';
 import { laserEngravingsRepository } from '@/lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
 import { assertLaserEngravingSlugDoesNotConflictWithProduct } from '@/lib/slug-conflicts';
-import { PUT } from './route';
+import { DELETE, GET, PUT } from './route';
 
 vi.mock(
   '@/lib/repositories/laser-engravings/drizzle-laser-engravings-repository',
   () => ({
     laserEngravingsRepository: {
+      deleteById: vi.fn(),
+      findById: vi.fn(),
       updateById: vi.fn(),
     },
   }),
@@ -43,10 +45,26 @@ const validLaserEngravingBody = {
   images: laserEngraving.images,
 };
 
+const laserEngravingJson = {
+  ...laserEngraving,
+  createdAt: laserEngraving.createdAt.toISOString(),
+  updatedAt: laserEngraving.updatedAt.toISOString(),
+};
+
+function createGetRequest() {
+  return new Request('http://localhost/api/laser-engravings/12');
+}
+
 function createPutRequest(body: unknown) {
   return new Request('http://localhost/api/laser-engravings/12', {
     method: 'PUT',
     body: JSON.stringify(body),
+  });
+}
+
+function createDeleteRequest() {
+  return new Request('http://localhost/api/laser-engravings/12', {
+    method: 'DELETE',
   });
 }
 
@@ -55,6 +73,64 @@ function createContext(id = '12') {
     params: Promise.resolve({ id }),
   };
 }
+
+describe('GET /api/laser-engravings/[id]', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('returns a laser engraving by id', async () => {
+    vi.mocked(laserEngravingsRepository.findById).mockResolvedValue(
+      laserEngraving,
+    );
+
+    const response = await GET(createGetRequest(), createContext());
+
+    expect(response.status).toBe(StatusCodes.OK);
+    await expect(response.json()).resolves.toEqual(laserEngravingJson);
+    expect(laserEngravingsRepository.findById).toHaveBeenCalledWith(12);
+  });
+
+  it('returns not found when the laser engraving does not exist', async () => {
+    vi.mocked(laserEngravingsRepository.findById).mockResolvedValue(null);
+
+    const response = await GET(createGetRequest(), createContext());
+
+    expect(response.status).toBe(StatusCodes.NOT_FOUND);
+    await expect(response.json()).resolves.toEqual({
+      error: 'Laser engraving not found',
+    });
+  });
+
+  it('returns bad request for invalid route params', async () => {
+    const response = await GET(createGetRequest(), createContext('invalid'));
+
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'Validation failed',
+    });
+    expect(laserEngravingsRepository.findById).not.toHaveBeenCalled();
+  });
+
+  it('returns internal server error when the repository fails', async () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    vi.mocked(laserEngravingsRepository.findById).mockRejectedValue(
+      new Error('database failed'),
+    );
+
+    const response = await GET(createGetRequest(), createContext());
+
+    expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
+    await expect(response.json()).resolves.toEqual({
+      error: 'Failed to fetch laser engraving',
+    });
+    expect(consoleError).toHaveBeenCalled();
+
+    consoleError.mockRestore();
+  });
+});
 
 describe('PUT /api/laser-engravings/[id]', () => {
   beforeEach(() => {
@@ -84,6 +160,49 @@ describe('PUT /api/laser-engravings/[id]', () => {
     );
   });
 
+  it('returns not found when the laser engraving does not exist', async () => {
+    vi.mocked(laserEngravingsRepository.updateById).mockResolvedValue(null);
+
+    const response = await PUT(
+      createPutRequest(validLaserEngravingBody),
+      createContext(),
+    );
+
+    expect(response.status).toBe(StatusCodes.NOT_FOUND);
+    await expect(response.json()).resolves.toEqual({
+      error: 'Laser engraving not found',
+    });
+  });
+
+  it('returns bad request for invalid route params', async () => {
+    const response = await PUT(
+      createPutRequest(validLaserEngravingBody),
+      createContext('invalid'),
+    );
+
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'Validation failed',
+    });
+    expect(laserEngravingsRepository.updateById).not.toHaveBeenCalled();
+  });
+
+  it('returns bad request for invalid request bodies', async () => {
+    const response = await PUT(
+      createPutRequest({
+        ...validLaserEngravingBody,
+        images: [],
+      }),
+      createContext(),
+    );
+
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'Validation failed',
+    });
+    expect(laserEngravingsRepository.updateById).not.toHaveBeenCalled();
+  });
+
   it('returns conflict when a product already uses the public slug', async () => {
     const conflict = new LaserEngravingConflictError(
       'Ya existe una joya publicada con ese slug',
@@ -110,5 +229,113 @@ describe('PUT /api/laser-engravings/[id]', () => {
       details: conflict.details,
     });
     expect(laserEngravingsRepository.updateById).not.toHaveBeenCalled();
+  });
+
+  it('returns conflict when the repository rejects a duplicate slug', async () => {
+    const conflict = new LaserEngravingConflictError(
+      'Ya existe un grabado laser con ese slug',
+      'LASER_ENGRAVING_SLUG_ALREADY_EXISTS',
+      [
+        {
+          path: 'slug',
+          message: 'Ya existe un grabado laser con ese slug',
+        },
+      ],
+    );
+    vi.mocked(laserEngravingsRepository.updateById).mockRejectedValue(conflict);
+
+    const response = await PUT(
+      createPutRequest(validLaserEngravingBody),
+      createContext(),
+    );
+
+    expect(response.status).toBe(StatusCodes.CONFLICT);
+    await expect(response.json()).resolves.toEqual({
+      error: conflict.message,
+      details: conflict.details,
+    });
+  });
+
+  it('returns internal server error when the repository fails', async () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    vi.mocked(laserEngravingsRepository.updateById).mockRejectedValue(
+      new Error('database failed'),
+    );
+
+    const response = await PUT(
+      createPutRequest(validLaserEngravingBody),
+      createContext(),
+    );
+
+    expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
+    await expect(response.json()).resolves.toEqual({
+      error: 'Failed to update laser engraving',
+    });
+    expect(consoleError).toHaveBeenCalled();
+
+    consoleError.mockRestore();
+  });
+});
+
+describe('DELETE /api/laser-engravings/[id]', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('deletes a laser engraving by id', async () => {
+    vi.mocked(laserEngravingsRepository.deleteById).mockResolvedValue(true);
+
+    const response = await DELETE(createDeleteRequest(), createContext());
+
+    expect(response.status).toBe(StatusCodes.OK);
+    await expect(response.json()).resolves.toEqual({
+      success: true,
+    });
+    expect(laserEngravingsRepository.deleteById).toHaveBeenCalledWith(12);
+  });
+
+  it('returns not found when the laser engraving does not exist', async () => {
+    vi.mocked(laserEngravingsRepository.deleteById).mockResolvedValue(false);
+
+    const response = await DELETE(createDeleteRequest(), createContext());
+
+    expect(response.status).toBe(StatusCodes.NOT_FOUND);
+    await expect(response.json()).resolves.toEqual({
+      error: 'Laser engraving not found',
+    });
+  });
+
+  it('returns bad request for invalid route params', async () => {
+    const response = await DELETE(
+      createDeleteRequest(),
+      createContext('invalid'),
+    );
+
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'Validation failed',
+    });
+    expect(laserEngravingsRepository.deleteById).not.toHaveBeenCalled();
+  });
+
+  it('returns internal server error when the repository fails', async () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    vi.mocked(laserEngravingsRepository.deleteById).mockRejectedValue(
+      new Error('database failed'),
+    );
+
+    const response = await DELETE(createDeleteRequest(), createContext());
+
+    expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
+    await expect(response.json()).resolves.toEqual({
+      error: 'Failed to delete laser engraving',
+    });
+    expect(consoleError).toHaveBeenCalled();
+
+    consoleError.mockRestore();
   });
 });
