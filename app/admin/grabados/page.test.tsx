@@ -40,7 +40,7 @@ describe('AdminLaserEngravingsPage', () => {
     render(await AdminLaserEngravingsPage());
 
     expect(
-      screen.getByRole('heading', { name: 'Administrar grabados laser' }),
+      screen.getByRole('heading', { name: 'Administrar grabados láser' }),
     ).toBeVisible();
     expect(
       screen.queryByRole('link', { name: 'Volver al panel' }),

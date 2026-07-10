@@ -49,12 +49,12 @@ describe('getLaserEngravingConflictError', () => {
     const error = getLaserEngravingConflictError();
 
     expect(error).toBeInstanceOf(LaserEngravingConflictError);
-    expect(error.message).toBe('Ya existe un grabado laser con ese slug');
+    expect(error.message).toBe('Ya existe un grabado láser con ese slug');
     expect(error.code).toBe('LASER_ENGRAVING_SLUG_ALREADY_EXISTS');
     expect(error.details).toEqual([
       {
         path: 'slug',
-        message: 'Ya existe un grabado laser con ese slug',
+        message: 'Ya existe un grabado láser con ese slug',
       },
     ]);
   });

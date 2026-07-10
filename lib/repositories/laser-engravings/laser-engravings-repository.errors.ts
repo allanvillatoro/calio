@@ -3,7 +3,7 @@ import { LaserEngravingConflictError } from '@/lib/errors';
 const POSTGRES_UNIQUE_VIOLATION_CODE = '23505';
 const LASER_ENGRAVING_SLUG_UNIQUE_CONSTRAINT = 'laser_engravings_slug_unique';
 const LASER_ENGRAVING_SLUG_UNIQUE_MESSAGE =
-  'Ya existe un grabado laser con ese slug';
+  'Ya existe un grabado láser con ese slug';
 
 interface DatabaseError {
   code?: string;

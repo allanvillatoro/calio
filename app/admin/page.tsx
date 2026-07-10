@@ -31,10 +31,10 @@ export default async function AdminPage() {
         <Link href="/admin/grabados">
           <div className="bg-gray-700 rounded-lg shadow-md hover:shadow-xl hover:bg-gray-800 transition-all p-8 cursor-pointer group">
             <h2 className="text-xl font-semibold text-white mb-2">
-              Administrar grabados laser
+              Administrar grabados láser
             </h2>
             <p className="text-gray-300 text-sm">
-              Agregar, editar o eliminar muestras de grabado laser.
+              Agregar, editar o eliminar muestras de grabado láser.
             </p>
           </div>
         </Link>

@@ -65,7 +65,7 @@ export const LaserEngravingDialog = ({
       logName: 'laser engraving',
       createTitle: 'Agregar nuevo grabado',
       editTitle: 'Editar grabado',
-      description: 'Ingrese todos los detalles del grabado laser',
+      description: 'Ingrese todos los detalles del grabado láser',
       nameLabel: 'Nombre del grabado',
       imageAlt: 'Grabado laser',
       showSlug: true,

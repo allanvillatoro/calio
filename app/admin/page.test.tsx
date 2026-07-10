@@ -37,7 +37,7 @@ describe('AdminPage', () => {
       screen.getByRole('link', { name: /Administrar piezas joyería/ }),
     ).toHaveAttribute('href', '/catalogo');
     expect(
-      screen.getByRole('link', { name: /Administrar grabados laser/ }),
+      screen.getByRole('link', { name: /Administrar grabados láser/ }),
     ).toHaveAttribute('href', '/admin/grabados');
   });
 });

@@ -1,16 +1,16 @@
-# Plan: catalogo de grabados laser
+# Plan: catalogo de grabados láser
 
 ## Objetivo
 
-Agregar un catalogo publico de muestras de grabado laser en Calio. El catalogo debe verse igual que el catalogo actual de joyas, permitir ver el detalle de una muestra, agregarla al carrito y mezclarla con productos de joyeria.
+Agregar un catalogo publico de muestras de grabado láser en Calio. El catalogo debe verse igual que el catalogo actual de joyas, permitir ver el detalle de una muestra, agregarla al carrito y mezclarla con productos de joyeria.
 
-El acceso al catalogo de grabados debe estar solamente en la seccion de grabado laser de la pagina principal, no en el menu/listado de categorias de joyas.
+El acceso al catalogo de grabados debe estar solamente en la seccion de grabado láser de la pagina principal, no en el menu/listado de categorias de joyas.
 
 El catalogo publico de grabados debe titularse: `Explora nuestros grabados`.
 
 ## Decision recomendada
 
-Crear una tabla separada para los grabados laser.
+Crear una tabla separada para los grabados láser.
 
 Motivos:
 
@@ -107,7 +107,7 @@ Esto evita que un producto `123` y un grabado `123` se mezclen en la misma linea
 
 Agregar:
 
-- `/grabados`: catalogo publico de grabados laser.
+- `/grabados`: catalogo publico de grabados láser.
 
 Mantener:
 
@@ -198,7 +198,7 @@ Esto permite que catalogo, carrito y admin trabajen contra contratos comunes sin
 La busqueda por texto y la paginacion deben funcionar en ambos catalogos:
 
 - `/catalogo`: busca y pagina productos de joyeria.
-- `/grabados`: busca y pagina grabados laser.
+- `/grabados`: busca y pagina grabados láser.
 - Ambos deben usar la misma experiencia visual de buscador, grid, empty state, skeleton y controles de paginacion.
 - Los query params compartidos pueden mantenerse consistentes: `query`, `page`, `limit`.
 - Productos puede seguir aceptando `instore`.
@@ -263,7 +263,7 @@ PDF y WhatsApp:
 
 - El PDF puede seguir listando nombre, cantidad, imagen y precio.
 - El mensaje de WhatsApp puede seguir igual, aunque se puede agregar un prefijo opcional en el futuro:
-  - `Grabado laser: Nombre`
+  - `grabado láser: Nombre`
   - `Joya: Nombre`
 
 ## Admin
@@ -272,7 +272,7 @@ Cambios en `/admin`:
 
 - Renombrar la tarjeta actual `Administrar catálogo` a `Administrar piezas joyería`.
 - Mantener esa tarjeta apuntando al admin/catalogo de joyas.
-- Agregar una nueva tarjeta/boton `Administrar grabados laser`.
+- Agregar una nueva tarjeta/boton `Administrar grabados láser`.
 - La administracion de grabados debe estar separada del menu de categorias de joyas.
 - El acceso puede apuntar a `/grabados` cuando hay sesion y modo admin, o a una ruta dedicada como `/admin/grabados`. La opcion mas limpia es `/admin/grabados` si se quiere evitar mezclar administracion con pagina publica.
 
@@ -308,14 +308,14 @@ En `app/page.tsx`, dentro de la seccion `#personalizacion`:
 
 Agregar metadata para `/grabados`:
 
-- Title: `Catalogo de Grabados Laser | CALIO Joyeria`
-- Description: `Explora muestras de grabado laser para personalizar joyas CALIO.`
+- Title: `Catalogo de grabados láser | CALIO Joyeria`
+- Description: `Explora muestras de grabado láser para personalizar joyas CALIO.`
 - Canonical: `${NEXT_PUBLIC_SITE_URL}/grabados`
 
 Para detalle:
 
 - Si el item es producto, conservar keywords actuales.
-- Si es grabado, usar keywords de personalizacion y grabado laser.
+- Si es grabado, usar keywords de personalizacion y grabado láser.
 
 ## Migraciones y datos iniciales
 
@@ -346,7 +346,7 @@ Imagenes:
 7. Agregar boton `Ver muestras de grabado` en la home. Estado: hecho en `6affb6f`.
 8. Actualizar `/productos/[id]` para resolver productos por ID numerico, productos por slug y grabados por slug. Estado: hecho en `51da915`.
 9. Migrar el carrito a claves compuestas y agregar migracion de localStorage. Estado: hecho en `d04fe64`.
-10. Actualizar `/admin`: renombrar `Administrar catálogo` a `Administrar piezas joyería` y agregar `Administrar grabados laser`. Estado: hecho en `dd3c036`.
+10. Actualizar `/admin`: renombrar `Administrar catálogo` a `Administrar piezas joyería` y agregar `Administrar grabados láser`. Estado: hecho en `dd3c036`.
 11. Crear server actions de administracion CRUD de grabados. Estado: hecho en `17e7a4a`.
 12. Crear UI de administracion CRUD de grabados. Estado: hecho en `e2d12a7`.
 13. Reutilizar o extraer `ProductDialog` para que pueda manejar productos y grabados con configuracion. Estado: hecho en `e2d12a7`.
@@ -400,7 +400,7 @@ Unitarias:
 - Migracion del carrito: convierte productos viejos con ID numerico a `product:${id}`.
 - Catalog grid/card: genera links correctos para productos y grabados.
 - Detalle `/productos/[id-or-slug]`: resuelve producto por ID numerico, producto por slug y grabado por slug.
-- Admin: muestra `Administrar piezas joyería` y `Administrar grabados laser`.
+- Admin: muestra `Administrar piezas joyería` y `Administrar grabados láser`.
 - Dialog reusable: muestra categoria para productos y la omite para grabados.
 
 Integracion/manual:
