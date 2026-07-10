@@ -351,7 +351,7 @@ Imagenes:
 12. Crear UI de administracion CRUD de grabados. Estado: hecho en `e2d12a7`.
 13. Reutilizar o extraer `ProductDialog` para que pueda manejar productos y grabados con configuracion. Estado: hecho en `e2d12a7`.
 14. Crear datos iniciales o seed de grabados. Estado: hecho en `8af3163`.
-15. Validar conflictos de slug publico entre joyas y grabados. Estado: en revision en el corte actual.
+15. Validar conflictos de slug publico entre joyas y grabados. Estado: hecho en `f33e78d`.
 16. Ejecutar migracion cuando se confirme el ambiente objetivo. Estado: pendiente.
 17. Ejecutar verificacion final. Estado: pendiente.
 
@@ -366,7 +366,20 @@ Imagenes:
 - `17e7a4a` - Add laser engraving server actions.
 - `e2d12a7` - Add reusable sellable item admin UI.
 - `8af3163` - Add laser engraving seed import.
-- Corte actual sin commit - Validate laser engraving public slug conflicts.
+- `f33e78d` - Validate laser engraving public slug conflicts.
+
+## Migracion e import
+
+La migracion todavia no se ha ejecutado. Antes de correrla hay que confirmar el ambiente objetivo definido por `.env`/`DB_TARGET`.
+
+Orden recomendado para base local o de pruebas:
+
+```bash
+npm run db:migrate
+npm run db:import-laser-engravings
+```
+
+No ejecutar estos comandos contra produccion hasta confirmar datos finales, imagenes definitivas y ventana de despliegue.
 
 ## Pruebas recomendadas
 
