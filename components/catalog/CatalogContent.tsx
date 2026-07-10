@@ -78,7 +78,7 @@ export default function CatalogContent() {
     }
     if (query) return `Resultados para "${query}"`;
     if (inStore) return 'Productos en Tienda Física';
-    return 'Catálogo Completo';
+    return 'Administrar joyería';
   };
 
   return (

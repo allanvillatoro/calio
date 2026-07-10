@@ -329,7 +329,7 @@ describe('CatalogContent', () => {
   it('renders the complete catalog title by default', () => {
     render(<CatalogContent />);
 
-    expect(screen.getByText('Catálogo Completo')).toBeVisible();
+    expect(screen.getByText('Administrar joyería')).toBeVisible();
   });
 
   it('renders the new collection title for the new in category', () => {
