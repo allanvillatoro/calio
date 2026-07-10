@@ -192,4 +192,21 @@ describe('ProductCard', () => {
     expect(onEdit).toHaveBeenCalledWith(product);
     expect(onDelete).toHaveBeenCalledWith(product);
   });
+
+  it('shows sold out instead of stock zero in admin mode', () => {
+    render(
+      <ProductCard
+        product={{
+          ...product,
+          quantity: 0,
+        }}
+        isAdmin
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText('Agotado')).toBeVisible();
+    expect(screen.queryByText('Stock: 0')).not.toBeInTheDocument();
+  });
 });
