@@ -113,5 +113,7 @@ This file is for coding-agent behavior. Use `README.md` for project overview, se
 
 - For code changes, run the narrowest useful checks first, then broader checks when risk warrants it.
 - Prefer `npm run test` for logic changes, `npm run lint` for TypeScript/React edits, and `npm run build` for routing, server/client boundary, or Next.js behavior changes.
+- Run `npm run format` before pushing changes so the branch satisfies the pipeline formatting check.
+- If `npm run format` changes files, review the diff and include those formatting changes in the same commit or in a small follow-up commit before pushing.
 - When the pipeline enforces coverage, run `npm run test:coverage` before finishing feature or refactor work, especially after adding files included by coverage.
-- If a requested change cannot include tests yet, state why, identify the missing coverage, and call out whether `npm run test:coverage` was skipped or fails.
+- If a requested change cannot include tests or formatting yet, state why, identify the missing coverage or formatting risk, and call out whether `npm run test:coverage` or `npm run format` was skipped or fails.
