@@ -107,7 +107,9 @@ export default function ProductCard<
             </div>
             {isAdmin && (
               <span className="mt-0.5 text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
-                {product.quantity === 0 ? 'Agotado' : `Stock: ${product.quantity}`}
+                {product.quantity === 0
+                  ? 'Agotado'
+                  : `Stock: ${product.quantity}`}
               </span>
             )}
           </div>
