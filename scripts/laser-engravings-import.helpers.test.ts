@@ -88,4 +88,15 @@ describe('laser engravings import helpers', () => {
       ]),
     ).toThrow('Invalid laser engraving at index 0');
   });
+
+  it('rejects numeric-only slugs to avoid product detail route ambiguity', () => {
+    expect(() =>
+      assertValidLaserEngravings([
+        {
+          ...laserEngraving,
+          slug: '123',
+        },
+      ]),
+    ).toThrow('Invalid laser engraving slug at index 0');
+  });
 });

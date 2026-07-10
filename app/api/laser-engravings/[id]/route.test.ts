@@ -203,6 +203,31 @@ describe('PUT /api/laser-engravings/[id]', () => {
     expect(laserEngravingsRepository.updateById).not.toHaveBeenCalled();
   });
 
+  it('returns bad request for numeric-only slugs', async () => {
+    const response = await PUT(
+      createPutRequest({
+        ...validLaserEngravingBody,
+        slug: '123',
+      }),
+      createContext(),
+    );
+
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'Validation failed',
+      details: expect.arrayContaining([
+        expect.objectContaining({
+          path: 'slug',
+          message: 'Slug cannot contain only numbers',
+        }),
+      ]),
+    });
+    expect(laserEngravingsRepository.updateById).not.toHaveBeenCalled();
+    expect(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).not.toHaveBeenCalled();
+  });
+
   it('returns conflict when a product already uses the public slug', async () => {
     const conflict = new LaserEngravingConflictError(
       'Ya existe una joya publicada con ese slug',

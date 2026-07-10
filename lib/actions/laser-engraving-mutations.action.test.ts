@@ -172,6 +172,30 @@ describe('createLaserEngravingAction', () => {
     expect(laserEngravingsRepository.save).not.toHaveBeenCalled();
   });
 
+  it('returns validation details when creating with a numeric-only slug', async () => {
+    authenticate();
+
+    const result = await createLaserEngravingAction({
+      ...validLaserEngravingInput,
+      slug: '123',
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('Validation failed');
+    expect(result.details).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: 'slug',
+          message: 'Slug cannot contain only numbers',
+        }),
+      ]),
+    );
+    expect(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).not.toHaveBeenCalled();
+    expect(laserEngravingsRepository.save).not.toHaveBeenCalled();
+  });
+
   it('returns conflict details when the repository rejects a duplicate slug', async () => {
     authenticate();
     const conflict = new LaserEngravingConflictError(
@@ -321,6 +345,30 @@ describe('updateLaserEngravingAction', () => {
 
     expect(result.success).toBe(false);
     expect(result.error).toBe('Validation failed');
+    expect(laserEngravingsRepository.updateById).not.toHaveBeenCalled();
+  });
+
+  it('returns validation details when updating with a numeric-only slug', async () => {
+    authenticate();
+
+    const result = await updateLaserEngravingAction(25, {
+      ...validLaserEngravingInput,
+      slug: '123',
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe('Validation failed');
+    expect(result.details).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: 'slug',
+          message: 'Slug cannot contain only numbers',
+        }),
+      ]),
+    );
+    expect(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).not.toHaveBeenCalled();
     expect(laserEngravingsRepository.updateById).not.toHaveBeenCalled();
   });
 });

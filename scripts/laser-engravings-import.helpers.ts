@@ -1,6 +1,8 @@
 import type { ILaserEngraving } from '@/lib/interfaces/laser-engraving';
 import type { LaserEngravingChanges } from '@/lib/repositories/laser-engravings/laser-engravings-repository.interface';
 
+const LASER_ENGRAVING_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 export type LaserEngravingSeed = Omit<
   ILaserEngraving,
   'createdAt' | 'updatedAt' | 'priceWithDiscount'
@@ -60,6 +62,15 @@ export function assertValidLaserEngravings(
       !Array.isArray(laserEngraving.images)
     ) {
       throw new Error(`Invalid laser engraving at index ${index}`);
+    }
+
+    const slug = laserEngraving.slug.trim();
+
+    if (
+      !LASER_ENGRAVING_SLUG_PATTERN.test(slug) ||
+      /^\d+$/.test(slug)
+    ) {
+      throw new Error(`Invalid laser engraving slug at index ${index}`);
     }
   }
 }

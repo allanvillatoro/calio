@@ -189,6 +189,30 @@ describe('POST /api/laser-engravings', () => {
     expect(laserEngravingsRepository.save).not.toHaveBeenCalled();
   });
 
+  it('returns bad request for numeric-only slugs', async () => {
+    const response = await POST(
+      createPostRequest({
+        ...validLaserEngravingBody,
+        slug: '123',
+      }),
+    );
+
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'Validation failed',
+      details: expect.arrayContaining([
+        expect.objectContaining({
+          path: 'slug',
+          message: 'Slug cannot contain only numbers',
+        }),
+      ]),
+    });
+    expect(laserEngravingsRepository.save).not.toHaveBeenCalled();
+    expect(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).not.toHaveBeenCalled();
+  });
+
   it('returns conflict when the repository rejects a duplicate slug', async () => {
     const conflict = new LaserEngravingConflictError(
       'Ya existe un grabado laser con ese slug',

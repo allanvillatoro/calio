@@ -8,6 +8,9 @@ const slugSchema = z
   .min(1)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
     message: 'Slug must use lowercase letters, numbers, and hyphens',
+  })
+  .refine((slug) => !/^\d+$/.test(slug), {
+    message: 'Slug cannot contain only numbers',
   });
 
 const laserEngravingBodySchema = z.object({

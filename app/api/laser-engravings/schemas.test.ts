@@ -58,6 +58,25 @@ describe('laser engraving body schemas', () => {
     }
   });
 
+  it('rejects numeric-only slugs because product detail routes treat numbers as product ids', () => {
+    const result = createLaserEngravingBodySchema.safeParse({
+      ...validLaserEngravingInput,
+      slug: '123',
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            path: ['slug'],
+            message: 'Slug cannot contain only numbers',
+          }),
+        ]),
+      );
+    }
+  });
+
   it('rejects laser engravings without images', () => {
     const result = createLaserEngravingBodySchema.safeParse({
       ...validLaserEngravingInput,
