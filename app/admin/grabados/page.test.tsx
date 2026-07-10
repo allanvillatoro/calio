@@ -43,8 +43,8 @@ describe('AdminLaserEngravingsPage', () => {
       screen.getByRole('heading', { name: 'Administrar grabados laser' }),
     ).toBeVisible();
     expect(
-      screen.getByRole('link', { name: 'Volver al panel' }),
-    ).toHaveAttribute('href', '/admin');
+      screen.queryByRole('link', { name: 'Volver al panel' }),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByText('Contenido administrativo de grabados'),
     ).toBeVisible();

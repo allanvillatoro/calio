@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { AdminLaserEngravingsContent } from '@/components/admin/AdminLaserEngravingsContent';
 import { getAuthenticatedUserFromCookies } from '@/lib/auth';
@@ -11,25 +10,12 @@ export default async function AdminLaserEngravingsPage() {
   }
 
   return (
-    <div className="container mx-auto px-6 py-16">
-      <div className="mx-auto max-w-3xl">
-        <Link
-          href="/admin"
-          className="text-sm font-medium text-gray-600 hover:text-gray-900"
-        >
-          Volver al panel
-        </Link>
+    <div className="container mx-auto px-4 py-12">
+      <h1 className="text-2xl font-semibold text-center pb-6">
+        Administrar grabados laser
+      </h1>
 
-        <h1 className="serif-title mt-6 text-3xl md:text-4xl">
-          Administrar grabados laser
-        </h1>
-        <p className="mt-3 text-gray-600">
-          Gestiona las muestras de grabado laser que aparecerán en el catálogo
-          público.
-        </p>
-
-        <AdminLaserEngravingsContent />
-      </div>
+      <AdminLaserEngravingsContent />
     </div>
   );
 }
