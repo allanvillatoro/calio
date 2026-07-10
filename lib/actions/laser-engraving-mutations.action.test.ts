@@ -140,9 +140,7 @@ describe('createLaserEngravingAction', () => {
       persistedLaserEngraving,
     );
 
-    const result = await createLaserEngravingAction(
-      validLaserEngravingInput,
-    );
+    const result = await createLaserEngravingAction(validLaserEngravingInput);
 
     expect(uploadProductImagesAction).not.toHaveBeenCalled();
     expect(laserEngravingsRepository.save).toHaveBeenCalledWith(
@@ -188,9 +186,7 @@ describe('createLaserEngravingAction', () => {
     );
     vi.mocked(laserEngravingsRepository.save).mockRejectedValue(conflict);
 
-    const result = await createLaserEngravingAction(
-      validLaserEngravingInput,
-    );
+    const result = await createLaserEngravingAction(validLaserEngravingInput);
 
     expect(result).toEqual({
       success: false,
@@ -215,9 +211,7 @@ describe('createLaserEngravingAction', () => {
       assertLaserEngravingSlugDoesNotConflictWithProduct,
     ).mockRejectedValue(conflict);
 
-    const result = await createLaserEngravingAction(
-      validLaserEngravingInput,
-    );
+    const result = await createLaserEngravingAction(validLaserEngravingInput);
 
     expect(result).toEqual({
       success: false,
@@ -236,9 +230,7 @@ describe('createLaserEngravingAction', () => {
       .spyOn(console, 'error')
       .mockImplementation(() => undefined);
 
-    const result = await createLaserEngravingAction(
-      validLaserEngravingInput,
-    );
+    const result = await createLaserEngravingAction(validLaserEngravingInput);
 
     expect(result).toEqual({
       success: false,

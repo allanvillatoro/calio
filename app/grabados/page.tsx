@@ -4,8 +4,7 @@ import LaserEngravingsCatalogContent from '@/components/catalog/LaserEngravingsC
 
 export const metadata: Metadata = {
   title: 'Catálogo de Grabados Láser | CALIO Joyería',
-  description:
-    'Explora nuestros grabados láser para personalizar joyas CALIO.',
+  description: 'Explora nuestros grabados láser para personalizar joyas CALIO.',
   openGraph: {
     title: 'Grabados Láser | CALIO Joyería',
     description: 'Explora muestras de grabado láser para personalizar joyas',

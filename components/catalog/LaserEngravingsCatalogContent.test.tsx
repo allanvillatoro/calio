@@ -166,9 +166,7 @@ describe('LaserEngravingsCatalogContent', () => {
     });
     expect(screen.getByText('Resultados para "Fecha"')).toBeVisible();
     expect(
-      screen.getByText(
-        'Nombre y fecha:laser-engraving:grabado-nombre-fecha',
-      ),
+      screen.getByText('Nombre y fecha:laser-engraving:grabado-nombre-fecha'),
     ).toBeVisible();
   });
 

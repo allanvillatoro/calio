@@ -24,9 +24,7 @@ import {
   requireLaserEngravingField,
 } from './drizzle-laser-engravings-repository.helpers';
 
-export class DrizzleLaserEngravingsRepository
-  implements ILaserEngravingsRepository
-{
+export class DrizzleLaserEngravingsRepository implements ILaserEngravingsRepository {
   constructor(private readonly database: AppDb) {}
 
   async save(input: LaserEngravingChanges): Promise<ILaserEngraving> {

@@ -31,9 +31,8 @@ describe('laser engraving body schemas', () => {
     };
     delete inputWithoutDiscount.discount;
 
-    const result = createLaserEngravingBodySchema.safeParse(
-      inputWithoutDiscount,
-    );
+    const result =
+      createLaserEngravingBodySchema.safeParse(inputWithoutDiscount);
 
     expect(result.success).toBe(true);
     if (result.success) {

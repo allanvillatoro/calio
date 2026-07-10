@@ -37,7 +37,10 @@ interface SellableItemDialogConfig {
   emptyItem: SellableItemFormItem;
   queryKey: unknown[];
   formFields: Array<keyof SellableItemFormValues>;
-  validateDiscount: (value: number, selectedCategory?: Category) => true | string;
+  validateDiscount: (
+    value: number,
+    selectedCategory?: Category,
+  ) => true | string;
   submitItem: (
     id: number | undefined,
     values: SellableItemFormValues & { files?: File[] },

@@ -110,12 +110,9 @@ export async function createLaserEngravingAction(
     }
 
     const laserEngravingData = await mergeUploadedImages(input);
-    const parsedBody = createLaserEngravingBodySchema.parse(
-      laserEngravingData,
-    );
+    const parsedBody = createLaserEngravingBodySchema.parse(laserEngravingData);
     await assertLaserEngravingSlugDoesNotConflictWithProduct(parsedBody.slug);
-    const laserEngraving =
-      await laserEngravingsRepository.save(parsedBody);
+    const laserEngraving = await laserEngravingsRepository.save(parsedBody);
 
     revalidateLaserEngravingPaths(laserEngraving);
 
@@ -153,12 +150,12 @@ export async function updateLaserEngravingAction(
 
     const validatedId = laserEngravingIdParamsSchema.parse({ id }).id;
     const laserEngravingData = await mergeUploadedImages(input);
-    const parsedBody = updateLaserEngravingBodySchema.parse(
-      laserEngravingData,
-    );
+    const parsedBody = updateLaserEngravingBodySchema.parse(laserEngravingData);
     await assertLaserEngravingSlugDoesNotConflictWithProduct(parsedBody.slug);
-    const laserEngraving =
-      await laserEngravingsRepository.updateById(validatedId, parsedBody);
+    const laserEngraving = await laserEngravingsRepository.updateById(
+      validatedId,
+      parsedBody,
+    );
 
     if (!laserEngraving) {
       return {
@@ -211,8 +208,7 @@ export async function deleteLaserEngravingAction(
       };
     }
 
-    const deleted =
-      await laserEngravingsRepository.deleteById(validatedId);
+    const deleted = await laserEngravingsRepository.deleteById(validatedId);
 
     if (!deleted) {
       return {
@@ -236,10 +232,7 @@ export async function deleteLaserEngravingAction(
       };
     }
 
-    console.error(
-      'Failed to delete laser engraving from server action',
-      error,
-    );
+    console.error('Failed to delete laser engraving from server action', error);
 
     return {
       success: false,

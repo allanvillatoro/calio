@@ -24,10 +24,9 @@ export const laserEngravingIdParamsSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
 
-export const createLaserEngravingBodySchema =
-  laserEngravingBodySchema.extend({
-    id: z.number().int().positive().optional(),
-  });
+export const createLaserEngravingBodySchema = laserEngravingBodySchema.extend({
+  id: z.number().int().positive().optional(),
+});
 
 export const updateLaserEngravingBodySchema = laserEngravingBodySchema;
 

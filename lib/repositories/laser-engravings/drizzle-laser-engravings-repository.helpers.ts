@@ -58,16 +58,15 @@ export function buildLaserEngravingsWhereClause(
 ) {
   const conditions: SQL[] = [
     filters.includeOutOfStock ? undefined : gte(laserEngravings.quantity, 1),
-    filters.query ? ilike(laserEngravings.name, `%${filters.query}%`) : undefined,
+    filters.query
+      ? ilike(laserEngravings.name, `%${filters.query}%`)
+      : undefined,
   ].filter(isSqlCondition);
 
   return conditions.length > 0 ? and(...conditions) : undefined;
 }
 
-export async function countLaserEngravingsWithDb(
-  db: AppDb,
-  whereClause?: SQL,
-) {
+export async function countLaserEngravingsWithDb(db: AppDb, whereClause?: SQL) {
   const [{ totalItems }] = whereClause
     ? await db
         .select({ totalItems: count() })

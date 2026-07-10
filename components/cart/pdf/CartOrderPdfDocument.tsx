@@ -49,10 +49,7 @@ export function CartOrderPdfDocument({
             <View style={styles.info}>
               <View style={styles.itemHeader}>
                 <Link
-                  src={getProductUrl(
-                    siteUrl,
-                    product.slug || product.sourceId,
-                  )}
+                  src={getProductUrl(siteUrl, product.slug || product.sourceId)}
                   style={styles.name}
                 >
                   {product.name}

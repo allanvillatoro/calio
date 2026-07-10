@@ -25,7 +25,8 @@ const ADD_TO_CART_ACTION_STYLES = cn(
 type ProductCardItem = Product | CatalogItem;
 
 function getProductHref(product: ProductCardItem) {
-  const publicId = product.slug || ('sourceId' in product ? product.sourceId : product.id);
+  const publicId =
+    product.slug || ('sourceId' in product ? product.sourceId : product.id);
 
   return `/productos/${publicId}`;
 }
@@ -38,7 +39,9 @@ interface ProductCardProps<TProduct extends ProductCardItem = Product> {
   enableCartAction?: boolean;
 }
 
-export default function ProductCard<TProduct extends ProductCardItem = Product>({
+export default function ProductCard<
+  TProduct extends ProductCardItem = Product,
+>({
   product,
   isAdmin,
   onEdit,

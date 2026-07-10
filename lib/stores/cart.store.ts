@@ -142,7 +142,8 @@ export const useCartStore = create<CartStoreState>()(
         get().incrementItem(getProductCartId(productId)),
       decrementProduct: (productId) =>
         get().decrementItem(getProductCartId(productId)),
-      removeProduct: (productId) => get().removeItem(getProductCartId(productId)),
+      removeProduct: (productId) =>
+        get().removeItem(getProductCartId(productId)),
       clearCart: () => {
         set({ items: [] });
       },

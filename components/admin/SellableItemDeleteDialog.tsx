@@ -22,7 +22,9 @@ interface SellableItemDeleteResult {
   error?: string;
 }
 
-interface SellableItemDeleteDialogProps<TItem extends SellableItemDeleteTarget> {
+interface SellableItemDeleteDialogProps<
+  TItem extends SellableItemDeleteTarget,
+> {
   item: TItem | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;

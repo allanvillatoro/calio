@@ -156,9 +156,7 @@ describe('POST /api/laser-engravings', () => {
   });
 
   it('creates a laser engraving from a valid request body', async () => {
-    vi.mocked(laserEngravingsRepository.save).mockResolvedValue(
-      laserEngraving,
-    );
+    vi.mocked(laserEngravingsRepository.save).mockResolvedValue(laserEngraving);
 
     const response = await POST(createPostRequest(validLaserEngravingBody));
 

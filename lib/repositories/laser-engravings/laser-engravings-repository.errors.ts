@@ -1,8 +1,7 @@
 import { LaserEngravingConflictError } from '@/lib/errors';
 
 const POSTGRES_UNIQUE_VIOLATION_CODE = '23505';
-const LASER_ENGRAVING_SLUG_UNIQUE_CONSTRAINT =
-  'laser_engravings_slug_unique';
+const LASER_ENGRAVING_SLUG_UNIQUE_CONSTRAINT = 'laser_engravings_slug_unique';
 const LASER_ENGRAVING_SLUG_UNIQUE_MESSAGE =
   'Ya existe un grabado laser con ese slug';
 
@@ -28,9 +27,7 @@ function getDatabaseErrorCandidates(error: unknown): DatabaseError[] {
   );
 }
 
-export function isLaserEngravingSlugUniqueViolation(
-  error: unknown,
-): boolean {
+export function isLaserEngravingSlugUniqueViolation(error: unknown): boolean {
   return getDatabaseErrorCandidates(error).some(
     (candidate) =>
       candidate.code === POSTGRES_UNIQUE_VIOLATION_CODE &&

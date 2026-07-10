@@ -82,9 +82,7 @@ vi.mock('@/components/admin/LaserEngravingDeleteDialog', () => ({
     laserEngraving: { name: string } | null;
     open: boolean;
   }) => (
-    <div>
-      {open ? `Eliminar ${laserEngraving?.name || 'grabado'}` : null}
-    </div>
+    <div>{open ? `Eliminar ${laserEngraving?.name || 'grabado'}` : null}</div>
   ),
 }));
 
@@ -149,7 +147,9 @@ describe('AdminLaserEngravingsContent', () => {
     fireEvent.click(screen.getByRole('button', { name: /Agregar/ }));
     expect(screen.getByText('Dialogo nuevo grabado')).toBeVisible();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Editar Placa corazon' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Editar Placa corazon' }),
+    );
     expect(screen.getByText('Dialogo Placa corazon')).toBeVisible();
 
     fireEvent.click(

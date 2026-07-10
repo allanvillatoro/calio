@@ -7,9 +7,7 @@
     "price": 180,
     "discount": 0,
     "quantity": 12,
-    "images": [
-      "grabado-laser-placa-corazon-placeholder.webp"
-    ]
+    "images": ["grabado-laser-placa-corazon-placeholder.webp"]
   },
   {
     "id": 1002,
@@ -19,9 +17,7 @@
     "price": 220,
     "discount": 0,
     "quantity": 10,
-    "images": [
-      "grabado-laser-barra-nombre-placeholder.webp"
-    ]
+    "images": ["grabado-laser-barra-nombre-placeholder.webp"]
   },
   {
     "id": 1003,
@@ -31,9 +27,7 @@
     "price": 200,
     "discount": 0,
     "quantity": 8,
-    "images": [
-      "grabado-laser-medalla-mensaje-placeholder.webp"
-    ]
+    "images": ["grabado-laser-medalla-mensaje-placeholder.webp"]
   },
   {
     "id": 1004,
@@ -43,8 +37,6 @@
     "price": 240,
     "discount": 0,
     "quantity": 6,
-    "images": [
-      "grabado-laser-dije-huella-placeholder.webp"
-    ]
+    "images": ["grabado-laser-dije-huella-placeholder.webp"]
   }
 ]

@@ -176,10 +176,14 @@ export function useSellableItemDialogForm({
       return;
     }
 
-    setValue('discount', item?.discount && item.discount > 0 ? item.discount : 0, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
+    setValue(
+      'discount',
+      item?.discount && item.discount > 0 ? item.discount : 0,
+      {
+        shouldDirty: true,
+        shouldValidate: true,
+      },
+    );
   };
 
   const handleDiscountChange = () => {
@@ -255,7 +259,10 @@ export function useSellableItemDialogForm({
           `${itemNameCapitalized} ${values.name} creado correctamente`,
         );
       } catch (error) {
-        console.error(`Unexpected error while submitting ${logName} form`, error);
+        console.error(
+          `Unexpected error while submitting ${logName} form`,
+          error,
+        );
         setSubmitError(`Ocurrió un error inesperado al guardar el ${itemName}`);
         toast.error(`Ocurrió un error inesperado al guardar el ${itemName}`);
       }
