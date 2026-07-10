@@ -9,6 +9,7 @@ import {
   laserEngravingsQuerySchema,
 } from './schemas';
 import { laserEngravingsRepository } from '@/lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
+import { assertLaserEngravingSlugDoesNotConflictWithProduct } from '@/lib/slug-conflicts';
 
 export async function GET(request: Request) {
   try {
@@ -46,6 +47,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = createLaserEngravingBodySchema.parse(await request.json());
+    await assertLaserEngravingSlugDoesNotConflictWithProduct(body.slug);
     const laserEngraving = await laserEngravingsRepository.save(body);
 
     return NextResponse.json(laserEngraving, { status: StatusCodes.CREATED });

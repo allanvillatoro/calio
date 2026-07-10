@@ -4,6 +4,7 @@ import { getAuthenticatedUserFromCookies } from '@/lib/auth';
 import { LaserEngravingConflictError } from '@/lib/errors';
 import type { ILaserEngraving } from '@/lib/interfaces/laser-engraving';
 import { laserEngravingsRepository } from '@/lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
+import { assertLaserEngravingSlugDoesNotConflictWithProduct } from '@/lib/slug-conflicts';
 import { GET, POST } from './route';
 
 vi.mock('@/lib/auth', () => ({
@@ -19,6 +20,10 @@ vi.mock(
     },
   }),
 );
+
+vi.mock('@/lib/slug-conflicts', () => ({
+  assertLaserEngravingSlugDoesNotConflictWithProduct: vi.fn(),
+}));
 
 const laserEngraving: ILaserEngraving = {
   id: 12,
@@ -145,6 +150,9 @@ describe('GET /api/laser-engravings', () => {
 describe('POST /api/laser-engravings', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).mockResolvedValue(undefined);
   });
 
   it('creates a laser engraving from a valid request body', async () => {
@@ -160,6 +168,9 @@ describe('POST /api/laser-engravings', () => {
       createdAt: laserEngraving.createdAt.toISOString(),
       updatedAt: laserEngraving.updatedAt.toISOString(),
     });
+    expect(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).toHaveBeenCalledWith('grabado-nombre-fecha');
     expect(laserEngravingsRepository.save).toHaveBeenCalledWith(
       validLaserEngravingBody,
     );
@@ -200,5 +211,30 @@ describe('POST /api/laser-engravings', () => {
       error: conflict.message,
       details: conflict.details,
     });
+  });
+
+  it('returns conflict when a product already uses the public slug', async () => {
+    const conflict = new LaserEngravingConflictError(
+      'Ya existe una joya publicada con ese slug',
+      'PUBLIC_SLUG_ALREADY_EXISTS',
+      [
+        {
+          path: 'slug',
+          message: 'Ya existe una joya publicada con ese slug',
+        },
+      ],
+    );
+    vi.mocked(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).mockRejectedValue(conflict);
+
+    const response = await POST(createPostRequest(validLaserEngravingBody));
+
+    expect(response.status).toBe(StatusCodes.CONFLICT);
+    await expect(response.json()).resolves.toEqual({
+      error: conflict.message,
+      details: conflict.details,
+    });
+    expect(laserEngravingsRepository.save).not.toHaveBeenCalled();
   });
 });

@@ -13,6 +13,7 @@ import { LaserEngravingConflictError } from '@/lib/errors';
 import type { ILaserEngraving } from '@/lib/interfaces/laser-engraving';
 import { laserEngravingsRepository } from '@/lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
 import type { LaserEngravingChanges } from '@/lib/repositories/laser-engravings/laser-engravings-repository.interface';
+import { assertLaserEngravingSlugDoesNotConflictWithProduct } from '@/lib/slug-conflicts';
 import { formatZodError } from '@/lib/zod';
 
 interface LaserEngravingMutationErrorDetail {
@@ -112,6 +113,7 @@ export async function createLaserEngravingAction(
     const parsedBody = createLaserEngravingBodySchema.parse(
       laserEngravingData,
     );
+    await assertLaserEngravingSlugDoesNotConflictWithProduct(parsedBody.slug);
     const laserEngraving =
       await laserEngravingsRepository.save(parsedBody);
 
@@ -154,6 +156,7 @@ export async function updateLaserEngravingAction(
     const parsedBody = updateLaserEngravingBodySchema.parse(
       laserEngravingData,
     );
+    await assertLaserEngravingSlugDoesNotConflictWithProduct(parsedBody.slug);
     const laserEngraving =
       await laserEngravingsRepository.updateById(validatedId, parsedBody);
 

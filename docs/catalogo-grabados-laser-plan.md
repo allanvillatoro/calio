@@ -350,9 +350,10 @@ Imagenes:
 11. Crear server actions de administracion CRUD de grabados. Estado: hecho en `17e7a4a`.
 12. Crear UI de administracion CRUD de grabados. Estado: hecho en `e2d12a7`.
 13. Reutilizar o extraer `ProductDialog` para que pueda manejar productos y grabados con configuracion. Estado: hecho en `e2d12a7`.
-14. Crear datos iniciales o seed de grabados. Estado: en revision en el corte actual.
-15. Ejecutar migracion cuando se confirme el ambiente objetivo. Estado: pendiente.
-16. Ejecutar verificacion final. Estado: pendiente.
+14. Crear datos iniciales o seed de grabados. Estado: hecho en `8af3163`.
+15. Validar conflictos de slug publico entre joyas y grabados. Estado: en revision en el corte actual.
+16. Ejecutar migracion cuando se confirme el ambiente objetivo. Estado: pendiente.
+17. Ejecutar verificacion final. Estado: pendiente.
 
 ## Bitacora de commits
 
@@ -364,7 +365,8 @@ Imagenes:
 - `dd3c036` - Add laser engraving admin entry point.
 - `17e7a4a` - Add laser engraving server actions.
 - `e2d12a7` - Add reusable sellable item admin UI.
-- Corte actual sin commit - Add laser engraving seed import.
+- `8af3163` - Add laser engraving seed import.
+- Corte actual sin commit - Validate laser engraving public slug conflicts.
 
 ## Pruebas recomendadas
 
@@ -406,7 +408,7 @@ npm run build
 ## Riesgos y decisiones abiertas
 
 - Slugs de productos: decidir si se agregan a productos en esta misma version. Los enlaces por ID numerico de productos deben mantenerse de forma permanente.
-- Conflictos de slug: si productos y grabados comparten `/productos/[id-or-slug]`, se necesita una validacion cruzada para evitar slugs repetidos.
+- Conflictos de slug: los grabados ya validan que su slug no exista en productos antes de guardar. Si se habilita edicion de slugs para joyas en admin, aplicar la misma regla en sentido inverso.
 - Ruta admin de grabados: decidir entre `/admin/grabados` o reutilizar `/grabados` en modo admin. Recomendacion: `/admin/grabados`.
 
 ## Recomendacion final

@@ -8,6 +8,7 @@ import {
   updateLaserEngravingBodySchema,
 } from '../schemas';
 import { laserEngravingsRepository } from '@/lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
+import { assertLaserEngravingSlugDoesNotConflictWithProduct } from '@/lib/slug-conflicts';
 
 interface LaserEngravingRouteContext {
   params: Promise<{
@@ -62,6 +63,7 @@ export async function PUT(
   try {
     const id = await getValidatedLaserEngravingId(context);
     const body = updateLaserEngravingBodySchema.parse(await request.json());
+    await assertLaserEngravingSlugDoesNotConflictWithProduct(body.slug);
     const laserEngraving = await laserEngravingsRepository.updateById(id, body);
 
     if (!laserEngraving) {

@@ -6,6 +6,7 @@ import { LaserEngravingConflictError } from '@/lib/errors';
 import type { ILaserEngraving } from '@/lib/interfaces/laser-engraving';
 import { laserEngravingsRepository } from '@/lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
 import type { LaserEngravingChanges } from '@/lib/repositories/laser-engravings/laser-engravings-repository.interface';
+import { assertLaserEngravingSlugDoesNotConflictWithProduct } from '@/lib/slug-conflicts';
 import {
   createLaserEngravingAction,
   deleteLaserEngravingAction,
@@ -35,6 +36,10 @@ vi.mock(
     },
   }),
 );
+
+vi.mock('@/lib/slug-conflicts', () => ({
+  assertLaserEngravingSlugDoesNotConflictWithProduct: vi.fn(),
+}));
 
 const authenticatedUser = {
   id: 'user-1',
@@ -80,6 +85,9 @@ function createImageFile(name: string) {
 describe('createLaserEngravingAction', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).mockResolvedValue(undefined);
   });
 
   it('returns unauthorized when no authenticated user exists', async () => {
@@ -110,6 +118,9 @@ describe('createLaserEngravingAction', () => {
     });
 
     expect(uploadProductImagesAction).toHaveBeenCalledWith(files);
+    expect(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).toHaveBeenCalledWith('placa-corazon');
     expect(laserEngravingsRepository.save).toHaveBeenCalledWith({
       ...validLaserEngravingInput,
       images: ['placa-corazon.jpg', 'uploaded.jpg'],
@@ -188,6 +199,34 @@ describe('createLaserEngravingAction', () => {
     });
   });
 
+  it('returns conflict details when a product already uses the public slug', async () => {
+    authenticate();
+    const conflict = new LaserEngravingConflictError(
+      'Ya existe una joya publicada con ese slug',
+      'PUBLIC_SLUG_ALREADY_EXISTS',
+      [
+        {
+          path: 'slug',
+          message: 'Ya existe una joya publicada con ese slug',
+        },
+      ],
+    );
+    vi.mocked(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).mockRejectedValue(conflict);
+
+    const result = await createLaserEngravingAction(
+      validLaserEngravingInput,
+    );
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Ya existe una joya publicada con ese slug',
+      details: conflict.details,
+    });
+    expect(laserEngravingsRepository.save).not.toHaveBeenCalled();
+  });
+
   it('returns a generic create error when saving fails unexpectedly', async () => {
     authenticate();
     vi.mocked(laserEngravingsRepository.save).mockRejectedValue(
@@ -217,6 +256,9 @@ describe('createLaserEngravingAction', () => {
 describe('updateLaserEngravingAction', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).mockResolvedValue(undefined);
   });
 
   it('returns unauthorized when no authenticated user exists', async () => {
@@ -249,6 +291,9 @@ describe('updateLaserEngravingAction', () => {
       25,
       validLaserEngravingInput,
     );
+    expect(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).toHaveBeenCalledWith('placa-corazon');
     expect(revalidatePath).toHaveBeenCalledWith('/grabados');
     expect(revalidatePath).toHaveBeenCalledWith('/admin/grabados');
     expect(revalidatePath).toHaveBeenCalledWith('/productos/placa-corazon');
@@ -291,6 +336,9 @@ describe('updateLaserEngravingAction', () => {
 describe('deleteLaserEngravingAction', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(
+      assertLaserEngravingSlugDoesNotConflictWithProduct,
+    ).mockResolvedValue(undefined);
   });
 
   it('returns unauthorized when no authenticated user exists', async () => {
