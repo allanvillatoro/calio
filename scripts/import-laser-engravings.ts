@@ -1,7 +1,11 @@
 import 'dotenv/config';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { laserEngravingsRepository } from '../lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
+import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
+import { getDatabaseUrl } from '../db/config';
+import { laserEngravings as laserEngravingsTable } from '../db/schema';
 import {
   assertValidLaserEngravings,
   compareLaserEngravings,
@@ -14,6 +18,10 @@ const DATA_FILE_PATH = path.resolve(
   'scripts/laser-engravings-data.json',
 );
 const INSERT_DELAY_MS = 500;
+const pool = new Pool({
+  connectionString: getDatabaseUrl(),
+});
+const db = drizzle({ client: pool });
 
 async function sleep(milliseconds: number): Promise<void> {
   await new Promise((resolve) => {
@@ -46,9 +54,11 @@ async function importLaserEngravings(
 
   for (let index = 0; index < laserEngravings.length; index += 1) {
     const laserEngraving = laserEngravings[index];
-    const existingLaserEngraving = await laserEngravingsRepository.findById(
-      laserEngraving.id,
-    );
+    const [existingLaserEngraving] = await db
+      .select({ id: laserEngravingsTable.id })
+      .from(laserEngravingsTable)
+      .where(eq(laserEngravingsTable.id, laserEngraving.id))
+      .limit(1);
 
     if (existingLaserEngraving) {
       skippedCount += 1;
@@ -58,9 +68,25 @@ async function importLaserEngravings(
       continue;
     }
 
-    const savedLaserEngraving = await laserEngravingsRepository.save(
-      normalizeLaserEngraving(laserEngraving),
-    );
+    const normalizedLaserEngraving = normalizeLaserEngraving(laserEngraving);
+    const [savedLaserEngraving] = await db
+      .insert(laserEngravingsTable)
+      .values({
+        id: normalizedLaserEngraving.id,
+        slug: normalizedLaserEngraving.slug,
+        name: normalizedLaserEngraving.name,
+        description: normalizedLaserEngraving.description,
+        price: normalizedLaserEngraving.price,
+        discount: normalizedLaserEngraving.discount ?? 0,
+        quantity: normalizedLaserEngraving.quantity,
+        images: normalizedLaserEngraving.images,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning({
+        id: laserEngravingsTable.id,
+        name: laserEngravingsTable.name,
+      });
     insertedCount += 1;
     console.log(
       `Inserted laser engraving ${savedLaserEngraving.id}: ${savedLaserEngraving.name}`,
@@ -87,8 +113,12 @@ async function main(): Promise<void> {
   await importLaserEngravings(sortedLaserEngravings);
 }
 
-main().catch((error: unknown) => {
-  console.error('Failed to import laser engravings.');
-  console.error(error);
-  process.exit(1);
-});
+main()
+  .catch((error: unknown) => {
+    console.error('Failed to import laser engravings.');
+    console.error(error);
+    process.exitCode = 1;
+  })
+  .finally(async () => {
+    await pool.end();
+  });

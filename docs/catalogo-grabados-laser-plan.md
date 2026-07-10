@@ -352,8 +352,9 @@ Imagenes:
 13. Reutilizar o extraer `ProductDialog` para que pueda manejar productos y grabados con configuracion. Estado: hecho en `e2d12a7`.
 14. Crear datos iniciales o seed de grabados. Estado: hecho en `8af3163`.
 15. Validar conflictos de slug publico entre joyas y grabados. Estado: hecho en `f33e78d`.
-16. Ejecutar migracion cuando se confirme el ambiente objetivo. Estado: pendiente.
-17. Ejecutar verificacion final. Estado: pendiente.
+16. Ejecutar migracion cuando se confirme el ambiente objetivo. Estado: hecho en testing.
+17. Ejecutar import seed de grabados. Estado: hecho en testing.
+18. Ejecutar verificacion final. Estado: pendiente.
 
 ## Bitacora de commits
 
@@ -370,14 +371,21 @@ Imagenes:
 
 ## Migracion e import
 
-La migracion todavia no se ha ejecutado. Antes de correrla hay que confirmar el ambiente objetivo definido por `.env`/`DB_TARGET`.
+La migracion e import ya se ejecutaron en el ambiente `testing`, que es el default cuando `DB_TARGET` no esta definido.
 
-Orden recomendado para base local o de pruebas:
+Comandos ejecutados contra testing:
 
 ```bash
 npm run db:migrate
 npm run db:import-laser-engravings
 ```
+
+Resultado:
+
+- Migracion `0002_lumpy_guardian.sql` aplicada y registrada.
+- `laser_engravings` creado.
+- `products.slug` creado.
+- 4 grabados seed importados.
 
 No ejecutar estos comandos contra produccion hasta confirmar datos finales, imagenes definitivas y ventana de despliegue.
 
