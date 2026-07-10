@@ -49,6 +49,8 @@ vi.mock('@/components/catalog/ProductsGrid', () => ({
     isAdmin,
     enableCartAction,
     onPageChange,
+    onEdit,
+    onDelete,
   }: {
     products: CatalogItem[];
     totalProducts: number;
@@ -58,6 +60,8 @@ vi.mock('@/components/catalog/ProductsGrid', () => ({
     isAdmin: boolean;
     enableCartAction?: boolean;
     onPageChange: (page: number) => void;
+    onEdit: (product?: CatalogItem) => void;
+    onDelete: (product?: CatalogItem) => void;
   }) => (
     <div>
       <span>grid-loading:{String(isLoading)}</span>
@@ -74,6 +78,12 @@ vi.mock('@/components/catalog/ProductsGrid', () => ({
       ))}
       <button type="button" onClick={() => onPageChange(2)}>
         Ir página 2
+      </button>
+      <button type="button" onClick={() => onEdit(products[0])}>
+        Editar primer grabado
+      </button>
+      <button type="button" onClick={() => onDelete(products[0])}>
+        Eliminar primer grabado
       </button>
     </div>
   ),
@@ -198,6 +208,12 @@ describe('LaserEngravingsCatalogContent', () => {
     expect(screen.getByText('grid-admin:false')).toBeVisible();
     expect(screen.getByText('grid-cart:true')).toBeVisible();
     fireEvent.click(screen.getByRole('button', { name: 'Ir página 2' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Editar primer grabado' }),
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Eliminar primer grabado' }),
+    );
 
     expect(onPageChange).toHaveBeenCalledWith(2);
   });

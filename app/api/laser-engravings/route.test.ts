@@ -145,6 +145,29 @@ describe('GET /api/laser-engravings', () => {
     });
     expect(laserEngravingsRepository.findAll).not.toHaveBeenCalled();
   });
+
+  it('returns internal server error when fetching laser engravings fails', async () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    vi.mocked(getAuthenticatedUserFromCookies).mockResolvedValue(null);
+    vi.mocked(laserEngravingsRepository.findAll).mockRejectedValue(
+      new Error('database failed'),
+    );
+
+    const response = await GET(createGetRequest());
+
+    expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
+    await expect(response.json()).resolves.toEqual({
+      error: 'Failed to fetch laser engravings',
+    });
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to fetch laser engravings',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
+  });
 });
 
 describe('POST /api/laser-engravings', () => {
@@ -258,5 +281,27 @@ describe('POST /api/laser-engravings', () => {
       details: conflict.details,
     });
     expect(laserEngravingsRepository.save).not.toHaveBeenCalled();
+  });
+
+  it('returns internal server error when creating a laser engraving fails unexpectedly', async () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    vi.mocked(laserEngravingsRepository.save).mockRejectedValue(
+      new Error('database failed'),
+    );
+
+    const response = await POST(createPostRequest(validLaserEngravingBody));
+
+    expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
+    await expect(response.json()).resolves.toEqual({
+      error: 'Failed to create laser engraving',
+    });
+    expect(consoleError).toHaveBeenCalledWith(
+      'Failed to create laser engraving',
+      expect.any(Error),
+    );
+
+    consoleError.mockRestore();
   });
 });

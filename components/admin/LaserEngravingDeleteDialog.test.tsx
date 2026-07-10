@@ -126,4 +126,53 @@ describe('LaserEngravingDeleteDialog', () => {
     );
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
+
+  it('shows action errors without closing the dialog', async () => {
+    const onOpenChange = vi.fn();
+    vi.mocked(deleteLaserEngravingAction).mockResolvedValue({
+      success: false,
+      error: 'No se pudo eliminar el grabado',
+    });
+
+    render(
+      <LaserEngravingDeleteDialog
+        laserEngraving={laserEngraving}
+        open
+        onOpenChange={onOpenChange}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Eliminar' }));
+
+    await waitFor(() => {
+      expect(deleteLaserEngravingAction).toHaveBeenCalledWith(
+        laserEngraving.id,
+      );
+    });
+    expect(toast.error).toHaveBeenCalledWith('No se pudo eliminar el grabado');
+    expect(invalidateQueries).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it('shows the fallback action error when delete fails without a message', async () => {
+    vi.mocked(deleteLaserEngravingAction).mockResolvedValue({
+      success: false,
+    });
+
+    render(
+      <LaserEngravingDeleteDialog
+        laserEngraving={laserEngraving}
+        open
+        onOpenChange={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Eliminar' }));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        'No se pudo eliminar el grabado',
+      );
+    });
+  });
 });
