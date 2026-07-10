@@ -69,24 +69,39 @@ async function importLaserEngravings(
     }
 
     const normalizedLaserEngraving = normalizeLaserEngraving(laserEngraving);
-    const [savedLaserEngraving] = await db
-      .insert(laserEngravingsTable)
-      .values({
-        id: normalizedLaserEngraving.id,
-        slug: normalizedLaserEngraving.slug,
-        name: normalizedLaserEngraving.name,
-        description: normalizedLaserEngraving.description,
-        price: normalizedLaserEngraving.price,
-        discount: normalizedLaserEngraving.discount ?? 0,
-        quantity: normalizedLaserEngraving.quantity,
-        images: normalizedLaserEngraving.images,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-      .returning({
-        id: laserEngravingsTable.id,
-        name: laserEngravingsTable.name,
-      });
+    const {
+      rows: [savedLaserEngraving],
+    } = await pool.query<{ id: number; name: string }>(
+      `
+        insert into laser_engravings (
+          id,
+          slug,
+          name,
+          description,
+          price,
+          discount,
+          quantity,
+          images,
+          created_at,
+          updated_at
+        )
+        overriding system value
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        returning id, name
+      `,
+      [
+        normalizedLaserEngraving.id,
+        normalizedLaserEngraving.slug,
+        normalizedLaserEngraving.name,
+        normalizedLaserEngraving.description,
+        normalizedLaserEngraving.price,
+        normalizedLaserEngraving.discount ?? 0,
+        normalizedLaserEngraving.quantity,
+        JSON.stringify(normalizedLaserEngraving.images),
+        new Date(),
+        new Date(),
+      ],
+    );
     insertedCount += 1;
     console.log(
       `Inserted laser engraving ${savedLaserEngraving.id}: ${savedLaserEngraving.name}`,

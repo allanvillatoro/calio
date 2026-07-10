@@ -111,12 +111,14 @@ export function AdminLaserEngravingsContent() {
         isLoading={isLoading}
         onPageChange={onPageChange}
         isAdmin
-        onEdit={(item) =>
-          setEditingLaserEngraving(mapCatalogItemToLaserEngraving(item))
-        }
-        onDelete={(item) =>
-          setDeletingLaserEngraving(mapCatalogItemToLaserEngraving(item))
-        }
+        onEdit={(item) => {
+          if (!item) return;
+          setEditingLaserEngraving(mapCatalogItemToLaserEngraving(item));
+        }}
+        onDelete={(item) => {
+          if (!item) return;
+          setDeletingLaserEngraving(mapCatalogItemToLaserEngraving(item));
+        }}
         enableCartAction={false}
       />
 

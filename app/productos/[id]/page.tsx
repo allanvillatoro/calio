@@ -94,7 +94,12 @@ function getCartItem(detailItem: ProductDetailItem): CartInputItem {
     void createdAt;
     void updatedAt;
 
-    return productForCart;
+    return {
+      ...productForCart,
+      cartId: `product:${detailItem.item.id}`,
+      sourceId: String(detailItem.item.id),
+      kind: 'product',
+    };
   }
 
   const { createdAt, updatedAt, ...laserEngravingForCart } = detailItem.item;
