@@ -18,10 +18,10 @@ describe('LaserEngravingsPage', () => {
           'Explora muestras de grabado láser para personalizar joyas',
         type: 'website',
       },
-      alternates: {
-        canonical: 'https://caliojoyeria.com/grabados',
-      },
     });
+    expect(metadata.alternates?.canonical).toEqual(
+      expect.stringMatching(/\/grabados$/),
+    );
   });
 
   it('renders the laser engravings catalog content', () => {

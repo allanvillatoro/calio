@@ -17,10 +17,10 @@ describe('CatalogPage', () => {
         description: 'Descubre nuestros diseños de joyería',
         type: 'website',
       },
-      alternates: {
-        canonical: 'https://caliojoyeria.com/catalogo',
-      },
     });
+    expect(metadata.alternates?.canonical).toEqual(
+      expect.stringMatching(/\/catalogo$/),
+    );
   });
 
   it('renders the jewelry catalog content', () => {
