@@ -37,7 +37,6 @@ type LaserEngravingMutationInput = LaserEngravingChanges & { files?: File[] };
 
 function revalidateLaserEngravingPaths(laserEngraving: ILaserEngraving) {
   revalidatePath('/grabados');
-  revalidatePath('/admin/grabados');
   revalidatePath(`/productos/${laserEngraving.slug}`);
 }
 

@@ -274,7 +274,8 @@ Cambios en `/admin`:
 - Mantener esa tarjeta apuntando al admin/catalogo de joyas.
 - Agregar una nueva tarjeta/boton `Administrar grabados láser`.
 - La administracion de grabados debe estar separada del menu de categorias de joyas.
-- El acceso puede apuntar a `/grabados` cuando hay sesion y modo admin, o a una ruta dedicada como `/admin/grabados`. La opcion mas limpia es `/admin/grabados` si se quiere evitar mezclar administracion con pagina publica.
+- El acceso debe apuntar a `/grabados`, siguiendo la misma logica de `/catalogo`: si hay sesion activa, la pagina muestra controles administrativos; si no, se muestra como catalogo publico.
+- No crear una ruta dedicada `/admin/grabados`.
 
 ProductDialog:
 
@@ -293,7 +294,7 @@ Acciones admin:
 
 - Crear server actions separadas para grabados, inspiradas en `product-mutations.action.ts`.
 - Reutilizar helpers compartidos para subida de imagenes si aplica.
-- Al crear o editar grabados, revalidar `/grabados`, `/admin/grabados` y `/productos/${slug}`.
+- Al crear o editar grabados, revalidar `/grabados` y `/productos/${slug}`.
 
 ## Home
 
@@ -436,7 +437,7 @@ Resultado final de verificacion:
 
 - Slugs de productos: decidir si se agregan a productos en esta misma version. Los enlaces por ID numerico de productos deben mantenerse de forma permanente.
 - Conflictos de slug: los grabados ya validan que su slug no exista en productos antes de guardar. Si se habilita edicion de slugs para joyas en admin, aplicar la misma regla en sentido inverso.
-- Ruta admin de grabados: decidir entre `/admin/grabados` o reutilizar `/grabados` en modo admin. Recomendacion: `/admin/grabados`.
+- Ruta admin de grabados: se reutiliza `/grabados` en modo admin cuando hay sesion activa, igual que `/catalogo`.
 
 ## Recomendacion final
 

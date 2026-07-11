@@ -38,6 +38,6 @@ describe('AdminPage', () => {
     ).toHaveAttribute('href', '/catalogo');
     expect(
       screen.getByRole('link', { name: /Administrar grabados láser/ }),
-    ).toHaveAttribute('href', '/admin/grabados');
+    ).toHaveAttribute('href', '/grabados');
   });
 });

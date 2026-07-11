@@ -5,6 +5,7 @@ import { getLaserEngravingsByQuery } from '@/lib/actions/get-laser-engravings-by
 import type { ILaserEngraving } from '@/lib/interfaces/laser-engraving';
 import type { CatalogItem } from '@/lib/types';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
+import { useAuthStore } from '@/lib/stores/auth.store';
 import LaserEngravingsCatalogContent from './LaserEngravingsCatalogContent';
 
 vi.mock('@tanstack/react-query', () => ({
@@ -17,6 +18,10 @@ vi.mock('@/lib/actions/get-laser-engravings-by-query.action', () => ({
 
 vi.mock('@/lib/hooks/useCatalogFilters', () => ({
   useCatalogFilters: vi.fn(),
+}));
+
+vi.mock('@/lib/stores/auth.store', () => ({
+  useAuthStore: vi.fn(),
 }));
 
 vi.mock('@/components/catalog/CatalogSearchBar', () => ({
@@ -82,8 +87,58 @@ vi.mock('@/components/catalog/ProductsGrid', () => ({
       <button type="button" onClick={() => onEdit(products[0])}>
         Editar primer grabado
       </button>
+      <button
+        type="button"
+        onClick={() => onEdit({ ...products[0], slug: null })}
+      >
+        Editar grabado sin slug
+      </button>
+      <button type="button" onClick={() => onEdit(undefined)}>
+        Editar nada
+      </button>
       <button type="button" onClick={() => onDelete(products[0])}>
         Eliminar primer grabado
+      </button>
+      <button type="button" onClick={() => onDelete(undefined)}>
+        Eliminar nada
+      </button>
+    </div>
+  ),
+}));
+
+vi.mock('@/components/admin/LaserEngravingDialog', () => ({
+  LaserEngravingDialog: ({
+    laserEngraving,
+    open,
+    onOpenChange,
+  }: {
+    laserEngraving: { name: string } | null;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+  }) => (
+    <div>
+      {open ? `Dialogo ${laserEngraving?.name || 'nuevo grabado'}` : null}
+      <button type="button" onClick={() => onOpenChange(false)}>
+        Cerrar diálogo
+      </button>
+    </div>
+  ),
+}));
+
+vi.mock('@/components/admin/LaserEngravingDeleteDialog', () => ({
+  LaserEngravingDeleteDialog: ({
+    laserEngraving,
+    open,
+    onOpenChange,
+  }: {
+    laserEngraving: { name: string } | null;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+  }) => (
+    <div>
+      {open ? `Eliminar ${laserEngraving?.name || 'grabado'}` : null}
+      <button type="button" onClick={() => onOpenChange(false)}>
+        Cerrar eliminación
       </button>
     </div>
   ),
@@ -127,6 +182,16 @@ function mockCatalogFilters(
 describe('LaserEngravingsCatalogContent', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(useAuthStore).mockImplementation((selector) =>
+      selector({
+        isAuthenticated: false,
+        isLoggingIn: false,
+        isLoggingOut: false,
+        login: vi.fn(),
+        logout: vi.fn(),
+        syncAuthState: vi.fn(),
+      }),
+    );
     mockCatalogFilters();
     vi.mocked(useQuery).mockReturnValue({
       isLoading: false,
@@ -216,6 +281,58 @@ describe('LaserEngravingsCatalogContent', () => {
     );
 
     expect(onPageChange).toHaveBeenCalledWith(2);
+  });
+
+  it('renders admin controls on the same /grabados catalog when authenticated', () => {
+    vi.mocked(useAuthStore).mockImplementation((selector) =>
+      selector({
+        isAuthenticated: true,
+        isLoggingIn: false,
+        isLoggingOut: false,
+        login: vi.fn(),
+        logout: vi.fn(),
+        syncAuthState: vi.fn(),
+      }),
+    );
+
+    render(<LaserEngravingsCatalogContent />);
+
+    expect(screen.getByText('Administrar grabados láser')).toBeVisible();
+    expect(screen.getByRole('button', { name: /Agregar/ })).toBeVisible();
+    expect(screen.getByText('grid-admin:true')).toBeVisible();
+    expect(screen.getByText('grid-cart:false')).toBeVisible();
+
+    fireEvent.click(screen.getByRole('button', { name: /Agregar/ }));
+    expect(screen.getByText('Dialogo nuevo grabado')).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'Cerrar diálogo' }));
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Editar primer grabado' }),
+    );
+    expect(screen.getByText('Dialogo Nombre y fecha')).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'Cerrar diálogo' }));
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Editar grabado sin slug' }),
+    );
+    expect(screen.getByText('Dialogo Nombre y fecha')).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'Cerrar diálogo' }));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Editar nada' }));
+    expect(
+      screen.queryByText('Dialogo Nombre y fecha'),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Eliminar primer grabado' }),
+    );
+    expect(screen.getByText('Eliminar Nombre y fecha')).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'Cerrar eliminación' }));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Eliminar nada' }));
+    expect(
+      screen.queryByText('Eliminar Nombre y fecha'),
+    ).not.toBeInTheDocument();
   });
 
   it('passes loading state and fallback paging while items are unavailable', () => {

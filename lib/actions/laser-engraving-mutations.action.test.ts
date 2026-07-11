@@ -126,7 +126,6 @@ describe('createLaserEngravingAction', () => {
       images: ['placa-corazon.jpg', 'uploaded.jpg'],
     });
     expect(revalidatePath).toHaveBeenCalledWith('/grabados');
-    expect(revalidatePath).toHaveBeenCalledWith('/admin/grabados');
     expect(revalidatePath).toHaveBeenCalledWith('/productos/placa-corazon');
     expect(result).toEqual({
       success: true,
@@ -344,7 +343,6 @@ describe('updateLaserEngravingAction', () => {
       assertLaserEngravingSlugDoesNotConflictWithProduct,
     ).toHaveBeenCalledWith('placa-corazon');
     expect(revalidatePath).toHaveBeenCalledWith('/grabados');
-    expect(revalidatePath).toHaveBeenCalledWith('/admin/grabados');
     expect(revalidatePath).toHaveBeenCalledWith('/productos/placa-corazon');
     expect(result).toEqual({
       success: true,
@@ -465,7 +463,6 @@ describe('deleteLaserEngravingAction', () => {
     expect(laserEngravingsRepository.findById).toHaveBeenCalledWith(25);
     expect(laserEngravingsRepository.deleteById).toHaveBeenCalledWith(25);
     expect(revalidatePath).toHaveBeenCalledWith('/grabados');
-    expect(revalidatePath).toHaveBeenCalledWith('/admin/grabados');
     expect(revalidatePath).toHaveBeenCalledWith('/productos/placa-corazon');
     expect(result).toEqual({
       success: true,
