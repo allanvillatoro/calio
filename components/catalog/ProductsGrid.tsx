@@ -6,20 +6,20 @@ import { ProductsGridSkeleton } from './ProductsGridSkeleton';
 
 type ProductsGridItem = Product | CatalogItem;
 
-interface ProductsGridProps<TProduct extends ProductsGridItem = Product> {
-  products: TProduct[];
+interface ProductsGridProps<TItem extends ProductsGridItem = Product> {
+  products: TItem[];
   totalProducts: number;
   currentPage: number;
   totalPages: number;
   isLoading?: boolean;
   onPageChange: (page: number) => void;
   isAdmin: boolean;
-  onEdit: (product: TProduct | null) => void;
-  onDelete: (product: TProduct | null) => void;
+  onEdit: (item: TItem | null) => void;
+  onDelete: (item: TItem | null) => void;
   enableCartAction?: boolean;
 }
 
-export function ProductsGrid<TProduct extends ProductsGridItem = Product>({
+export function ProductsGrid<TItem extends ProductsGridItem = Product>({
   products,
   totalProducts,
   currentPage,
@@ -30,7 +30,7 @@ export function ProductsGrid<TProduct extends ProductsGridItem = Product>({
   onEdit,
   onDelete,
   enableCartAction = true,
-}: ProductsGridProps<TProduct>) {
+}: ProductsGridProps<TItem>) {
   if (isLoading) {
     return <ProductsGridSkeleton />;
   }
@@ -43,13 +43,13 @@ export function ProductsGrid<TProduct extends ProductsGridItem = Product>({
     <div>
       {/* Products Grid */}
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-        {products.map((product) => (
+        {products.map((item) => (
           <ProductCard
-            key={product.id}
-            product={product}
+            key={item.id}
+            product={item}
             isAdmin={isAdmin}
-            onEdit={() => onEdit(product)}
-            onDelete={() => onDelete(product)}
+            onEdit={() => onEdit(item)}
+            onDelete={() => onDelete(item)}
             enableCartAction={enableCartAction}
           />
         ))}

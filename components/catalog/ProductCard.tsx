@@ -31,23 +31,21 @@ function getProductHref(product: ProductCardItem) {
   return `/productos/${publicId}`;
 }
 
-interface ProductCardProps<TProduct extends ProductCardItem = Product> {
-  product: TProduct;
+interface ProductCardProps<TItem extends ProductCardItem = Product> {
+  product: TItem;
   isAdmin: boolean;
-  onEdit: (product: TProduct) => void;
-  onDelete: (product: TProduct) => void;
+  onEdit: (item: TItem) => void;
+  onDelete: (item: TItem) => void;
   enableCartAction?: boolean;
 }
 
-export default function ProductCard<
-  TProduct extends ProductCardItem = Product,
->({
+export default function ProductCard<TItem extends ProductCardItem = Product>({
   product,
   isAdmin,
   onEdit,
   onDelete,
   enableCartAction = true,
-}: ProductCardProps<TProduct>) {
+}: ProductCardProps<TItem>) {
   const mainImage = product.images[0];
   const hasDiscount = product.discount > 0;
   const addProduct = useCartStore((state) => state.addProduct);
