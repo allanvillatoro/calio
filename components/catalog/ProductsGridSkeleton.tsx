@@ -4,6 +4,7 @@ export function ProductsGridSkeleton() {
       {Array.from({ length: 8 }).map((_, index) => (
         <div
           key={index}
+          data-testid="products-grid-skeleton-item"
           className="overflow-hidden rounded-2xl border border-neutral-200 bg-white"
         >
           <div className="aspect-square animate-pulse bg-neutral-200" />
