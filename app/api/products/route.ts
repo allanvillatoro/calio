@@ -1,11 +1,16 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 import { getAuthenticatedUserFromCookies } from '@/lib/auth';
 import { ProductConflictError } from '@/lib/errors';
-import { formatZodError } from '@/lib/zod';
-import { ZodError } from 'zod';
-import { createProductBodySchema, productsQuerySchema } from './schemas';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
+import {
+  conflictErrorResponse,
+  getConflictError,
+  internalServerErrorResponse,
+  validationErrorResponse,
+} from '../route-response.helpers';
+import { createProductBodySchema, productsQuerySchema } from './schemas';
 
 export async function GET(request: Request) {
   try {
@@ -34,17 +39,10 @@ export async function GET(request: Request) {
     return NextResponse.json(products);
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json(formatZodError(error), {
-        status: StatusCodes.BAD_REQUEST,
-      });
+      return validationErrorResponse(error);
     }
 
-    console.error('Failed to fetch products', error);
-
-    return NextResponse.json(
-      { error: 'Failed to fetch products' },
-      { status: StatusCodes.INTERNAL_SERVER_ERROR },
-    );
+    return internalServerErrorResponse('Failed to fetch products', error);
   }
 }
 
@@ -56,28 +54,15 @@ export async function POST(request: Request) {
     return NextResponse.json(product, { status: StatusCodes.CREATED });
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json(formatZodError(error), {
-        status: StatusCodes.BAD_REQUEST,
-      });
+      return validationErrorResponse(error);
     }
 
-    if (error instanceof ProductConflictError) {
-      return NextResponse.json(
-        {
-          error: error.message,
-          details: error.details,
-        },
-        {
-          status: StatusCodes.CONFLICT,
-        },
-      );
+    const conflictError = getConflictError(error, [ProductConflictError]);
+
+    if (conflictError) {
+      return conflictErrorResponse(conflictError);
     }
 
-    console.error('Failed to create product', error);
-
-    return NextResponse.json(
-      { error: 'Failed to create product' },
-      { status: StatusCodes.INTERNAL_SERVER_ERROR },
-    );
+    return internalServerErrorResponse('Failed to create product', error);
   }
 }

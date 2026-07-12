@@ -3,13 +3,18 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { getAuthenticatedUserFromCookies } from '@/lib/auth';
 import { LaserEngravingConflictError } from '@/lib/errors';
-import { formatZodError } from '@/lib/zod';
 import {
   createLaserEngravingBodySchema,
   laserEngravingsQuerySchema,
 } from './schemas';
 import { laserEngravingsRepository } from '@/lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
 import { assertLaserEngravingSlugDoesNotConflictWithProduct } from '@/lib/slug-conflicts';
+import {
+  conflictErrorResponse,
+  getConflictError,
+  internalServerErrorResponse,
+  validationErrorResponse,
+} from '../route-response.helpers';
 
 export async function GET(request: Request) {
   try {
@@ -30,16 +35,12 @@ export async function GET(request: Request) {
     return NextResponse.json(laserEngravings);
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json(formatZodError(error), {
-        status: StatusCodes.BAD_REQUEST,
-      });
+      return validationErrorResponse(error);
     }
 
-    console.error('Failed to fetch laser engravings', error);
-
-    return NextResponse.json(
-      { error: 'Failed to fetch laser engravings' },
-      { status: StatusCodes.INTERNAL_SERVER_ERROR },
+    return internalServerErrorResponse(
+      'Failed to fetch laser engravings',
+      error,
     );
   }
 }
@@ -53,28 +54,20 @@ export async function POST(request: Request) {
     return NextResponse.json(laserEngraving, { status: StatusCodes.CREATED });
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json(formatZodError(error), {
-        status: StatusCodes.BAD_REQUEST,
-      });
+      return validationErrorResponse(error);
     }
 
-    if (error instanceof LaserEngravingConflictError) {
-      return NextResponse.json(
-        {
-          error: error.message,
-          details: error.details,
-        },
-        {
-          status: StatusCodes.CONFLICT,
-        },
-      );
+    const conflictError = getConflictError(error, [
+      LaserEngravingConflictError,
+    ]);
+
+    if (conflictError) {
+      return conflictErrorResponse(conflictError);
     }
 
-    console.error('Failed to create laser engraving', error);
-
-    return NextResponse.json(
-      { error: 'Failed to create laser engraving' },
-      { status: StatusCodes.INTERNAL_SERVER_ERROR },
+    return internalServerErrorResponse(
+      'Failed to create laser engraving',
+      error,
     );
   }
 }

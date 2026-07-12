@@ -1,14 +1,19 @@
-import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { LaserEngravingConflictError } from '@/lib/errors';
-import { formatZodError } from '@/lib/zod';
 import {
   laserEngravingIdParamsSchema,
   updateLaserEngravingBodySchema,
 } from '../schemas';
 import { laserEngravingsRepository } from '@/lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
 import { assertLaserEngravingSlugDoesNotConflictWithProduct } from '@/lib/slug-conflicts';
+import {
+  conflictErrorResponse,
+  getConflictError,
+  internalServerErrorResponse,
+  notFoundResponse,
+  validationErrorResponse,
+} from '../../route-response.helpers';
 
 interface LaserEngravingRouteContext {
   params: Promise<{
@@ -33,25 +38,18 @@ export async function GET(
     const laserEngraving = await laserEngravingsRepository.findById(id);
 
     if (!laserEngraving) {
-      return NextResponse.json(
-        { error: 'Laser engraving not found' },
-        { status: StatusCodes.NOT_FOUND },
-      );
+      return notFoundResponse('Laser engraving not found');
     }
 
     return NextResponse.json(laserEngraving);
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json(formatZodError(error), {
-        status: StatusCodes.BAD_REQUEST,
-      });
+      return validationErrorResponse(error);
     }
 
-    console.error('Failed to fetch laser engraving', error);
-
-    return NextResponse.json(
-      { error: 'Failed to fetch laser engraving' },
-      { status: StatusCodes.INTERNAL_SERVER_ERROR },
+    return internalServerErrorResponse(
+      'Failed to fetch laser engraving',
+      error,
     );
   }
 }
@@ -67,37 +65,26 @@ export async function PUT(
     const laserEngraving = await laserEngravingsRepository.updateById(id, body);
 
     if (!laserEngraving) {
-      return NextResponse.json(
-        { error: 'Laser engraving not found' },
-        { status: StatusCodes.NOT_FOUND },
-      );
+      return notFoundResponse('Laser engraving not found');
     }
 
     return NextResponse.json(laserEngraving);
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json(formatZodError(error), {
-        status: StatusCodes.BAD_REQUEST,
-      });
+      return validationErrorResponse(error);
     }
 
-    if (error instanceof LaserEngravingConflictError) {
-      return NextResponse.json(
-        {
-          error: error.message,
-          details: error.details,
-        },
-        {
-          status: StatusCodes.CONFLICT,
-        },
-      );
+    const conflictError = getConflictError(error, [
+      LaserEngravingConflictError,
+    ]);
+
+    if (conflictError) {
+      return conflictErrorResponse(conflictError);
     }
 
-    console.error('Failed to update laser engraving', error);
-
-    return NextResponse.json(
-      { error: 'Failed to update laser engraving' },
-      { status: StatusCodes.INTERNAL_SERVER_ERROR },
+    return internalServerErrorResponse(
+      'Failed to update laser engraving',
+      error,
     );
   }
 }
@@ -111,25 +98,18 @@ export async function DELETE(
     const deleted = await laserEngravingsRepository.deleteById(id);
 
     if (!deleted) {
-      return NextResponse.json(
-        { error: 'Laser engraving not found' },
-        { status: StatusCodes.NOT_FOUND },
-      );
+      return notFoundResponse('Laser engraving not found');
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json(formatZodError(error), {
-        status: StatusCodes.BAD_REQUEST,
-      });
+      return validationErrorResponse(error);
     }
 
-    console.error('Failed to delete laser engraving', error);
-
-    return NextResponse.json(
-      { error: 'Failed to delete laser engraving' },
-      { status: StatusCodes.INTERNAL_SERVER_ERROR },
+    return internalServerErrorResponse(
+      'Failed to delete laser engraving',
+      error,
     );
   }
 }
