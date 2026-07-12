@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
 import { LaserEngravingDeleteDialog } from '@/components/admin/LaserEngravingDeleteDialog';
 import { LaserEngravingDialog } from '@/components/admin/LaserEngravingDialog';
+import { CatalogContentShell } from '@/components/catalog/CatalogContentShell';
 import { getLaserEngravingsByQuery } from '@/lib/actions/get-laser-engravings-by-query.action';
 import {
   EMPTY_LASER_ENGRAVING,
@@ -14,9 +14,7 @@ import type { ILaserEngraving } from '@/lib/interfaces/laser-engraving';
 import type { CatalogItem } from '@/lib/types';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
 import { useAuthStore } from '@/lib/stores/auth.store';
-import { CatalogSearchBar } from '@/components/catalog/CatalogSearchBar';
 import { ProductsGrid } from '@/components/catalog/ProductsGrid';
-import { Button } from '@/components/ui/button';
 
 function mapLaserEngravingToCatalogItem(
   laserEngraving: ILaserEngraving,
@@ -97,57 +95,47 @@ export default function LaserEngravingsCatalogContent() {
       : 'Explora nuestros grabados';
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h2 className="text-2xl font-semibold text-center pb-6">
-        {catalogTitle}
-      </h2>
-      {isAuthenticated && (
-        <div className="py-4 text-right">
-          <Button
-            className="w-24"
-            onClick={() => setEditingLaserEngraving(EMPTY_LASER_ENGRAVING)}
-          >
-            <Plus className="size-4" />
-            Agregar
-          </Button>
-        </div>
-      )}
-
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="flex-1">
-          <CatalogSearchBar defaultValue={query} onSearch={handleSearch} />
-          <ProductsGrid
-            products={catalogItems}
-            totalProducts={laserEngravingsResponse?.paging.totalItems ?? 0}
-            currentPage={currentPage}
-            totalPages={laserEngravingsResponse?.paging.totalPages ?? 1}
-            isLoading={isLoading}
-            onPageChange={onPageChange}
-            isAdmin={isAuthenticated}
-            onEdit={(item) => {
-              if (!item) return;
-              setEditingLaserEngraving(mapCatalogItemToLaserEngraving(item));
-            }}
-            onDelete={(item) => {
-              if (!item) return;
-              setDeletingLaserEngraving(mapCatalogItemToLaserEngraving(item));
-            }}
-            enableCartAction={!isAuthenticated}
+    <CatalogContentShell
+      title={catalogTitle}
+      showAddButton={isAuthenticated}
+      showSearchBar
+      searchDefaultValue={query}
+      onAdd={() => setEditingLaserEngraving(EMPTY_LASER_ENGRAVING)}
+      onSearch={handleSearch}
+      dialogs={
+        <>
+          <LaserEngravingDialog
+            laserEngraving={editingLaserEngraving}
+            open={!!editingLaserEngraving}
+            onOpenChange={() => setEditingLaserEngraving(null)}
           />
-        </div>
-      </div>
 
-      <LaserEngravingDialog
-        laserEngraving={editingLaserEngraving}
-        open={!!editingLaserEngraving}
-        onOpenChange={() => setEditingLaserEngraving(null)}
+          <LaserEngravingDeleteDialog
+            laserEngraving={deletingLaserEngraving}
+            open={!!deletingLaserEngraving}
+            onOpenChange={() => setDeletingLaserEngraving(null)}
+          />
+        </>
+      }
+    >
+      <ProductsGrid
+        products={catalogItems}
+        totalProducts={laserEngravingsResponse?.paging.totalItems ?? 0}
+        currentPage={currentPage}
+        totalPages={laserEngravingsResponse?.paging.totalPages ?? 1}
+        isLoading={isLoading}
+        onPageChange={onPageChange}
+        isAdmin={isAuthenticated}
+        onEdit={(item) => {
+          if (!item) return;
+          setEditingLaserEngraving(mapCatalogItemToLaserEngraving(item));
+        }}
+        onDelete={(item) => {
+          if (!item) return;
+          setDeletingLaserEngraving(mapCatalogItemToLaserEngraving(item));
+        }}
+        enableCartAction={!isAuthenticated}
       />
-
-      <LaserEngravingDeleteDialog
-        laserEngraving={deletingLaserEngraving}
-        open={!!deletingLaserEngraving}
-        onOpenChange={() => setDeletingLaserEngraving(null)}
-      />
-    </div>
+    </CatalogContentShell>
   );
 }
