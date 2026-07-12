@@ -4,16 +4,10 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  createProductAction,
-  updateProductAction,
-} from '@/lib/actions/product-mutations.action';
-import type { Product } from '@/lib/types';
-import { useProductDialogForm } from './useProductDialogForm';
-
-vi.mock('@/lib/actions/product-mutations.action', () => ({
-  createProductAction: vi.fn(),
-  updateProductAction: vi.fn(),
-}));
+  type SellableItemFormItem,
+  type SellableItemFormValues,
+  useSellableItemDialogForm,
+} from './useSellableItemDialogForm';
 
 vi.mock('sonner', () => ({
   toast: {
@@ -22,8 +16,23 @@ vi.mock('sonner', () => ({
   },
 }));
 
-const baseProduct: Product = {
+const emptyItem: SellableItemFormItem = {
+  id: 0,
+  slug: '',
+  name: '',
+  description: '',
+  price: 0,
+  discount: 0,
+  priceWithDiscount: 0,
+  quantity: 0,
+  inStore: false,
+  category: 'collares',
+  images: [],
+};
+
+const baseItem: SellableItemFormItem = {
   id: 12,
+  slug: 'collar-perla',
   name: 'Collar Perla',
   description: 'Collar dorado con dije de perla',
   price: 250,
@@ -34,6 +43,18 @@ const baseProduct: Product = {
   category: 'collares',
   images: ['collar-perla.jpg', 'collar-perla-2.jpg'],
 };
+
+const formFields: Array<keyof SellableItemFormValues> = [
+  'slug',
+  'name',
+  'description',
+  'price',
+  'discount',
+  'quantity',
+  'inStore',
+  'category',
+  'images',
+];
 
 function createWrapper() {
   const queryClient = new QueryClient({
@@ -57,18 +78,28 @@ function createWrapper() {
   };
 }
 
-function renderProductDialogForm(product: Product | null = null) {
+function renderSellableItemDialogForm(
+  item: SellableItemFormItem | null = null,
+) {
   const onOpenChange = vi.fn();
+  const submitItem = vi.fn();
   const { Wrapper, invalidateQueries } = createWrapper();
   const hook = renderHook(
-    ({ product: currentProduct }) =>
-      useProductDialogForm({
-        product: currentProduct,
+    ({ currentItem }) =>
+      useSellableItemDialogForm({
+        item: currentItem,
+        emptyItem,
         onOpenChange,
+        queryKey: ['items'],
+        itemName: 'producto',
+        itemNameCapitalized: 'Producto',
+        logName: 'product',
+        formFields,
+        submitItem,
       }),
     {
       initialProps: {
-        product,
+        currentItem: item,
       },
       wrapper: Wrapper,
     },
@@ -78,6 +109,7 @@ function renderProductDialogForm(product: Product | null = null) {
     ...hook,
     invalidateQueries,
     onOpenChange,
+    submitItem,
   };
 }
 
@@ -114,45 +146,48 @@ function createDragEvent(type: string, files: File[] | null = []) {
   } as unknown as React.DragEvent;
 }
 
-function createSubmitValues(overrides: Partial<Product> & { files?: File[] }) {
+function createSubmitValues(
+  overrides: Partial<SellableItemFormValues> & { files?: File[] },
+) {
   return {
     id: overrides.id,
-    name: overrides.name ?? baseProduct.name,
-    description: overrides.description ?? baseProduct.description,
-    price: overrides.price ?? baseProduct.price,
-    discount: overrides.discount ?? baseProduct.discount,
-    quantity: overrides.quantity ?? baseProduct.quantity,
-    inStore: overrides.inStore ?? baseProduct.inStore ?? false,
-    category: overrides.category ?? baseProduct.category,
-    images: overrides.images ?? baseProduct.images,
+    slug: overrides.slug ?? baseItem.slug ?? '',
+    name: overrides.name ?? baseItem.name,
+    description: overrides.description ?? baseItem.description,
+    price: overrides.price ?? baseItem.price,
+    discount: overrides.discount ?? baseItem.discount,
+    quantity: overrides.quantity ?? baseItem.quantity,
+    inStore: overrides.inStore ?? baseItem.inStore ?? false,
+    category: overrides.category ?? baseItem.category,
+    images: overrides.images ?? baseItem.images,
     files: overrides.files ?? [],
   };
 }
 
-describe('useProductDialogForm', () => {
+describe('useSellableItemDialogForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('resets form state from the product being edited', async () => {
-    const { result } = renderProductDialogForm(baseProduct);
+  it('resets form state from the item being edited', async () => {
+    const { result } = renderSellableItemDialogForm(baseItem);
 
     await waitFor(() => {
       expect(result.current.isEditing).toBe(true);
-      expect(result.current.currentPrice).toBe(baseProduct.price);
-      expect(result.current.currentDiscount).toBe(baseProduct.discount);
-      expect(result.current.currentImages).toEqual(baseProduct.images);
-      expect(result.current.selectedCategory).toBe(baseProduct.category);
+      expect(result.current.currentPrice).toBe(baseItem.price);
+      expect(result.current.currentDiscount).toBe(baseItem.discount);
+      expect(result.current.currentImages).toEqual(baseItem.images);
+      expect(result.current.selectedCategory).toBe(baseItem.category);
     });
   });
 
   it('sets discount to zero when category changes outside rebajas', async () => {
-    const product = {
-      ...baseProduct,
+    const item = {
+      ...baseItem,
       category: 'rebajas' as const,
       discount: 30,
     };
-    const { result } = renderProductDialogForm(product);
+    const { result } = renderSellableItemDialogForm(item);
 
     await waitFor(() => {
       expect(result.current.currentDiscount).toBe(30);
@@ -167,12 +202,12 @@ describe('useProductDialogForm', () => {
     });
   });
 
-  it('restores the edited product discount when changing to rebajas', async () => {
-    const product = {
-      ...baseProduct,
+  it('restores the edited item discount when changing to rebajas', async () => {
+    const item = {
+      ...baseItem,
       discount: 25,
     };
-    const { result } = renderProductDialogForm(product);
+    const { result } = renderSellableItemDialogForm(item);
 
     act(() => {
       result.current.handleCategoryChange('rebajas');
@@ -183,9 +218,9 @@ describe('useProductDialogForm', () => {
     });
   });
 
-  it('uses zero discount when changing to rebajas without a positive product discount', async () => {
-    const { result } = renderProductDialogForm({
-      ...baseProduct,
+  it('uses zero discount when changing to rebajas without a positive item discount', async () => {
+    const { result } = renderSellableItemDialogForm({
+      ...baseItem,
       discount: 0,
     });
 
@@ -198,15 +233,15 @@ describe('useProductDialogForm', () => {
     });
   });
 
-  it('treats products without a positive id as create mode', async () => {
-    const { result } = renderProductDialogForm({
-      ...baseProduct,
+  it('treats items without a positive id as create mode', async () => {
+    const { result } = renderSellableItemDialogForm({
+      ...baseItem,
       id: 0,
     });
 
     await waitFor(() => {
       expect(result.current.isEditing).toBe(false);
-      expect(result.current.currentImages).toEqual(baseProduct.images);
+      expect(result.current.currentImages).toEqual(baseItem.images);
     });
   });
 
@@ -215,7 +250,7 @@ describe('useProductDialogForm', () => {
     const duplicateFile = createFile('collar.jpg');
     const secondFile = createFile('detalle.jpg');
     const oversizedFile = createFile('pesada.jpg', 1024 * 1024 + 1);
-    const { result } = renderProductDialogForm();
+    const { result } = renderSellableItemDialogForm();
 
     act(() => {
       result.current.handleFileChange(createFileChangeEvent([firstFile]));
@@ -241,7 +276,7 @@ describe('useProductDialogForm', () => {
 
   it('ignores file input changes without files or without valid files', async () => {
     const oversizedFile = createFile('pesada.jpg', 1024 * 1024 + 1);
-    const { result } = renderProductDialogForm();
+    const { result } = renderSellableItemDialogForm();
 
     act(() => {
       result.current.handleFileChange(createEmptyFileChangeEvent());
@@ -262,7 +297,7 @@ describe('useProductDialogForm', () => {
   });
 
   it('sets and clears drag active state from drag events', async () => {
-    const { result } = renderProductDialogForm();
+    const { result } = renderSellableItemDialogForm();
 
     act(() => {
       result.current.handleDrag(createDragEvent('dragover'));
@@ -282,7 +317,7 @@ describe('useProductDialogForm', () => {
   });
 
   it('triggers discount validation when discount changes', async () => {
-    const { result } = renderProductDialogForm();
+    const { result } = renderSellableItemDialogForm();
 
     act(() => {
       result.current.handleDiscountChange();
@@ -295,7 +330,7 @@ describe('useProductDialogForm', () => {
 
   it('ignores drops without files or valid files', async () => {
     const oversizedFile = createFile('pesada.jpg', 1024 * 1024 + 1);
-    const { result } = renderProductDialogForm();
+    const { result } = renderSellableItemDialogForm();
 
     act(() => {
       result.current.handleDrag(createDragEvent('dragenter'));
@@ -327,7 +362,7 @@ describe('useProductDialogForm', () => {
 
   it('adds dropped files and clears image errors when files are available', async () => {
     const droppedFile = createFile('drop.jpg');
-    const { result } = renderProductDialogForm();
+    const { result } = renderSellableItemDialogForm();
 
     act(() => {
       result.current.handleDrop(createDragEvent('drop', [droppedFile]));
@@ -338,11 +373,11 @@ describe('useProductDialogForm', () => {
     });
   });
 
-  it('removes and reorders current product images', async () => {
-    const { result } = renderProductDialogForm(baseProduct);
+  it('removes and reorders current item images', async () => {
+    const { result } = renderSellableItemDialogForm(baseItem);
 
     await waitFor(() => {
-      expect(result.current.currentImages).toEqual(baseProduct.images);
+      expect(result.current.currentImages).toEqual(baseItem.images);
     });
 
     act(() => {
@@ -368,7 +403,7 @@ describe('useProductDialogForm', () => {
   it('removes and reorders uploaded images', async () => {
     const firstFile = createFile('primera.jpg');
     const secondFile = createFile('segunda.jpg');
-    const { result } = renderProductDialogForm();
+    const { result } = renderSellableItemDialogForm();
 
     act(() => {
       result.current.handleFileChange(
@@ -397,15 +432,11 @@ describe('useProductDialogForm', () => {
     });
   });
 
-  it('creates a product, resets the form, and refreshes product queries when the dialog closes', async () => {
-    const { result, invalidateQueries, onOpenChange } =
-      renderProductDialogForm();
-    vi.mocked(createProductAction).mockResolvedValue({
+  it('creates an item, resets the form, and refreshes queries when the dialog closes', async () => {
+    const { result, invalidateQueries, onOpenChange, submitItem } =
+      renderSellableItemDialogForm();
+    submitItem.mockResolvedValue({
       success: true,
-      product: {
-        ...baseProduct,
-        id: 44,
-      },
     });
 
     act(() => {
@@ -418,10 +449,11 @@ describe('useProductDialogForm', () => {
     });
 
     await waitFor(() => {
-      expect(createProductAction).toHaveBeenCalledWith(
+      expect(submitItem).toHaveBeenCalledWith(
+        undefined,
         expect.objectContaining({
           category: 'collares',
-          discount: 0,
+          discount: 40,
         }),
       );
       expect(result.current.formVersion).toBe(1);
@@ -435,14 +467,14 @@ describe('useProductDialogForm', () => {
     });
 
     expect(invalidateQueries).toHaveBeenCalledWith({
-      queryKey: ['products'],
+      queryKey: ['items'],
     });
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
-  it('closes the dialog without refreshing when no product was saved', () => {
+  it('closes the dialog without refreshing when no item was saved', () => {
     const { result, invalidateQueries, onOpenChange } =
-      renderProductDialogForm();
+      renderSellableItemDialogForm();
 
     act(() => {
       result.current.handleDialogOpenChange(false);
@@ -453,8 +485,8 @@ describe('useProductDialogForm', () => {
   });
 
   it('maps server validation details to form field errors', async () => {
-    const { result } = renderProductDialogForm();
-    vi.mocked(createProductAction).mockResolvedValue({
+    const { result, submitItem } = renderSellableItemDialogForm();
+    submitItem.mockResolvedValue({
       success: false,
       error: 'Validation failed',
       details: [
@@ -476,9 +508,32 @@ describe('useProductDialogForm', () => {
     expect(toast.error).toHaveBeenCalledWith('Validation failed');
   });
 
+  it('ignores server validation details for fields outside the configured form', async () => {
+    const { result, submitItem } = renderSellableItemDialogForm();
+    submitItem.mockResolvedValue({
+      success: false,
+      error: 'Validation failed',
+      details: [
+        {
+          path: 'unknown',
+          message: 'Unknown field',
+        },
+      ],
+    });
+
+    act(() => {
+      result.current.onSubmit(createSubmitValues({}));
+    });
+
+    await waitFor(() => {
+      expect(result.current.submitError).toBe('Validation failed');
+    });
+    expect(result.current.errors).toEqual({});
+  });
+
   it('falls back to default submit errors when server errors do not include a message', async () => {
-    const { result } = renderProductDialogForm();
-    vi.mocked(createProductAction).mockResolvedValue({
+    const { result, submitItem } = renderSellableItemDialogForm();
+    submitItem.mockResolvedValue({
       success: false,
     });
 
@@ -494,9 +549,9 @@ describe('useProductDialogForm', () => {
     );
   });
 
-  it('shows unexpected error feedback when product creation throws', async () => {
-    const { result } = renderProductDialogForm();
-    vi.mocked(createProductAction).mockRejectedValue(new Error('Network down'));
+  it('shows unexpected error feedback when item submission throws', async () => {
+    const { result, submitItem } = renderSellableItemDialogForm();
+    submitItem.mockRejectedValue(new Error('Network down'));
     const consoleError = vi
       .spyOn(console, 'error')
       .mockImplementation(() => undefined);
@@ -521,18 +576,17 @@ describe('useProductDialogForm', () => {
     consoleError.mockRestore();
   });
 
-  it('updates an edited product, refreshes products, and closes the dialog', async () => {
-    const { result, invalidateQueries, onOpenChange } =
-      renderProductDialogForm(baseProduct);
-    vi.mocked(updateProductAction).mockResolvedValue({
+  it('updates an edited item, refreshes queries, and closes the dialog', async () => {
+    const { result, invalidateQueries, onOpenChange, submitItem } =
+      renderSellableItemDialogForm(baseItem);
+    submitItem.mockResolvedValue({
       success: true,
-      product: baseProduct,
     });
 
     act(() => {
       result.current.onSubmit(
         createSubmitValues({
-          ...baseProduct,
+          ...baseItem,
           category: 'rebajas',
           discount: 20,
         }),
@@ -540,15 +594,15 @@ describe('useProductDialogForm', () => {
     });
 
     await waitFor(() => {
-      expect(updateProductAction).toHaveBeenCalledWith(
-        baseProduct.id,
+      expect(submitItem).toHaveBeenCalledWith(
+        baseItem.id,
         expect.objectContaining({
           category: 'rebajas',
           discount: 20,
         }),
       );
       expect(invalidateQueries).toHaveBeenCalledWith({
-        queryKey: ['products'],
+        queryKey: ['items'],
       });
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });

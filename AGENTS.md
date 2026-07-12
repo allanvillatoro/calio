@@ -106,7 +106,7 @@ This file is for coding-agent behavior. Use `README.md` for project overview, se
 - Prefer existing shadcn/ui controls in `components/ui` before building custom controls with Tailwind classes.
 - Use `cn` from `lib/utils.ts` for class merging.
 - Use lucide-react icons where icons are already part of a control.
-- Keep forms consistent with `react-hook-form` patterns used by `ProductDialog` and `useProductDialogForm`.
+- Keep forms consistent with `react-hook-form` patterns used by `SellableItemDialog` and `useSellableItemDialogForm`.
 - Product admin feedback should use Sonner toasts and field-level errors where possible.
 
 ## Verification
