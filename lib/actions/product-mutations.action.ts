@@ -1,30 +1,28 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { ZodError } from 'zod';
 import {
   createProductBodySchema,
   productIdParamsSchema,
   updateProductBodySchema,
 } from '@/app/api/products/schemas';
 import { ensureAuthenticatedUser } from '@/lib/actions/authenticated-action.helpers';
-import { uploadProductImagesAction } from '@/lib/actions/cloudinary-upload.action';
+import {
+  formatMutationError,
+  logUnexpectedMutationError,
+  mergeUploadedImages,
+  type MutationErrorDetail,
+} from '@/lib/actions/mutation-action.helpers';
 import { ProductConflictError } from '@/lib/errors';
 import type { IProduct } from '@/lib/interfaces/product';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
-import { formatZodError } from '@/lib/zod';
 import type { Product } from '../types';
-
-interface ProductMutationErrorDetail {
-  path: string;
-  message: string;
-}
 
 export interface ProductMutationResult {
   success: boolean;
   product?: IProduct;
   error?: string;
-  details?: ProductMutationErrorDetail[];
+  details?: MutationErrorDetail[];
 }
 
 export interface ProductDeleteResult {
@@ -40,39 +38,7 @@ function revalidateProductPaths(productId: number) {
 }
 
 function formatProductMutationError(error: unknown, fallbackMessage: string) {
-  if (error instanceof ZodError) {
-    const formattedError = formatZodError(error);
-
-    return {
-      success: false as const,
-      error: formattedError.error,
-      details: formattedError.details,
-    };
-  }
-
-  if (error instanceof ProductConflictError) {
-    return {
-      success: false as const,
-      error: error.message,
-      details: error.details,
-    };
-  }
-
-  return {
-    success: false as const,
-    error: fallbackMessage,
-  };
-}
-
-async function mergeUploadedImages(input: ProductMutationInput) {
-  const { files = [], ...productData } = input;
-
-  if (files.length > 0) {
-    const uploadedImages = await uploadProductImagesAction(files);
-    productData.images = [...(productData.images ?? []), ...uploadedImages];
-  }
-
-  return productData;
+  return formatMutationError(error, fallbackMessage, [ProductConflictError]);
 }
 
 export async function createProductAction(
@@ -101,9 +67,12 @@ export async function createProductAction(
       'Failed to create product',
     );
 
-    if (result.error === 'Failed to create product') {
-      console.error('Failed to create product from server action', error);
-    }
+    logUnexpectedMutationError(
+      result,
+      error,
+      'Failed to create product',
+      'Failed to create product from server action',
+    );
 
     return result;
   }
@@ -147,9 +116,12 @@ export async function updateProductAction(
       'Failed to update product',
     );
 
-    if (result.error === 'Failed to update product') {
-      console.error('Failed to update product from server action', error);
-    }
+    logUnexpectedMutationError(
+      result,
+      error,
+      'Failed to update product',
+      'Failed to update product from server action',
+    );
 
     return result;
   }
@@ -190,20 +162,21 @@ export async function deleteProductAction(
       success: true,
     };
   } catch (error) {
-    if (error instanceof ZodError) {
-      const formattedError = formatZodError(error);
+    const result = formatProductMutationError(
+      error,
+      'Failed to delete product',
+    );
 
-      return {
-        success: false,
-        error: formattedError.error,
-      };
-    }
-
-    console.error('Failed to delete product from server action', error);
+    logUnexpectedMutationError(
+      result,
+      error,
+      'Failed to delete product',
+      'Failed to delete product from server action',
+    );
 
     return {
       success: false,
-      error: 'Failed to delete product',
+      error: result.error,
     };
   }
 }

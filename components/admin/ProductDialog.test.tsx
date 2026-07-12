@@ -1,5 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  createProductAction,
+  updateProductAction,
+} from '@/lib/actions/product-mutations.action';
 import type { Product } from '@/lib/types';
 import { useSellableItemDialogForm } from '@/lib/hooks/useSellableItemDialogForm';
 import { ProductDialog, validateProductDiscount } from './ProductDialog';
@@ -303,6 +307,69 @@ describe('ProductDialog', () => {
     expect(validateProductDiscount(10, 'collares')).toBe(
       'El descuento debe ser 0 fuera de Rebajas',
     );
+    expect(validateProductDiscount(0)).toBe(true);
+  });
+
+  it('adapts form values before submitting product mutations', async () => {
+    vi.mocked(createProductAction).mockResolvedValue({
+      success: true,
+    });
+    vi.mocked(updateProductAction).mockResolvedValue({
+      success: true,
+    });
+    render(<ProductDialog product={null} open onOpenChange={vi.fn()} />);
+
+    const hookParams = vi.mocked(useSellableItemDialogForm).mock.calls[0][0];
+    const files = [createFile('collar.jpg')];
+
+    await expect(
+      hookParams.submitItem(undefined, {
+        name: 'Collar',
+        description: 'Collar dorado',
+        price: 250,
+        discount: 30,
+        quantity: 4,
+        inStore: true,
+        category: 'collares',
+        images: ['collar.jpg'],
+        files,
+      }),
+    ).resolves.toEqual({
+      success: true,
+    });
+    expect(createProductAction).toHaveBeenCalledWith({
+      name: 'Collar',
+      description: 'Collar dorado',
+      price: 250,
+      discount: 0,
+      quantity: 4,
+      inStore: true,
+      category: 'collares',
+      images: ['collar.jpg'],
+      files,
+    });
+
+    await hookParams.submitItem(12, {
+      name: 'Collar rebaja',
+      description: 'Collar dorado',
+      price: 250,
+      discount: 30,
+      quantity: 4,
+      category: 'rebajas',
+      images: ['collar.jpg'],
+    });
+
+    expect(updateProductAction).toHaveBeenCalledWith(12, {
+      name: 'Collar rebaja',
+      description: 'Collar dorado',
+      price: 250,
+      discount: 30,
+      quantity: 4,
+      inStore: false,
+      category: 'rebajas',
+      images: ['collar.jpg'],
+      files: undefined,
+    });
   });
 
   it('does not render the discount preview when price data is not finite', () => {
