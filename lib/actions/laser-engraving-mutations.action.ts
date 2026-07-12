@@ -7,7 +7,7 @@ import {
   laserEngravingIdParamsSchema,
   updateLaserEngravingBodySchema,
 } from '@/app/api/laser-engravings/schemas';
-import { getAuthenticatedUserFromCookies } from '@/lib/auth';
+import { ensureAuthenticatedUser } from '@/lib/actions/authenticated-action.helpers';
 import { uploadProductImagesAction } from '@/lib/actions/cloudinary-upload.action';
 import { LaserEngravingConflictError } from '@/lib/errors';
 import type { ILaserEngraving } from '@/lib/interfaces/laser-engraving';
@@ -38,22 +38,6 @@ type LaserEngravingMutationInput = LaserEngravingChanges & { files?: File[] };
 function revalidateLaserEngravingPaths(laserEngraving: ILaserEngraving) {
   revalidatePath('/grabados');
   revalidatePath(`/productos/${laserEngraving.slug}`);
-}
-
-async function ensureAuthenticatedUser() {
-  const authenticatedUser = await getAuthenticatedUserFromCookies();
-
-  if (!authenticatedUser) {
-    return {
-      success: false as const,
-      error: 'Unauthorized',
-    };
-  }
-
-  return {
-    success: true as const,
-    user: authenticatedUser,
-  };
 }
 
 function formatLaserEngravingMutationError(

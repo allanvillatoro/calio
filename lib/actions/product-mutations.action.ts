@@ -7,7 +7,7 @@ import {
   productIdParamsSchema,
   updateProductBodySchema,
 } from '@/app/api/products/schemas';
-import { getAuthenticatedUserFromCookies } from '@/lib/auth';
+import { ensureAuthenticatedUser } from '@/lib/actions/authenticated-action.helpers';
 import { uploadProductImagesAction } from '@/lib/actions/cloudinary-upload.action';
 import { ProductConflictError } from '@/lib/errors';
 import type { IProduct } from '@/lib/interfaces/product';
@@ -32,29 +32,51 @@ export interface ProductDeleteResult {
   error?: string;
 }
 
+type ProductMutationInput = Partial<Product> & { files?: File[] };
+
 function revalidateProductPaths(productId: number) {
   revalidatePath('/catalogo');
   revalidatePath(`/productos/${productId}`);
 }
 
-async function ensureAuthenticatedUser() {
-  const authenticatedUser = await getAuthenticatedUserFromCookies();
+function formatProductMutationError(error: unknown, fallbackMessage: string) {
+  if (error instanceof ZodError) {
+    const formattedError = formatZodError(error);
 
-  if (!authenticatedUser) {
     return {
       success: false as const,
-      error: 'Unauthorized',
+      error: formattedError.error,
+      details: formattedError.details,
+    };
+  }
+
+  if (error instanceof ProductConflictError) {
+    return {
+      success: false as const,
+      error: error.message,
+      details: error.details,
     };
   }
 
   return {
-    success: true as const,
-    user: authenticatedUser,
+    success: false as const,
+    error: fallbackMessage,
   };
 }
 
+async function mergeUploadedImages(input: ProductMutationInput) {
+  const { files = [], ...productData } = input;
+
+  if (files.length > 0) {
+    const uploadedImages = await uploadProductImagesAction(files);
+    productData.images = [...(productData.images ?? []), ...uploadedImages];
+  }
+
+  return productData;
+}
+
 export async function createProductAction(
-  input: Partial<Product> & { files?: File[] },
+  input: ProductMutationInput,
 ): Promise<ProductMutationResult> {
   try {
     const authResult = await ensureAuthenticatedUser();
@@ -63,12 +85,7 @@ export async function createProductAction(
       return authResult;
     }
 
-    const { files = [], ...productData } = input;
-    if (files.length > 0) {
-      const uploadedImages = await uploadProductImagesAction(files);
-      productData.images = [...(productData.images ?? []), ...uploadedImages];
-    }
-
+    const productData = await mergeUploadedImages(input);
     const parsedBody = createProductBodySchema.parse(productData);
     const product = await productsRepository.save(parsedBody);
 
@@ -79,36 +96,22 @@ export async function createProductAction(
       product,
     };
   } catch (error) {
-    if (error instanceof ZodError) {
-      const formattedError = formatZodError(error);
+    const result = formatProductMutationError(
+      error,
+      'Failed to create product',
+    );
 
-      return {
-        success: false,
-        error: formattedError.error,
-        details: formattedError.details,
-      };
+    if (result.error === 'Failed to create product') {
+      console.error('Failed to create product from server action', error);
     }
 
-    if (error instanceof ProductConflictError) {
-      return {
-        success: false,
-        error: error.message,
-        details: error.details,
-      };
-    }
-
-    console.error('Failed to create product from server action', error);
-
-    return {
-      success: false,
-      error: 'Failed to create product',
-    };
+    return result;
   }
 }
 
 export async function updateProductAction(
   id: number,
-  input: Partial<Product> & { files?: File[] },
+  input: ProductMutationInput,
 ): Promise<ProductMutationResult> {
   try {
     const authResult = await ensureAuthenticatedUser();
@@ -118,13 +121,7 @@ export async function updateProductAction(
     }
 
     const validatedId = productIdParamsSchema.parse({ id }).id;
-
-    const { files = [], ...productData } = input;
-    if (files.length > 0) {
-      const uploadedImages = await uploadProductImagesAction(files);
-      productData.images = [...(productData.images ?? []), ...uploadedImages];
-    }
-
+    const productData = await mergeUploadedImages(input);
     const parsedBody = updateProductBodySchema.parse(productData);
     const product = await productsRepository.updateById(
       validatedId,
@@ -145,30 +142,16 @@ export async function updateProductAction(
       product,
     };
   } catch (error) {
-    if (error instanceof ZodError) {
-      const formattedError = formatZodError(error);
+    const result = formatProductMutationError(
+      error,
+      'Failed to update product',
+    );
 
-      return {
-        success: false,
-        error: formattedError.error,
-        details: formattedError.details,
-      };
+    if (result.error === 'Failed to update product') {
+      console.error('Failed to update product from server action', error);
     }
 
-    if (error instanceof ProductConflictError) {
-      return {
-        success: false,
-        error: error.message,
-        details: error.details,
-      };
-    }
-
-    console.error('Failed to update product from server action', error);
-
-    return {
-      success: false,
-      error: 'Failed to update product',
-    };
+    return result;
   }
 }
 
