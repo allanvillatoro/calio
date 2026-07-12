@@ -18,11 +18,14 @@ import {
   buildLaserEngravingsWhereClause,
   countLaserEngravingsWithDb,
   findLaserEngravingRowsWithDb,
-  getPagination,
   mapRowToLaserEngraving,
   normalizeFilters,
   requireLaserEngravingField,
 } from './drizzle-laser-engravings-repository.helpers';
+import {
+  buildFindAllResult,
+  getPagination,
+} from '../sellable-items-repository.helpers';
 
 export class DrizzleLaserEngravingsRepository implements ILaserEngravingsRepository {
   constructor(private readonly database: AppDb) {}
@@ -90,19 +93,11 @@ export class DrizzleLaserEngravingsRepository implements ILaserEngravingsReposit
       }),
     ]);
 
-    const totalPages = totalItems === 0 ? 0 : Math.ceil(totalItems / limit);
-
-    return {
-      data: laserEngravingRows.map(mapRowToLaserEngraving),
-      paging: {
-        totalItems,
-        totalPages,
-        currentPage,
-        limit,
-        hasNextPage: currentPage < totalPages,
-        hasPreviousPage: currentPage > 1,
-      },
-    };
+    return buildFindAllResult(laserEngravingRows.map(mapRowToLaserEngraving), {
+      totalItems,
+      currentPage,
+      limit,
+    });
   }
 
   async updateById(

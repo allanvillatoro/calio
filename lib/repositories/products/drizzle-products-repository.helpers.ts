@@ -1,13 +1,4 @@
-import {
-  and,
-  count,
-  desc,
-  eq,
-  gte,
-  ilike,
-  inArray,
-  type SQL,
-} from 'drizzle-orm';
+import { count, desc, eq, gte, ilike, inArray, type SQL } from 'drizzle-orm';
 import { products, type ProductRow } from '@/db/schema';
 import type { AppDb } from '@/db';
 import type {
@@ -18,14 +9,11 @@ import { requireField } from '../repository.helpers';
 import type { IProduct } from '@/lib/interfaces/product';
 import {
   calculatePriceWithDiscount,
+  combineSqlConditions,
   normalizeSellableFilters,
 } from '../sellable-items-repository.helpers';
 
 export { getPagination } from '../sellable-items-repository.helpers';
-
-function isSqlCondition(value: SQL | undefined): value is SQL {
-  return value !== undefined;
-}
 
 export function requireProductField<K extends keyof ProductChanges>(
   input: ProductChanges,
@@ -99,7 +87,7 @@ export function normalizeFilters(
 }
 
 export function buildProductsWhereClause(filters: ProductFilters) {
-  const conditions: SQL[] = [
+  return combineSqlConditions([
     filters.includeOutOfStock ? undefined : gte(products.quantity, 1),
     filters.categories
       ? inArray(products.category, filters.categories)
@@ -108,9 +96,7 @@ export function buildProductsWhereClause(filters: ProductFilters) {
     filters.inStore !== undefined
       ? eq(products.inStore, filters.inStore)
       : undefined,
-  ].filter(isSqlCondition);
-
-  return conditions.length > 0 ? and(...conditions) : undefined;
+  ]);
 }
 
 export async function countProductsWithDb(db: AppDb, whereClause?: SQL) {

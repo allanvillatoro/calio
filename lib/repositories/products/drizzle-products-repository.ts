@@ -12,7 +12,6 @@ import {
   buildProductsWhereClause,
   countProductsWithDb,
   findProductRowsWithDb,
-  getPagination,
   mapRowToProduct,
   normalizeFilters,
   requireProductField,
@@ -23,6 +22,10 @@ import {
 } from './products-repository.errors';
 import { omitUndefined } from '../repository.helpers';
 import type { IProduct } from '@/lib/interfaces/product';
+import {
+  buildFindAllResult,
+  getPagination,
+} from '../sellable-items-repository.helpers';
 
 export class DrizzleProductsRepository implements IProductsRepository {
   constructor(private readonly database: AppDb) {}
@@ -91,19 +94,11 @@ export class DrizzleProductsRepository implements IProductsRepository {
       }),
     ]);
 
-    const totalPages = totalItems === 0 ? 0 : Math.ceil(totalItems / limit);
-
-    return {
-      data: productRows.map(mapRowToProduct),
-      paging: {
-        totalItems,
-        totalPages,
-        currentPage,
-        limit,
-        hasNextPage: currentPage < totalPages,
-        hasPreviousPage: currentPage > 1,
-      },
-    };
+    return buildFindAllResult(productRows.map(mapRowToProduct), {
+      totalItems,
+      currentPage,
+      limit,
+    });
   }
 
   async updateById(

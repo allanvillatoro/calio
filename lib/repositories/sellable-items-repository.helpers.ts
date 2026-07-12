@@ -1,3 +1,4 @@
+import { and, type SQL } from 'drizzle-orm';
 import { PRODUCTS_PER_PAGE } from '@/lib/constants/product';
 
 export interface SellableItemFilters {
@@ -58,5 +59,39 @@ export function getPagination(filters: SellableItemFilters) {
     currentPage,
     limit,
     offset,
+  };
+}
+
+function isSqlCondition(value: SQL | undefined): value is SQL {
+  return value !== undefined;
+}
+
+export function combineSqlConditions(conditions: Array<SQL | undefined>) {
+  const sqlConditions = conditions.filter(isSqlCondition);
+
+  return sqlConditions.length > 0 ? and(...sqlConditions) : undefined;
+}
+
+export function buildFindAllResult<TItem>(
+  data: TItem[],
+  options: {
+    totalItems: number;
+    currentPage: number;
+    limit: number;
+  },
+) {
+  const { totalItems, currentPage, limit } = options;
+  const totalPages = totalItems === 0 ? 0 : Math.ceil(totalItems / limit);
+
+  return {
+    data,
+    paging: {
+      totalItems,
+      totalPages,
+      currentPage,
+      limit,
+      hasNextPage: currentPage < totalPages,
+      hasPreviousPage: currentPage > 1,
+    },
   };
 }

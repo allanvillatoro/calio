@@ -1,9 +1,10 @@
-import { and, count, desc, gte, ilike, type SQL } from 'drizzle-orm';
+import { count, desc, gte, ilike, type SQL } from 'drizzle-orm';
 import { laserEngravings, type LaserEngravingRow } from '@/db/schema';
 import type { AppDb } from '@/db';
 import { requireField } from '../repository.helpers';
 import {
   calculatePriceWithDiscount,
+  combineSqlConditions,
   normalizeSellableFilters,
 } from '../sellable-items-repository.helpers';
 import type { ILaserEngraving } from '@/lib/interfaces/laser-engraving';
@@ -13,10 +14,6 @@ import type {
 } from './laser-engravings-repository.interface';
 
 export { getPagination } from '../sellable-items-repository.helpers';
-
-function isSqlCondition(value: SQL | undefined): value is SQL {
-  return value !== undefined;
-}
 
 export function requireLaserEngravingField<
   K extends keyof LaserEngravingChanges,
@@ -56,14 +53,12 @@ export function normalizeFilters(
 export function buildLaserEngravingsWhereClause(
   filters: LaserEngravingFilters,
 ) {
-  const conditions: SQL[] = [
+  return combineSqlConditions([
     filters.includeOutOfStock ? undefined : gte(laserEngravings.quantity, 1),
     filters.query
       ? ilike(laserEngravings.name, `%${filters.query}%`)
       : undefined,
-  ].filter(isSqlCondition);
-
-  return conditions.length > 0 ? and(...conditions) : undefined;
+  ]);
 }
 
 export async function countLaserEngravingsWithDb(db: AppDb, whereClause?: SQL) {
