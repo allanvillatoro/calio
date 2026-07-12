@@ -2,9 +2,12 @@ import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { UserAuthenticationError } from '@/lib/errors';
-import { formatZodError } from '@/lib/zod';
 import { userCredentialsSchema } from '../schemas';
 import { usersRepository } from '@/lib/repositories/users/drizzle-users-repository';
+import {
+  internalServerErrorResponse,
+  validationErrorResponse,
+} from '../../route-response.helpers';
 
 export async function POST(request: Request) {
   try {
@@ -14,9 +17,7 @@ export async function POST(request: Request) {
     return NextResponse.json(user, { status: StatusCodes.CREATED });
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json(formatZodError(error), {
-        status: StatusCodes.BAD_REQUEST,
-      });
+      return validationErrorResponse(error);
     }
 
     if (
@@ -29,11 +30,6 @@ export async function POST(request: Request) {
       );
     }
 
-    console.error('Failed to register user', error);
-
-    return NextResponse.json(
-      { error: 'Failed to register user' },
-      { status: StatusCodes.INTERNAL_SERVER_ERROR },
-    );
+    return internalServerErrorResponse('Failed to register user', error);
   }
 }
