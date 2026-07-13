@@ -1,6 +1,6 @@
 import type { CartItem } from '@/lib/stores/cart.store';
 import { getImageUrl } from '@/lib/utils';
-import { LOGO_PATH } from '@/lib/constants/cart-order-pdf';
+import { LOGO_PATH } from './cart-order-pdf.constants';
 
 const IMAGE_LOAD_ERROR = 'No se pudo cargar la imagen para el PDF';
 const IMAGE_PREPARE_ERROR = 'No se pudo preparar la imagen para el PDF';

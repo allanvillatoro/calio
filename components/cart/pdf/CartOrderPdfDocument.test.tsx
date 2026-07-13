@@ -5,9 +5,9 @@ import {
   type ReactNode,
 } from 'react';
 import { describe, expect, it } from 'vitest';
-import type { PdfCartItem } from '@/lib/cart/order-pdf-image.helpers';
 import { SOCIAL_PROFILE_LINKS } from '@/lib/constants/social-links';
 import { CartOrderPdfDocument } from './CartOrderPdfDocument';
+import type { PdfCartItem } from './order-pdf-image.helpers';
 
 function createPdfItem(overrides: Partial<PdfCartItem> = {}): PdfCartItem {
   return {

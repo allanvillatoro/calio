@@ -1,11 +1,8 @@
 import { pdf } from '@react-pdf/renderer';
 import type { CartItem } from '@/lib/stores/cart.store';
 import { CartOrderPdfDocument } from './pdf/CartOrderPdfDocument';
-import { DEFAULT_SITE_URL } from '@/lib/constants/cart-order-pdf';
-import {
-  prepareLogoSrc,
-  preparePdfItems,
-} from '@/lib/cart/order-pdf-image.helpers';
+import { DEFAULT_SITE_URL } from './pdf/cart-order-pdf.constants';
+import { prepareLogoSrc, preparePdfItems } from './pdf/order-pdf-image.helpers';
 
 export async function createCartOrderPdfBlob(
   items: CartItem[],

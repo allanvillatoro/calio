@@ -8,8 +8,8 @@ import {
 } from '@react-pdf/renderer';
 import { SOCIAL_PROFILE_LINKS } from '@/lib/constants/social-links';
 import { formatPrice } from '@/lib/utils';
-import { getProductUrl } from '@/lib/constants/cart-order-pdf';
-import type { PdfCartItem } from '@/lib/cart/order-pdf-image.helpers';
+import { getProductUrl } from './cart-order-pdf.constants';
+import type { PdfCartItem } from './order-pdf-image.helpers';
 import { cartOrderPdfStyles as styles } from './styles';
 
 interface CartOrderPdfDocumentProps {
