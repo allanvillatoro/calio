@@ -125,6 +125,7 @@ export default function CatalogContent() {
         isAdmin={isAuthenticated && !printView}
         onEdit={setEditingProduct}
         onDelete={setDeletingProduct}
+        enableCartAction={!isAuthenticated}
       />
     </CatalogContentShell>
   );
