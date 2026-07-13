@@ -30,6 +30,7 @@ export interface FindAllProductsResult {
 export interface IProductsRepository {
   save(input: ProductChanges): Promise<IProduct>;
   findById(id: number): Promise<IProduct | null>;
+  findBySlug(slug: string): Promise<IProduct | null>;
   findAll(
     filters?: ProductFilters | URLSearchParams,
   ): Promise<FindAllProductsResult>;

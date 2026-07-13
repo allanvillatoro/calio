@@ -1,22 +1,25 @@
 import ProductCard from '@/components/catalog/ProductCard';
-import type { Product } from '@/lib/types';
+import type { CatalogItem, Product } from '@/lib/types';
 import { PaginationControls } from './PaginationControls';
 import { EmptyState } from './EmptyState';
 import { ProductsGridSkeleton } from './ProductsGridSkeleton';
 
-interface ProductsGridProps {
-  products: Product[];
+type ProductsGridItem = Product | CatalogItem;
+
+interface ProductsGridProps<TItem extends ProductsGridItem = Product> {
+  products: TItem[];
   totalProducts: number;
   currentPage: number;
   totalPages: number;
   isLoading?: boolean;
   onPageChange: (page: number) => void;
   isAdmin: boolean;
-  onEdit: (product: Product | null) => void;
-  onDelete: (product: Product | null) => void;
+  onEdit: (item: TItem | null) => void;
+  onDelete: (item: TItem | null) => void;
+  enableCartAction?: boolean;
 }
 
-export function ProductsGrid({
+export function ProductsGrid<TItem extends ProductsGridItem = Product>({
   products,
   totalProducts,
   currentPage,
@@ -26,7 +29,8 @@ export function ProductsGrid({
   isAdmin,
   onEdit,
   onDelete,
-}: ProductsGridProps) {
+  enableCartAction = true,
+}: ProductsGridProps<TItem>) {
   if (isLoading) {
     return <ProductsGridSkeleton />;
   }
@@ -39,13 +43,14 @@ export function ProductsGrid({
     <div>
       {/* Products Grid */}
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-        {products.map((product) => (
+        {products.map((item) => (
           <ProductCard
-            key={product.id}
-            product={product}
+            key={item.id}
+            product={item}
             isAdmin={isAdmin}
-            onEdit={() => onEdit(product)}
-            onDelete={() => onDelete(product)}
+            onEdit={() => onEdit(item)}
+            onDelete={() => onDelete(item)}
+            enableCartAction={enableCartAction}
           />
         ))}
       </div>

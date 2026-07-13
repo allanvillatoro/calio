@@ -24,10 +24,10 @@ export default defineConfig({
       ],
       reporter: ['text', 'html'],
       thresholds: {
-        statements: 74.59,
-        branches: 74.44,
-        functions: 71.73,
-        lines: 74.65,
+        statements: 84.4,
+        branches: 83.8,
+        functions: 81.57,
+        lines: 84.72,
       },
       exclude: [
         '.next/**',

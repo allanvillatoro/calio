@@ -50,6 +50,9 @@ function createCartItem(overrides: Partial<CartItem> = {}): CartItem {
   return {
     product: {
       id: 1,
+      cartId: 'product:1',
+      sourceId: '1',
+      kind: 'product',
       name: 'Collar Perla',
       description: 'Collar dorado con dije de perla',
       price: 250,
@@ -106,6 +109,14 @@ describe('order PDF image helpers', () => {
 
     await expect(
       loadImageAsPngDataUrl('https://cdn.test/empty.jpg'),
+    ).rejects.toThrow('No se pudo preparar la imagen para el PDF');
+  });
+
+  it('rejects when the canvas context cannot be created', async () => {
+    getContext.mockReturnValueOnce(null);
+
+    await expect(
+      loadImageAsPngDataUrl('https://cdn.test/no-context.jpg'),
     ).rejects.toThrow('No se pudo preparar la imagen para el PDF');
   });
 

@@ -1,13 +1,4 @@
-import {
-  and,
-  count,
-  desc,
-  eq,
-  gte,
-  ilike,
-  inArray,
-  type SQL,
-} from 'drizzle-orm';
+import { count, desc, eq, gte, ilike, inArray, type SQL } from 'drizzle-orm';
 import { products, type ProductRow } from '@/db/schema';
 import type { AppDb } from '@/db';
 import type {
@@ -16,11 +7,13 @@ import type {
 } from './products-repository.interface';
 import { requireField } from '../repository.helpers';
 import type { IProduct } from '@/lib/interfaces/product';
-import { PRODUCTS_PER_PAGE } from '@/lib/constants/product';
+import {
+  calculatePriceWithDiscount,
+  combineSqlConditions,
+  normalizeSellableFilters,
+} from '../sellable-items-repository.helpers';
 
-function isSqlCondition(value: SQL | undefined): value is SQL {
-  return value !== undefined;
-}
+export { getPagination } from '../sellable-items-repository.helpers';
 
 export function requireProductField<K extends keyof ProductChanges>(
   input: ProductChanges,
@@ -38,11 +31,10 @@ export function mapRowToProduct(row: ProductRow): IProduct {
     description: row.description,
     price: row.price,
     discount: row.discount,
-    priceWithDiscount: Number(
-      (row.price * (1 - row.discount / 100)).toFixed(2),
-    ),
+    priceWithDiscount: calculatePriceWithDiscount(row.price, row.discount),
     quantity: row.quantity,
     images: row.images,
+    slug: row.slug,
     category: row.category,
     inStore: row.inStore,
     createdAt: row.createdAt,
@@ -60,23 +52,15 @@ function normalizeCategories(categories?: string[]): string[] | undefined {
     : undefined;
 }
 
-function normalizeQuery(query?: string): string | undefined {
-  const normalizedQuery = query?.trim();
-  return normalizedQuery ? normalizedQuery : undefined;
-}
-
 export function normalizeFilters(
   filters?: ProductFilters | URLSearchParams,
 ): ProductFilters {
   if (!filters) {
-    return {
-      page: 1,
-      limit: PRODUCTS_PER_PAGE,
-      includeOutOfStock: false,
-    };
+    return normalizeSellableFilters();
   }
 
   if (filters instanceof URLSearchParams) {
+    const sellableFilters = normalizeSellableFilters(filters);
     const categories = normalizeCategories(
       filters
         .getAll('category')
@@ -84,46 +68,26 @@ export function normalizeFilters(
         .map((category) => category.trim()),
     );
     const inStoreParam = filters.get('instore');
-    const queryParam = normalizeQuery(filters.get('query') ?? undefined);
-    const pageParam = filters.get('page');
-    const limitParam = filters.get('limit');
 
     return {
+      ...sellableFilters,
       ...(categories ? { categories } : {}),
-      ...(queryParam ? { query: queryParam } : {}),
       ...(inStoreParam === 'true' ? { inStore: true } : {}),
       ...(inStoreParam === 'false' ? { inStore: false } : {}),
-      page: pageParam ? Number(pageParam) : 1,
-      limit: limitParam ? Number(limitParam) : PRODUCTS_PER_PAGE,
-      includeOutOfStock: filters.get('includeOutOfStock') === 'true',
     };
   }
 
+  const sellableFilters = normalizeSellableFilters(filters);
+
   return {
+    ...sellableFilters,
     categories: normalizeCategories(filters.categories),
-    query: normalizeQuery(filters.query),
     inStore: filters.inStore,
-    page: filters.page ?? 1,
-    limit: filters.limit ?? PRODUCTS_PER_PAGE,
-    includeOutOfStock: filters.includeOutOfStock ?? false,
-  };
-}
-
-export function getPagination(filters: ProductFilters) {
-  const currentPage = filters.page && filters.page > 0 ? filters.page : 1;
-  const limit =
-    filters.limit && filters.limit > 0 ? filters.limit : PRODUCTS_PER_PAGE;
-  const offset = (currentPage - 1) * limit;
-
-  return {
-    currentPage,
-    limit,
-    offset,
   };
 }
 
 export function buildProductsWhereClause(filters: ProductFilters) {
-  const conditions: SQL[] = [
+  return combineSqlConditions([
     filters.includeOutOfStock ? undefined : gte(products.quantity, 1),
     filters.categories
       ? inArray(products.category, filters.categories)
@@ -132,9 +96,7 @@ export function buildProductsWhereClause(filters: ProductFilters) {
     filters.inStore !== undefined
       ? eq(products.inStore, filters.inStore)
       : undefined,
-  ].filter(isSqlCondition);
-
-  return conditions.length > 0 ? and(...conditions) : undefined;
+  ]);
 }
 
 export async function countProductsWithDb(db: AppDb, whereClause?: SQL) {

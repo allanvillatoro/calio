@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Pencil, ShoppingCart, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import type { Product } from '@/lib/types';
+import type { CatalogItem, Product } from '@/lib/types';
 import { useCartStore } from '@/lib/stores/cart.store';
 import { cn, formatPrice, getImageUrl } from '@/lib/utils';
 import { Button } from '../ui/button';
@@ -22,19 +22,30 @@ const ADD_TO_CART_ACTION_STYLES = cn(
   '[@media(hover:hover)_and_(pointer:fine)]:group-focus-within:opacity-100',
 );
 
-interface ProductCardProps {
-  product: Product;
-  isAdmin: boolean;
-  onEdit: (product: Product) => void;
-  onDelete: (product: Product) => void;
+type ProductCardItem = Product | CatalogItem;
+
+function getProductHref(product: ProductCardItem) {
+  const publicId =
+    product.slug || ('sourceId' in product ? product.sourceId : product.id);
+
+  return `/productos/${publicId}`;
 }
 
-export default function ProductCard({
+interface ProductCardProps<TItem extends ProductCardItem = Product> {
+  product: TItem;
+  isAdmin: boolean;
+  onEdit: (item: TItem) => void;
+  onDelete: (item: TItem) => void;
+  enableCartAction?: boolean;
+}
+
+export default function ProductCard<TItem extends ProductCardItem = Product>({
   product,
   isAdmin,
   onEdit,
   onDelete,
-}: ProductCardProps) {
+  enableCartAction = true,
+}: ProductCardProps<TItem>) {
   const mainImage = product.images[0];
   const hasDiscount = product.discount > 0;
   const addProduct = useCartStore((state) => state.addProduct);
@@ -52,7 +63,7 @@ export default function ProductCard({
 
   return (
     <div className={PRODUCT_CARD_STYLES}>
-      <Link href={`/productos/${product.id}`}>
+      <Link href={getProductHref(product)}>
         <div className="relative w-full aspect-square bg-white">
           <Image
             src={getImageUrl(mainImage)}
@@ -94,21 +105,29 @@ export default function ProductCard({
             </div>
             {isAdmin && (
               <span className="mt-0.5 text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
-                Stock: {product.quantity}
+                {product.quantity === 0
+                  ? 'Agotado'
+                  : `Stock: ${product.quantity}`}
               </span>
             )}
           </div>
         </div>
       </Link>
-      <div className={cn(ADD_TO_CART_ACTION_STYLES, isAdmin ? 'pb-2' : 'pb-4')}>
-        <Button
-          className="w-full bg-gray-900 text-white hover:bg-gray-700"
-          onClick={handleAddToCart}
-          aria-label={`Agregar ${product.name} al carrito`}
+      {enableCartAction ? (
+        <div
+          className={cn(ADD_TO_CART_ACTION_STYLES, isAdmin ? 'pb-2' : 'pb-4')}
         >
-          <ShoppingCart className="size-4" />
-        </Button>
-      </div>
+          <Button
+            className="w-full bg-gray-900 text-white hover:bg-gray-700"
+            onClick={handleAddToCart}
+            aria-label={`Agregar ${product.name} al carrito`}
+          >
+            <ShoppingCart className="size-4" />
+          </Button>
+        </div>
+      ) : (
+        <div className="pb-4" />
+      )}
       {isAdmin && (
         <div className="flex justify-center gap-2 px-4 pb-4">
           <Button

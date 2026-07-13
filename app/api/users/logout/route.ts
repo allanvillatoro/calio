@@ -1,6 +1,6 @@
-import { StatusCodes } from 'http-status-codes';
 import { NextResponse } from 'next/server';
 import { clearAuthCookie } from '@/lib/auth';
+import { internalServerErrorResponse } from '../../route-response.helpers';
 
 export async function POST() {
   try {
@@ -8,11 +8,6 @@ export async function POST() {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Failed to logout user', error);
-
-    return NextResponse.json(
-      { error: 'Failed to logout user' },
-      { status: StatusCodes.INTERNAL_SERVER_ERROR },
-    );
+    return internalServerErrorResponse('Failed to logout user', error);
   }
 }

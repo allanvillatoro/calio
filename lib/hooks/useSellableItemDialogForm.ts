@@ -2,56 +2,94 @@ import { useEffect, useState, useTransition } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
-
-import { EMPTY_PRODUCT } from '@/lib/constants/product';
-import {
-  createProductAction,
-  updateProductAction,
-} from '@/lib/actions/product-mutations.action';
 import { mergeFilesByName, moveArrayItem } from '@/lib/utils';
-import type { Category, Product } from '@/lib/types';
+import type { Category } from '@/lib/types';
 
-interface ProductFormValues {
+export interface SellableItemFormItem {
+  id: number;
+  slug?: string | null;
+  name: string;
+  description: string;
+  price: number;
+  discount: number;
+  priceWithDiscount: number;
+  quantity: number;
+  images: string[];
+  category?: Category;
+  inStore?: boolean;
+}
+
+export interface SellableItemFormValues {
   id?: number;
+  slug?: string;
   name: string;
   description: string;
   price: number;
   discount: number;
   quantity: number;
-  inStore: boolean;
-  category: Category;
+  inStore?: boolean;
+  category?: Category;
   images: string[];
 }
 
-interface FormInputs extends ProductFormValues {
+export interface SellableItemMutationResult {
+  success: boolean;
+  error?: string;
+  details?: Array<{
+    path: string;
+    message: string;
+  }>;
+}
+
+interface FormInputs extends SellableItemFormValues {
   files?: File[];
 }
 
-interface UseProductDialogFormParams {
-  product: Product | null;
+interface UseSellableItemDialogFormParams {
+  item: SellableItemFormItem | null;
+  emptyItem: SellableItemFormItem;
   onOpenChange: (open: boolean) => void;
+  queryKey: unknown[];
+  itemName: string;
+  itemNameCapitalized: string;
+  logName?: string;
+  formFields: Array<keyof SellableItemFormValues>;
+  submitItem: (
+    id: number | undefined,
+    values: FormInputs,
+  ) => Promise<SellableItemMutationResult>;
 }
 
 const MAX_IMAGE_FILE_SIZE_BYTES = 1024 * 1024;
 
-function getEmptyFormValues(): ProductFormValues {
+function getEmptyFormValues(
+  emptyItem: SellableItemFormItem,
+): SellableItemFormValues {
   return {
     id: undefined,
-    name: EMPTY_PRODUCT.name,
-    description: EMPTY_PRODUCT.description,
-    price: EMPTY_PRODUCT.price,
-    discount: EMPTY_PRODUCT.discount,
-    quantity: EMPTY_PRODUCT.quantity,
-    inStore: EMPTY_PRODUCT.inStore ?? false,
-    category: EMPTY_PRODUCT.category,
+    slug: emptyItem.slug ?? '',
+    name: emptyItem.name,
+    description: emptyItem.description,
+    price: emptyItem.price,
+    discount: emptyItem.discount,
+    quantity: emptyItem.quantity,
+    inStore: emptyItem.inStore ?? false,
+    category: emptyItem.category,
     images: [],
   };
 }
 
-export function useProductDialogForm({
-  product,
+export function useSellableItemDialogForm({
+  item,
+  emptyItem,
   onOpenChange,
-}: UseProductDialogFormParams) {
+  queryKey,
+  itemName,
+  itemNameCapitalized,
+  logName = itemName,
+  formFields,
+  submitItem,
+}: UseSellableItemDialogFormParams) {
   const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -70,7 +108,7 @@ export function useProductDialogForm({
     trigger,
     formState: { errors },
   } = useForm<FormInputs>({
-    defaultValues: { ...getEmptyFormValues(), files: [] },
+    defaultValues: { ...getEmptyFormValues(emptyItem), files: [] },
   });
 
   const handleDialogOpenChange = (nextOpen: boolean) => {
@@ -78,7 +116,7 @@ export function useProductDialogForm({
       setSubmitError(null);
       if (shouldRefreshOnClose) {
         queryClient.invalidateQueries({
-          queryKey: ['products'],
+          queryKey,
         });
         setShouldRefreshOnClose(false);
       }
@@ -89,23 +127,21 @@ export function useProductDialogForm({
 
   useEffect(() => {
     reset({
-      id:
-        typeof product?.id === 'number' && product.id > 0
-          ? product.id
-          : undefined,
-      name: product?.name ?? EMPTY_PRODUCT.name,
-      description: product?.description ?? EMPTY_PRODUCT.description,
-      price: product?.price ?? EMPTY_PRODUCT.price,
-      discount: product?.discount ?? EMPTY_PRODUCT.discount,
-      quantity: product?.quantity ?? EMPTY_PRODUCT.quantity,
-      inStore: product?.inStore ?? EMPTY_PRODUCT.inStore ?? false,
-      category: product?.category ?? EMPTY_PRODUCT.category,
-      images: product?.images ?? [],
+      id: typeof item?.id === 'number' && item.id > 0 ? item.id : undefined,
+      slug: item?.slug ?? emptyItem.slug ?? '',
+      name: item?.name ?? emptyItem.name,
+      description: item?.description ?? emptyItem.description,
+      price: item?.price ?? emptyItem.price,
+      discount: item?.discount ?? emptyItem.discount,
+      quantity: item?.quantity ?? emptyItem.quantity,
+      inStore: item?.inStore ?? emptyItem.inStore ?? false,
+      category: item?.category ?? emptyItem.category,
+      images: item?.images ?? [],
       files: [],
     });
-  }, [product, reset]);
+  }, [emptyItem, item, reset]);
 
-  const isEditing = !!product?.id;
+  const isEditing = !!item?.id;
   const selectedCategory = useWatch({
     control,
     name: 'category',
@@ -142,7 +178,7 @@ export function useProductDialogForm({
 
     setValue(
       'discount',
-      product?.discount && product.discount > 0 ? product.discount : 0,
+      item?.discount && item.discount > 0 ? item.discount : 0,
       {
         shouldDirty: true,
         shouldValidate: true,
@@ -176,41 +212,18 @@ export function useProductDialogForm({
 
   const onSubmit = (values: FormInputs) => {
     clearImagesErrorIfNeeded(values.files ?? []);
-
-    const productData = {
-      name: values.name,
-      description: values.description,
-      price: values.price,
-      discount: values.category === 'rebajas' ? values.discount : 0,
-      quantity: values.quantity,
-      inStore: values.inStore,
-      category: values.category,
-      images: values.images,
-      files: values.files,
-    };
-
     setSubmitError(null);
 
     startTransition(async () => {
       try {
-        const result =
-          isEditing && product?.id
-            ? await updateProductAction(product.id, productData)
-            : await createProductAction(productData);
+        const result = await submitItem(
+          isEditing && item?.id ? item.id : undefined,
+          values,
+        );
 
         if (!result.success) {
-          const formFields: Array<keyof ProductFormValues> = [
-            'name',
-            'description',
-            'price',
-            'discount',
-            'quantity',
-            'category',
-            'images',
-          ];
-
           result.details?.forEach((detail) => {
-            const field = detail.path as keyof ProductFormValues;
+            const field = detail.path as keyof SellableItemFormValues;
 
             if (formFields.includes(field)) {
               setError(field, {
@@ -220,35 +233,38 @@ export function useProductDialogForm({
             }
           });
 
-          setSubmitError(result.error ?? 'No se pudo guardar el producto');
+          setSubmitError(result.error ?? `No se pudo guardar el ${itemName}`);
           toast.error(
-            result.error ??
-              `No se pudo guardar el producto ${productData.name}`,
+            result.error ?? `No se pudo guardar el ${itemName} ${values.name}`,
           );
           return;
         }
 
         if (isEditing) {
           queryClient.invalidateQueries({
-            queryKey: ['products'],
+            queryKey,
           });
           toast.success(
-            `Producto ${productData.name} actualizado correctamente`,
+            `${itemNameCapitalized} ${values.name} actualizado correctamente`,
           );
           handleDialogOpenChange(false);
           return;
         }
 
         setShouldRefreshOnClose(true);
-
-        reset(getEmptyFormValues());
+        reset(getEmptyFormValues(emptyItem));
         setFormVersion((currentVersion) => currentVersion + 1);
         setSubmitError(null);
-        toast.success(`Producto ${productData.name} creado correctamente`);
+        toast.success(
+          `${itemNameCapitalized} ${values.name} creado correctamente`,
+        );
       } catch (error) {
-        console.error('Unexpected error while submitting product form', error);
-        setSubmitError('Ocurrió un error inesperado al guardar el producto');
-        toast.error('Ocurrió un error inesperado al guardar el producto');
+        console.error(
+          `Unexpected error while submitting ${logName} form`,
+          error,
+        );
+        setSubmitError(`Ocurrió un error inesperado al guardar el ${itemName}`);
+        toast.error(`Ocurrió un error inesperado al guardar el ${itemName}`);
       }
     });
   };

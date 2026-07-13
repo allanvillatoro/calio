@@ -25,11 +25,17 @@ type CatalogFilterUpdates = Partial<
   Record<CatalogFilterKey, string | undefined>
 >;
 
+interface UseCatalogFiltersOptions {
+  basePath?: string;
+}
+
 export function useCatalogFilters(
   categories: Category[],
+  options: UseCatalogFiltersOptions = {},
 ): UseCatalogFiltersReturn {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const basePath = options.basePath ?? '/catalogo';
 
   // Get selected categories from URL
   const categoriesParam = searchParams.get('categorias');
@@ -78,7 +84,10 @@ export function useCatalogFilters(
       }
     }
 
-    router.replace(`/catalogo?${params.toString()}`, { scroll: true });
+    const queryString = params.toString();
+    const nextUrl = queryString ? `${basePath}?${queryString}` : basePath;
+
+    router.replace(nextUrl, { scroll: true });
   };
 
   const onPageChange = (nextPage: number) => {

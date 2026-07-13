@@ -13,6 +13,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:import-products": "tsx scripts/import-products.ts",
+    "db:import-laser-engravings": "tsx scripts/import-laser-engravings.ts",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -1,16 +1,8 @@
-export interface IProduct {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  discount: number;
-  priceWithDiscount: number;
-  quantity: number;
-  images: string[];
+import type { ISellableItem, Paging } from './sellable-item';
+
+export interface IProduct extends ISellableItem {
   category: string;
   inStore: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface ProductResponse {
@@ -18,11 +10,4 @@ export interface ProductResponse {
   paging: Paging;
 }
 
-export interface Paging {
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  limit: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
+export type { Paging } from './sellable-item';

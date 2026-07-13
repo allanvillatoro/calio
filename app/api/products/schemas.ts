@@ -1,18 +1,16 @@
 import { z } from 'zod';
 import { PRODUCT_CATEGORIES } from '@/lib/constants/product-categories';
+import {
+  sellableItemBodyShape,
+  sellableItemIdParamsSchema,
+  sellableItemsQuerySchema,
+} from '../sellable-item-schemas';
 
 const categorySchema = z.enum(PRODUCT_CATEGORIES);
-const imageSchema = z.string().trim().min(1);
-const discountSchema = z.number().int().min(0).max(99);
 
 const productBodyShape = {
-  name: z.string().trim().min(1),
-  description: z.string().trim().min(1),
-  price: z.number().nonnegative(),
-  quantity: z.number().int().nonnegative(),
-  images: z.array(imageSchema).min(1),
+  ...sellableItemBodyShape,
   category: categorySchema,
-  discount: discountSchema.default(0),
   inStore: z.boolean().optional(),
 };
 
@@ -45,9 +43,7 @@ const productBodySchema = z
   .object(productBodyShape)
   .superRefine(validateDiscountByCategory);
 
-export const productIdParamsSchema = z.object({
-  id: z.coerce.number().int().positive(),
-});
+export const productIdParamsSchema = sellableItemIdParamsSchema;
 
 export const createProductBodySchema = productBodySchema.extend({
   id: z.number().int().positive().optional(),
@@ -55,9 +51,8 @@ export const createProductBodySchema = productBodySchema.extend({
 
 export const updateProductBodySchema = productBodySchema;
 
-export const productsQuerySchema = z.object({
+export const productsQuerySchema = sellableItemsQuerySchema.extend({
   category: z.array(categorySchema).optional(),
-  query: z.string().trim().min(1).optional(),
   instore: z.preprocess((value) => {
     if (value === undefined) {
       return undefined;
@@ -70,6 +65,4 @@ export const productsQuerySchema = z.object({
 
     return value;
   }, z.boolean().optional()),
-  page: z.coerce.number().int().positive().default(1),
-  limit: z.coerce.number().int().positive().max(100).default(20),
 });

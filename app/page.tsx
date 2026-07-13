@@ -78,15 +78,24 @@ export default function Home() {
               regalar o guardar un momento especial.
             </p>
 
-            <Link
-              href={urlGrabados}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Grabados laser personalizados"
-              className="inline-block bg-white text-black px-8 py-3 font-semibold tracking-wide hover:scale-105 transition-all duration-300"
-            >
-              Quiero personalizar
-            </Link>
+            <div className="flex flex-col gap-4 sm:flex-row">
+              {/*               <Link
+                href="/grabados"
+                aria-label="Ver muestras de grabado laser"
+                className="inline-block border border-white px-8 py-3 text-center font-semibold tracking-wide transition-all duration-300 hover:scale-105 hover:bg-white hover:text-black"
+              >
+                Ver muestras de grabado
+              </Link> */}
+              <Link
+                href={urlGrabados}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Grabados laser personalizados"
+                className="inline-block bg-white text-black px-8 py-3 text-center font-semibold tracking-wide hover:scale-105 transition-all duration-300"
+              >
+                Quiero personalizar
+              </Link>
+            </div>
           </div>
         </div>
       </section>

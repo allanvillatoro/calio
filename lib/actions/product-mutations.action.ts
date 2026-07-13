@@ -1,30 +1,28 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { ZodError } from 'zod';
 import {
   createProductBodySchema,
   productIdParamsSchema,
   updateProductBodySchema,
 } from '@/app/api/products/schemas';
-import { getAuthenticatedUserFromCookies } from '@/lib/auth';
-import { uploadProductImagesAction } from '@/lib/actions/cloudinary-upload.action';
+import { ensureAuthenticatedUser } from '@/lib/actions/authenticated-action.helpers';
+import {
+  formatMutationError,
+  logUnexpectedMutationError,
+  mergeUploadedImages,
+  type MutationErrorDetail,
+} from '@/lib/actions/mutation-action.helpers';
 import { ProductConflictError } from '@/lib/errors';
 import type { IProduct } from '@/lib/interfaces/product';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
-import { formatZodError } from '@/lib/zod';
 import type { Product } from '../types';
-
-interface ProductMutationErrorDetail {
-  path: string;
-  message: string;
-}
 
 export interface ProductMutationResult {
   success: boolean;
   product?: IProduct;
   error?: string;
-  details?: ProductMutationErrorDetail[];
+  details?: MutationErrorDetail[];
 }
 
 export interface ProductDeleteResult {
@@ -32,29 +30,19 @@ export interface ProductDeleteResult {
   error?: string;
 }
 
+type ProductMutationInput = Partial<Product> & { files?: File[] };
+
 function revalidateProductPaths(productId: number) {
   revalidatePath('/catalogo');
   revalidatePath(`/productos/${productId}`);
 }
 
-async function ensureAuthenticatedUser() {
-  const authenticatedUser = await getAuthenticatedUserFromCookies();
-
-  if (!authenticatedUser) {
-    return {
-      success: false as const,
-      error: 'Unauthorized',
-    };
-  }
-
-  return {
-    success: true as const,
-    user: authenticatedUser,
-  };
+function formatProductMutationError(error: unknown, fallbackMessage: string) {
+  return formatMutationError(error, fallbackMessage, [ProductConflictError]);
 }
 
 export async function createProductAction(
-  input: Partial<Product> & { files?: File[] },
+  input: ProductMutationInput,
 ): Promise<ProductMutationResult> {
   try {
     const authResult = await ensureAuthenticatedUser();
@@ -63,12 +51,7 @@ export async function createProductAction(
       return authResult;
     }
 
-    const { files = [], ...productData } = input;
-    if (files.length > 0) {
-      const uploadedImages = await uploadProductImagesAction(files);
-      productData.images = [...(productData.images ?? []), ...uploadedImages];
-    }
-
+    const productData = await mergeUploadedImages(input);
     const parsedBody = createProductBodySchema.parse(productData);
     const product = await productsRepository.save(parsedBody);
 
@@ -79,36 +62,25 @@ export async function createProductAction(
       product,
     };
   } catch (error) {
-    if (error instanceof ZodError) {
-      const formattedError = formatZodError(error);
+    const result = formatProductMutationError(
+      error,
+      'Failed to create product',
+    );
 
-      return {
-        success: false,
-        error: formattedError.error,
-        details: formattedError.details,
-      };
-    }
+    logUnexpectedMutationError(
+      result,
+      error,
+      'Failed to create product',
+      'Failed to create product from server action',
+    );
 
-    if (error instanceof ProductConflictError) {
-      return {
-        success: false,
-        error: error.message,
-        details: error.details,
-      };
-    }
-
-    console.error('Failed to create product from server action', error);
-
-    return {
-      success: false,
-      error: 'Failed to create product',
-    };
+    return result;
   }
 }
 
 export async function updateProductAction(
   id: number,
-  input: Partial<Product> & { files?: File[] },
+  input: ProductMutationInput,
 ): Promise<ProductMutationResult> {
   try {
     const authResult = await ensureAuthenticatedUser();
@@ -118,13 +90,7 @@ export async function updateProductAction(
     }
 
     const validatedId = productIdParamsSchema.parse({ id }).id;
-
-    const { files = [], ...productData } = input;
-    if (files.length > 0) {
-      const uploadedImages = await uploadProductImagesAction(files);
-      productData.images = [...(productData.images ?? []), ...uploadedImages];
-    }
-
+    const productData = await mergeUploadedImages(input);
     const parsedBody = updateProductBodySchema.parse(productData);
     const product = await productsRepository.updateById(
       validatedId,
@@ -145,30 +111,19 @@ export async function updateProductAction(
       product,
     };
   } catch (error) {
-    if (error instanceof ZodError) {
-      const formattedError = formatZodError(error);
+    const result = formatProductMutationError(
+      error,
+      'Failed to update product',
+    );
 
-      return {
-        success: false,
-        error: formattedError.error,
-        details: formattedError.details,
-      };
-    }
+    logUnexpectedMutationError(
+      result,
+      error,
+      'Failed to update product',
+      'Failed to update product from server action',
+    );
 
-    if (error instanceof ProductConflictError) {
-      return {
-        success: false,
-        error: error.message,
-        details: error.details,
-      };
-    }
-
-    console.error('Failed to update product from server action', error);
-
-    return {
-      success: false,
-      error: 'Failed to update product',
-    };
+    return result;
   }
 }
 
@@ -207,20 +162,21 @@ export async function deleteProductAction(
       success: true,
     };
   } catch (error) {
-    if (error instanceof ZodError) {
-      const formattedError = formatZodError(error);
+    const result = formatProductMutationError(
+      error,
+      'Failed to delete product',
+    );
 
-      return {
-        success: false,
-        error: formattedError.error,
-      };
-    }
-
-    console.error('Failed to delete product from server action', error);
+    logUnexpectedMutationError(
+      result,
+      error,
+      'Failed to delete product',
+      'Failed to delete product from server action',
+    );
 
     return {
       success: false,
-      error: 'Failed to delete product',
+      error: result.error,
     };
   }
 }

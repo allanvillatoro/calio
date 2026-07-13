@@ -8,8 +8,8 @@ import {
 } from '@react-pdf/renderer';
 import { SOCIAL_PROFILE_LINKS } from '@/lib/constants/social-links';
 import { formatPrice } from '@/lib/utils';
-import { getProductUrl } from '@/lib/constants/cart-order-pdf';
-import type { PdfCartItem } from '@/lib/cart/order-pdf-image.helpers';
+import { getProductUrl } from './cart-order-pdf.constants';
+import type { PdfCartItem } from './order-pdf-image.helpers';
 import { cartOrderPdfStyles as styles } from './styles';
 
 interface CartOrderPdfDocumentProps {
@@ -42,14 +42,14 @@ export function CartOrderPdfDocument({
         </View>
 
         {items.map(({ product, quantity, imageSrc }) => (
-          <View key={product.id} style={styles.item}>
+          <View key={product.cartId} style={styles.item}>
             {product.images[0] && imageSrc ? (
               <PdfImage src={imageSrc} style={styles.image} />
             ) : null}
             <View style={styles.info}>
               <View style={styles.itemHeader}>
                 <Link
-                  src={getProductUrl(siteUrl, product.id)}
+                  src={getProductUrl(siteUrl, product.slug || product.sourceId)}
                   style={styles.name}
                 >
                   {product.name}

@@ -3,9 +3,12 @@ import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { UserAuthenticationError } from '@/lib/errors';
 import { AUTH_TOKEN_COOKIE_NAME } from '@/lib/auth';
-import { formatZodError } from '@/lib/zod';
 import { userCredentialsSchema } from '../schemas';
 import { usersRepository } from '@/lib/repositories/users/drizzle-users-repository';
+import {
+  internalServerErrorResponse,
+  validationErrorResponse,
+} from '../../route-response.helpers';
 
 export async function POST(request: Request) {
   try {
@@ -26,9 +29,7 @@ export async function POST(request: Request) {
     return response;
   } catch (error) {
     if (error instanceof ZodError) {
-      return NextResponse.json(formatZodError(error), {
-        status: StatusCodes.BAD_REQUEST,
-      });
+      return validationErrorResponse(error);
     }
 
     if (
@@ -41,11 +42,6 @@ export async function POST(request: Request) {
       );
     }
 
-    console.error('Failed to login user', error);
-
-    return NextResponse.json(
-      { error: 'Failed to login user' },
-      { status: StatusCodes.INTERNAL_SERVER_ERROR },
-    );
+    return internalServerErrorResponse('Failed to login user', error);
   }
 }

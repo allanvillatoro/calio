@@ -20,6 +20,7 @@ export const getProductsByQuery = async (
   const data: Product[] = response.data.data.map((product) => {
     return {
       id: product.id,
+      slug: product.slug,
       name: product.name,
       description: product.description,
       price: product.price,

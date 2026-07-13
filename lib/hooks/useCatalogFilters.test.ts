@@ -113,6 +113,26 @@ describe('useCatalogFilters', () => {
     });
   });
 
+  it('uses a custom base path when updating URL params', () => {
+    setSearchParams('pagina=2&query=fecha');
+    const { result } = renderHook(() =>
+      useCatalogFilters(CATEGORIES, {
+        basePath: '/grabados',
+      }),
+    );
+
+    act(() => {
+      result.current.updateURL({
+        query: undefined,
+        pagina: undefined,
+      });
+    });
+
+    const nextUrl = getLastReplacedUrl();
+    expect(nextUrl.pathname).toBe('/grabados');
+    expect(nextUrl.search).toBe('');
+  });
+
   it('removes page one from the URL when changing pages', () => {
     setSearchParams('categorias=anillos&pagina=4');
     const { result } = renderHook(() => useCatalogFilters(CATEGORIES));

@@ -85,6 +85,25 @@ describe('ProductCard', () => {
     expect(screen.getAllByText('-20%')).toHaveLength(2);
   });
 
+  it('uses the product slug for the public link when present', () => {
+    render(
+      <ProductCard
+        product={{
+          ...product,
+          slug: 'collar-perla',
+        }}
+        isAdmin={false}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      '/productos/collar-perla',
+    );
+  });
+
   it('renders products without discount pricing details', () => {
     render(
       <ProductCard
@@ -111,7 +130,12 @@ describe('ProductCard', () => {
     );
 
     expect(useCartStore.getState().items[0]).toEqual({
-      product,
+      product: {
+        ...product,
+        cartId: 'product:12',
+        sourceId: '12',
+        kind: 'product',
+      },
       quantity: 1,
     });
     expect(toast.success).toHaveBeenCalledWith('Producto agregado al carrito');
@@ -128,6 +152,24 @@ describe('ProductCard', () => {
     expect(toast.error).toHaveBeenCalledWith(
       'Ya no se puede agregar más de este producto',
     );
+  });
+
+  it('can hide the cart action for catalog items that are not cart-ready yet', () => {
+    render(
+      <ProductCard
+        product={product}
+        isAdmin={false}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+        enableCartAction={false}
+      />,
+    );
+
+    expect(
+      screen.queryByRole('button', {
+        name: 'Agregar Collar Perla al carrito',
+      }),
+    ).not.toBeInTheDocument();
   });
 
   it('shows admin controls and calls edit/delete handlers', () => {
@@ -149,5 +191,22 @@ describe('ProductCard', () => {
 
     expect(onEdit).toHaveBeenCalledWith(product);
     expect(onDelete).toHaveBeenCalledWith(product);
+  });
+
+  it('shows sold out instead of stock zero in admin mode', () => {
+    render(
+      <ProductCard
+        product={{
+          ...product,
+          quantity: 0,
+        }}
+        isAdmin
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText('Agotado')).toBeVisible();
+    expect(screen.queryByText('Stock: 0')).not.toBeInTheDocument();
   });
 });

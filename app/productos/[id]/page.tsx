@@ -1,50 +1,52 @@
-import { cache } from 'react';
 import { notFound } from 'next/navigation';
-import { formatPrice, toNumber } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils';
 import { FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import ImageCarousel from '@/components/product/ImageCarousel';
 import BackButton from '@/components/product/BackButton';
 import AddToCartButton from '@/components/product/AddToCartButton';
 import { SOCIAL_LINKS } from '@/lib/constants/social-links';
-import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
+import {
+  getAbsoluteProductUrl,
+  getCartItem,
+  getItemCategory,
+  getProductDetailItem,
+} from './product-detail.helpers';
 
 interface ProductDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
-
-const getProduct = cache(async (id: number) => {
-  return productsRepository.findById(id);
-});
 
 export async function generateMetadata({ params }: ProductDetailPageProps) {
   const { id } = await params;
-  const product = await getProduct(toNumber(id));
+  const detailItem = await getProductDetailItem(id);
 
-  if (!product) {
+  if (!detailItem) {
     return {
       title: 'Producto no encontrado | CALIO',
     };
   }
 
-  const productUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://caliojoyeria.com'}/productos/${product.id}`;
+  const { item } = detailItem;
+  const productUrl = getAbsoluteProductUrl(detailItem);
+  const category = getItemCategory(detailItem);
 
   return {
-    title: `${product.name} | CALIO Joyería`,
-    description: product.description,
-    keywords: `${product.name}, ${product.category}, joyas, joyería, grabados laser, acero inoxidable, san pedro sula`,
+    title: `${item.name} | CALIO Joyería`,
+    description: item.description,
+    keywords: `${item.name}, ${category}, joyas, joyería, grabados laser, acero inoxidable, san pedro sula`,
     openGraph: {
-      title: product.name,
-      description: product.description,
+      title: item.name,
+      description: item.description,
       type: 'website',
       url: productUrl,
       images: [
         {
-          url: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_pad,w_1200,h_630/${product.images[0] || 'default.jpg'}`,
+          url: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_pad,w_1200,h_630/${item.images[0] || 'default.jpg'}`,
           width: 1200,
           height: 630,
-          alt: product.name,
+          alt: item.name,
         },
       ],
     },
@@ -59,19 +61,21 @@ export default async function ProductDetailPage({
 }: ProductDetailPageProps) {
   const { id } = await params;
 
-  const product = await getProduct(toNumber(id));
+  const detailItem = await getProductDetailItem(id);
 
-  if (!product) {
+  if (!detailItem) {
     notFound();
   }
-  const productUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/productos/${product.id}`;
+
+  const { item } = detailItem;
+  const productUrl = getAbsoluteProductUrl(detailItem);
   const phoneNumber = process.env.NEXT_PUBLIC_CONTACT_PHONE || '';
-  const message = `Hola, quiero solicitar este producto: ${product.name} - ${productUrl}`;
+  const itemLabel =
+    detailItem.kind === 'laser-engraving' ? 'grabado' : 'producto';
+  const message = `Hola, quiero solicitar este ${itemLabel}: ${item.name} - ${productUrl}`;
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-  const hasDiscount = product.discount > 0;
-  const { createdAt, updatedAt, ...cartProduct } = product;
-  void createdAt;
-  void updatedAt;
+  const hasDiscount = item.discount > 0;
+  const cartProduct = getCartItem(detailItem);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -80,25 +84,25 @@ export default async function ProductDetailPage({
         <BackButton />
         <div className="grid md:grid-cols-2 gap-12">
           {/* Product Image Carousel */}
-          <ImageCarousel images={product.images} />
+          <ImageCarousel images={item.images} />
 
           {/* Product Info */}
           <div className="space-y-6">
             <div>
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                {product.name}
+                {item.name}
               </h1>
               <div className="mb-2">
                 <p className="text-3xl font-bold text-gray-900">
-                  {formatPrice(product.priceWithDiscount)}
+                  {formatPrice(item.priceWithDiscount)}
                 </p>
                 {hasDiscount && (
                   <div className="mt-2 flex flex-wrap items-center gap-3">
                     <span className="text-lg text-gray-400 line-through">
-                      {formatPrice(product.price)}
+                      {formatPrice(item.price)}
                     </span>
                     <span className="rounded-full bg-rose-100 px-3 py-1 text-sm font-semibold tracking-wide text-rose-700">
-                      {product.discount}% OFF
+                      {item.discount}% OFF
                     </span>
                   </div>
                 )}
@@ -113,12 +117,12 @@ export default async function ProductDetailPage({
                 Descripción
               </h2>
               <p className="text-gray-600 leading-relaxed">
-                {product.description}
+                {item.description}
               </p>
             </div>
 
             <div className="pt-6">
-              {product.quantity > 0 ? (
+              {item.quantity > 0 ? (
                 <div className="grid gap-3">
                   <a
                     href={whatsappUrl}

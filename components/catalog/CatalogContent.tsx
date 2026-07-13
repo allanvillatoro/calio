@@ -2,15 +2,13 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Plus } from 'lucide-react';
 import { CATEGORIES, type Product } from '@/lib/types';
 import { useCatalogFilters } from '@/lib/hooks/useCatalogFilters';
 import { getProductsByQuery } from '@/lib/actions/get-products-by-query.action';
-import { CatalogSearchBar } from '@/components/catalog/CatalogSearchBar';
+import { CatalogContentShell } from '@/components/catalog/CatalogContentShell';
 import { ProductsGrid } from '@/components/catalog/ProductsGrid';
 import { ProductDialog } from '../admin/ProductDialog';
 import { DeleteDialog } from '../admin/DeleteDialog';
-import { Button } from '../ui/button';
 import { EMPTY_PRODUCT } from '@/lib/constants/product';
 import { useAuthStore } from '@/lib/stores/auth.store';
 
@@ -78,27 +76,34 @@ export default function CatalogContent() {
     }
     if (query) return `Resultados para "${query}"`;
     if (inStore) return 'Productos en Tienda Física';
-    return 'Catálogo Completo';
+    return 'Administrar joyería';
   };
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h2 className="text-2xl font-semibold text-center pb-6">
-        {getCatalogTitle()}
-      </h2>
-      {isAuthenticated && !printView && (
-        <div className="py-4 text-right">
-          <Button
-            className="w-24"
-            onClick={() => setEditingProduct(EMPTY_PRODUCT)}
-          >
-            <Plus className="size-4" />
-            Agregar
-          </Button>
-        </div>
-      )}
-      <div className="flex flex-col md:flex-row gap-8">
-        {/*         {!printView && (
+    <CatalogContentShell
+      title={getCatalogTitle()}
+      showAddButton={isAuthenticated && !printView}
+      showSearchBar={!printView}
+      searchDefaultValue={query}
+      onAdd={() => setEditingProduct(EMPTY_PRODUCT)}
+      onSearch={handleSearch}
+      dialogs={
+        <>
+          <ProductDialog
+            product={editingProduct}
+            open={!!editingProduct}
+            onOpenChange={() => setEditingProduct(null)}
+          />
+
+          <DeleteDialog
+            product={deletingProduct}
+            open={!!deletingProduct}
+            onOpenChange={() => setDeletingProduct(null)}
+          />
+        </>
+      }
+    >
+      {/*         {!printView && (
           <FiltersSection
             key={selectedCategoriesParam ?? 'all'}
             categories={CATEGORIES}
@@ -110,35 +115,18 @@ export default function CatalogContent() {
           />
         )} */}
 
-        <div className="flex-1">
-          {!printView && (
-            <CatalogSearchBar defaultValue={query} onSearch={handleSearch} />
-          )}
-          <ProductsGrid
-            products={productsResponse?.data ?? []}
-            totalProducts={productsResponse?.paging.totalItems ?? 0}
-            currentPage={currentPage}
-            totalPages={productsResponse?.paging.totalPages ?? 1}
-            isLoading={isLoading}
-            onPageChange={onPageChange}
-            isAdmin={isAuthenticated && !printView}
-            onEdit={setEditingProduct}
-            onDelete={setDeletingProduct}
-          />
-        </div>
-      </div>
-
-      <ProductDialog
-        product={editingProduct}
-        open={!!editingProduct}
-        onOpenChange={() => setEditingProduct(null)}
+      <ProductsGrid
+        products={productsResponse?.data ?? []}
+        totalProducts={productsResponse?.paging.totalItems ?? 0}
+        currentPage={currentPage}
+        totalPages={productsResponse?.paging.totalPages ?? 1}
+        isLoading={isLoading}
+        onPageChange={onPageChange}
+        isAdmin={isAuthenticated && !printView}
+        onEdit={setEditingProduct}
+        onDelete={setDeletingProduct}
+        enableCartAction={!isAuthenticated}
       />
-
-      <DeleteDialog
-        product={deletingProduct}
-        open={!!deletingProduct}
-        onOpenChange={() => setDeletingProduct(null)}
-      />
-    </div>
+    </CatalogContentShell>
   );
 }

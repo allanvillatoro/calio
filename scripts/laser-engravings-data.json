@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1001,
+    "slug": "placa-corazon-iniciales",
+    "name": "Placa corazon con iniciales",
+    "description": "Muestra de placa base para grabar iniciales, fechas cortas o nombres pequenos.",
+    "price": 180,
+    "discount": 0,
+    "quantity": 12,
+    "images": ["grabado-laser-placa-corazon-placeholder.webp"]
+  },
+  {
+    "id": 1002,
+    "slug": "barra-nombre-fecha",
+    "name": "Barra con nombre y fecha",
+    "description": "Muestra de barra minimalista para personalizar con nombre, fecha o coordenadas.",
+    "price": 220,
+    "discount": 0,
+    "quantity": 10,
+    "images": ["grabado-laser-barra-nombre-placeholder.webp"]
+  },
+  {
+    "id": 1003,
+    "slug": "medalla-mensaje-corto",
+    "name": "Medalla con mensaje corto",
+    "description": "Muestra circular para grabar frases breves, nombres o dedicatorias sencillas.",
+    "price": 200,
+    "discount": 0,
+    "quantity": 8,
+    "images": ["grabado-laser-medalla-mensaje-placeholder.webp"]
+  },
+  {
+    "id": 1004,
+    "slug": "dije-huella-minimalista",
+    "name": "Dije huella minimalista",
+    "description": "Muestra de dije base para grabados de huella, silueta o simbolos delicados.",
+    "price": 240,
+    "discount": 0,
+    "quantity": 6,
+    "images": ["grabado-laser-dije-huella-placeholder.webp"]
+  }
+]
