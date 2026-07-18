@@ -39,13 +39,24 @@ export default async function AdminPage() {
           </div>
         </Link>
 
-        <Link href="/catalogo?entienda=true&modoprint=true">
+        <Link href="/catalogo?tiendasps=true&modoprint=true">
           <div className="bg-gray-700 rounded-lg shadow-md hover:shadow-xl hover:bg-gray-800 transition-all p-8 cursor-pointer group">
             <h2 className="text-xl font-semibold text-white mb-2">
-              Ver productos en tienda física
+              Ver productos tienda SPS
             </h2>
             <p className="text-gray-300 text-sm">
-              Consulta los productos disponibles en el punto de venta.
+              Consulta los productos disponibles en la tienda de San Pedro Sula.
+            </p>
+          </div>
+        </Link>
+
+        <Link href="/catalogo?tiendapro=true&modoprint=true">
+          <div className="bg-gray-700 rounded-lg shadow-md hover:shadow-xl hover:bg-gray-800 transition-all p-8 cursor-pointer group">
+            <h2 className="text-xl font-semibold text-white mb-2">
+              Ver productos tienda El Progreso
+            </h2>
+            <p className="text-gray-300 text-sm">
+              Consulta los productos disponibles en la tienda de El Progreso.
             </p>
           </div>
         </Link>
