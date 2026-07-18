@@ -40,11 +40,11 @@ describe('AdminPage', () => {
       screen.getByRole('link', { name: /Administrar grabados láser/ }),
     ).toHaveAttribute('href', '/grabados');
     expect(
-      screen.getByRole('link', { name: /Ver productos tienda SPS/ }),
+      screen.getByRole('link', { name: /Ver tienda SPS/ }),
     ).toHaveAttribute('href', '/catalogo?tiendasps=true&modoprint=true');
     expect(
       screen.getByRole('link', {
-        name: /Ver productos tienda El Progreso/,
+        name: /Ver tienda El Progreso/,
       }),
     ).toHaveAttribute('href', '/catalogo?tiendapro=true&modoprint=true');
   });

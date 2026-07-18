@@ -42,7 +42,7 @@ export default async function AdminPage() {
         <Link href="/catalogo?tiendasps=true&modoprint=true">
           <div className="bg-gray-700 rounded-lg shadow-md hover:shadow-xl hover:bg-gray-800 transition-all p-8 cursor-pointer group">
             <h2 className="text-xl font-semibold text-white mb-2">
-              Ver productos tienda SPS
+              Ver tienda SPS
             </h2>
             <p className="text-gray-300 text-sm">
               Consulta los productos disponibles en la tienda de San Pedro Sula.
@@ -53,7 +53,7 @@ export default async function AdminPage() {
         <Link href="/catalogo?tiendapro=true&modoprint=true">
           <div className="bg-gray-700 rounded-lg shadow-md hover:shadow-xl hover:bg-gray-800 transition-all p-8 cursor-pointer group">
             <h2 className="text-xl font-semibold text-white mb-2">
-              Ver productos tienda El Progreso
+              Ver tienda El Progreso
             </h2>
             <p className="text-gray-300 text-sm">
               Consulta los productos disponibles en la tienda de El Progreso.
