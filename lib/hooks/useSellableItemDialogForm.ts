@@ -16,7 +16,8 @@ export interface SellableItemFormItem {
   quantity: number;
   images: string[];
   category?: Category;
-  inStore?: boolean;
+  inStoreSps?: boolean;
+  inStorePro?: boolean;
 }
 
 export interface SellableItemFormValues {
@@ -27,7 +28,8 @@ export interface SellableItemFormValues {
   price: number;
   discount: number;
   quantity: number;
-  inStore?: boolean;
+  inStoreSps?: boolean;
+  inStorePro?: boolean;
   category?: Category;
   images: string[];
 }
@@ -73,7 +75,8 @@ function getEmptyFormValues(
     price: emptyItem.price,
     discount: emptyItem.discount,
     quantity: emptyItem.quantity,
-    inStore: emptyItem.inStore ?? false,
+    inStoreSps: emptyItem.inStoreSps ?? false,
+    inStorePro: emptyItem.inStorePro ?? false,
     category: emptyItem.category,
     images: [],
   };
@@ -134,7 +137,8 @@ export function useSellableItemDialogForm({
       price: item?.price ?? emptyItem.price,
       discount: item?.discount ?? emptyItem.discount,
       quantity: item?.quantity ?? emptyItem.quantity,
-      inStore: item?.inStore ?? emptyItem.inStore ?? false,
+      inStoreSps: item?.inStoreSps ?? emptyItem.inStoreSps ?? false,
+      inStorePro: item?.inStorePro ?? emptyItem.inStorePro ?? false,
       category: item?.category ?? emptyItem.category,
       images: item?.images ?? [],
       files: [],
@@ -188,6 +192,10 @@ export function useSellableItemDialogForm({
 
   const handleDiscountChange = () => {
     void trigger('discount');
+  };
+
+  const handleStoreAvailabilityChange = () => {
+    void trigger(['inStoreSps', 'inStorePro']);
   };
 
   const clearImagesErrorIfNeeded = (
@@ -364,6 +372,7 @@ export function useSellableItemDialogForm({
     handleDeleteCurrentImage,
     handleDeleteUploadImage,
     handleDiscountChange,
+    handleStoreAvailabilityChange,
     handleCategoryChange,
     handleDialogOpenChange,
     handleDrag,

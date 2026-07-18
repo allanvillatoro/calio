@@ -17,6 +17,7 @@ import {
   useSellableItemDialogForm,
 } from '@/lib/hooks/useSellableItemDialogForm';
 import { CATEGORIES, type Category } from '@/lib/types';
+import { getProductStoreAvailabilityError } from '@/lib/product-store-availability';
 import { cn, formatPrice, getImageUrl } from '@/lib/utils';
 
 interface SellableItemDialogConfig {
@@ -30,7 +31,7 @@ interface SellableItemDialogConfig {
   imageAlt: string;
   showSlug?: boolean;
   showCategory?: boolean;
-  showInStore?: boolean;
+  showStoreAvailability?: boolean;
   showDiscountField: (selectedCategory?: Category) => boolean;
   discountMin: number;
   discountMax: number;
@@ -71,6 +72,7 @@ export const SellableItemDialog = ({
     handleDeleteCurrentImage,
     handleDeleteUploadImage,
     handleDiscountChange,
+    handleStoreAvailabilityChange,
     handleCategoryChange,
     handleDialogOpenChange,
     handleDrag,
@@ -222,6 +224,7 @@ export const SellableItemDialog = ({
                           value: 0,
                           message: 'La cantidad no puede ser negativa',
                         },
+                        onChange: handleStoreAvailabilityChange,
                       })}
                       className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-gray-900"
                     />
@@ -291,20 +294,65 @@ export const SellableItemDialog = ({
                   )}
                 </div>
 
-                {config.showInStore && (
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id="inStore"
-                      {...register('inStore')}
-                      className="h-4 w-4 cursor-pointer rounded border-gray-300 accent-gray-900"
-                    />
-                    <label
-                      htmlFor="inStore"
-                      className="cursor-pointer text-sm font-medium text-gray-700"
-                    >
-                      Disponible en tienda física
-                    </label>
+                {config.showStoreAvailability && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          id="inStoreSps"
+                          {...register('inStoreSps', {
+                            validate: (isSelected, values) =>
+                              !isSelected
+                                ? true
+                                : (getProductStoreAvailabilityError(values) ??
+                                  true),
+                            onChange: handleStoreAvailabilityChange,
+                          })}
+                          className="h-4 w-4 cursor-pointer rounded border-gray-300 accent-gray-900"
+                        />
+                        <label
+                          htmlFor="inStoreSps"
+                          className="cursor-pointer text-sm font-medium text-gray-700"
+                        >
+                          Tienda SPS
+                        </label>
+                      </div>
+                      {errors.inStoreSps && (
+                        <p className="mt-1 text-xs text-red-600">
+                          {errors.inStoreSps.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          id="inStorePro"
+                          {...register('inStorePro', {
+                            validate: (isSelected, values) =>
+                              !isSelected
+                                ? true
+                                : (getProductStoreAvailabilityError(values) ??
+                                  true),
+                            onChange: handleStoreAvailabilityChange,
+                          })}
+                          className="h-4 w-4 cursor-pointer rounded border-gray-300 accent-gray-900"
+                        />
+                        <label
+                          htmlFor="inStorePro"
+                          className="cursor-pointer text-sm font-medium text-gray-700"
+                        >
+                          Tienda El Progreso
+                        </label>
+                      </div>
+                      {errors.inStorePro && (
+                        <p className="mt-1 text-xs text-red-600">
+                          {errors.inStorePro.message}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 )}
 

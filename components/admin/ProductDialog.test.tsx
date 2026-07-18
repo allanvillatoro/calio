@@ -75,6 +75,7 @@ const hookHandlers = {
   handleDeleteCurrentImage: vi.fn(),
   handleDeleteUploadImage: vi.fn(),
   handleDiscountChange: vi.fn(),
+  handleStoreAvailabilityChange: vi.fn(),
   handleCategoryChange: vi.fn(),
   handleDialogOpenChange: vi.fn(),
   handleDrag: vi.fn(),
@@ -149,6 +150,59 @@ describe('ProductDialog', () => {
       hookHandlers.onSubmit,
     );
     expect(hookHandlers.onSubmit).toHaveBeenCalled();
+  });
+
+  it('renders both store checkboxes in the same product form', () => {
+    render(<ProductDialog product={null} open onOpenChange={vi.fn()} />);
+
+    expect(screen.getByRole('checkbox', { name: 'Tienda SPS' })).toBeVisible();
+    expect(
+      screen.getByRole('checkbox', { name: 'Tienda El Progreso' }),
+    ).toBeVisible();
+  });
+
+  it('validates store availability against product quantity', () => {
+    render(<ProductDialog product={null} open onOpenChange={vi.fn()} />);
+
+    const storeRegisterCall = hookHandlers.register.mock.calls.find(
+      ([name]) => name === 'inStoreSps',
+    );
+    const validateStore = (
+      storeRegisterCall?.[1] as {
+        validate: (
+          value: boolean,
+          values: {
+            quantity: number;
+            inStoreSps: boolean;
+            inStorePro: boolean;
+          },
+        ) => true | string;
+      }
+    ).validate;
+
+    expect(
+      validateStore(true, {
+        quantity: 0,
+        inStoreSps: true,
+        inStorePro: false,
+      }),
+    ).toBe('Un producto sin existencias no puede estar disponible en tiendas');
+    expect(
+      validateStore(true, {
+        quantity: 1,
+        inStoreSps: true,
+        inStorePro: true,
+      }),
+    ).toBe(
+      'Con una sola unidad, el producto solo puede estar disponible en una tienda',
+    );
+    expect(
+      validateStore(true, {
+        quantity: 2,
+        inStoreSps: true,
+        inStorePro: true,
+      }),
+    ).toBe(true);
   });
 
   it('does not render dialog content when closed', () => {
@@ -330,7 +384,8 @@ describe('ProductDialog', () => {
         price: 250,
         discount: 30,
         quantity: 4,
-        inStore: true,
+        inStoreSps: true,
+        inStorePro: false,
         category: 'collares',
         images: ['collar.jpg'],
         files,
@@ -344,7 +399,8 @@ describe('ProductDialog', () => {
       price: 250,
       discount: 0,
       quantity: 4,
-      inStore: true,
+      inStoreSps: true,
+      inStorePro: false,
       category: 'collares',
       images: ['collar.jpg'],
       files,
@@ -366,7 +422,8 @@ describe('ProductDialog', () => {
       price: 250,
       discount: 30,
       quantity: 4,
-      inStore: false,
+      inStoreSps: false,
+      inStorePro: false,
       category: 'rebajas',
       images: ['collar.jpg'],
       files: undefined,
