@@ -25,7 +25,7 @@ describe('AdminPage', () => {
     expect(redirect).toHaveBeenCalledWith('/login');
   });
 
-  it('renders separate admin access cards for jewelry and laser engravings', async () => {
+  it('renders separate admin access cards for catalogs and physical stores', async () => {
     vi.mocked(getAuthenticatedUserFromCookies).mockResolvedValue({
       id: 'user-1',
       email: 'admin@example.test',
@@ -39,5 +39,13 @@ describe('AdminPage', () => {
     expect(
       screen.getByRole('link', { name: /Administrar grabados láser/ }),
     ).toHaveAttribute('href', '/grabados');
+    expect(
+      screen.getByRole('link', { name: /Ver productos tienda SPS/ }),
+    ).toHaveAttribute('href', '/catalogo?tiendasps=true&modoprint=true');
+    expect(
+      screen.getByRole('link', {
+        name: /Ver productos tienda El Progreso/,
+      }),
+    ).toHaveAttribute('href', '/catalogo?tiendapro=true&modoprint=true');
   });
 });
