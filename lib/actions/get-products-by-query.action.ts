@@ -29,7 +29,8 @@ export const getProductsByQuery = async (
       quantity: product.quantity,
       images: product.images,
       category: product.category as Category,
-      inStore: product.inStore,
+      inStoreSps: product.inStoreSps,
+      inStorePro: product.inStorePro,
     };
   });
 

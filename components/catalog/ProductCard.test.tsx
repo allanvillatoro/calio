@@ -41,7 +41,8 @@ const product: Product = {
   quantity: 1,
   images: ['collar-perla.jpg'],
   category: 'collares',
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: false,
 };
 
 function renderProductCard({

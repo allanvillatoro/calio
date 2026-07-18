@@ -15,7 +15,8 @@ function createCartProduct(overrides: Partial<CartProduct> = {}): CartProduct {
     quantity: 3,
     images: ['anillo-aurora.jpg'],
     category: 'anillos',
-    inStore: true,
+    inStoreSps: true,
+    inStorePro: false,
     ...overrides,
   };
 }
@@ -274,7 +275,8 @@ describe('useCartStore', () => {
       quantity: 2,
       images: ['anillo-luna.jpg'],
       category: 'anillos' as const,
-      inStore: false,
+      inStoreSps: false,
+      inStorePro: false,
     };
 
     const added = useCartStore.getState().addItem(product);
@@ -324,7 +326,8 @@ describe('useCartStore', () => {
       quantity: 2,
       images: ['pulsera.jpg'],
       category: 'pulseras',
-      inStore: false,
+      inStoreSps: false,
+      inStorePro: false,
     };
     window.localStorage.setItem(
       'calio-cart',
@@ -335,7 +338,7 @@ describe('useCartStore', () => {
               product: legacyProduct,
               quantity: 1,
             },
-          ] satisfies CartItem[],
+          ] as unknown as CartItem[],
         },
         version: 0,
       }),

@@ -27,7 +27,8 @@ function createProductRow(overrides: Partial<ProductRow> = {}): ProductRow {
     images: ['anillo-aurora.jpg'],
     slug: null,
     category: 'anillos',
-    inStore: true,
+    inStoreSps: true,
+    inStorePro: false,
     createdAt,
     updatedAt,
     ...overrides,
@@ -49,7 +50,8 @@ describe('mapRowToProduct', () => {
       quantity: row.quantity,
       images: row.images,
       category: row.category,
-      inStore: row.inStore,
+      inStoreSps: row.inStoreSps,
+      inStorePro: row.inStorePro,
       createdAt,
       updatedAt,
     });
@@ -93,7 +95,8 @@ describe('normalizeFilters', () => {
     const filters = normalizeFilters({
       categories: [' anillos ', '', 'collares'],
       query: '  perla  ',
-      inStore: false,
+      inStoreSps: false,
+      inStorePro: true,
       page: 3,
       limit: 12,
       includeOutOfStock: true,
@@ -102,7 +105,8 @@ describe('normalizeFilters', () => {
     expect(filters).toEqual({
       categories: ['anillos', 'collares'],
       query: 'perla',
-      inStore: false,
+      inStoreSps: false,
+      inStorePro: true,
       page: 3,
       limit: 12,
       includeOutOfStock: true,
@@ -118,7 +122,8 @@ describe('normalizeFilters', () => {
     expect(filters).toEqual({
       categories: undefined,
       query: undefined,
-      inStore: undefined,
+      inStoreSps: undefined,
+      inStorePro: undefined,
       page: 1,
       limit: PRODUCTS_PER_PAGE,
       includeOutOfStock: false,
@@ -129,7 +134,8 @@ describe('normalizeFilters', () => {
     const params = new URLSearchParams({
       category: ' anillos, collares ',
       query: '  oro  ',
-      instore: 'true',
+      instoresps: 'true',
+      instorepro: 'false',
       page: '4',
       limit: '8',
       includeOutOfStock: 'true',
@@ -140,7 +146,8 @@ describe('normalizeFilters', () => {
     expect(filters).toEqual({
       categories: ['anillos', 'collares'],
       query: 'oro',
-      inStore: true,
+      inStoreSps: true,
+      inStorePro: false,
       page: 4,
       limit: 8,
       includeOutOfStock: true,
@@ -157,14 +164,16 @@ describe('normalizeFilters', () => {
     expect(filters.categories).toEqual(['aretes', 'pulseras', 'sets']);
   });
 
-  it('parses instore=false from URLSearchParams', () => {
+  it('parses both store filters from URLSearchParams', () => {
     const params = new URLSearchParams({
-      instore: 'false',
+      instoresps: 'false',
+      instorepro: 'true',
     });
 
     const filters = normalizeFilters(params);
 
-    expect(filters.inStore).toBe(false);
+    expect(filters.inStoreSps).toBe(false);
+    expect(filters.inStorePro).toBe(true);
   });
 });
 
@@ -217,7 +226,8 @@ describe('buildProductsWhereClause', () => {
     const whereClause = buildProductsWhereClause({
       categories: ['anillos'],
       query: 'oro',
-      inStore: true,
+      inStoreSps: true,
+      inStorePro: true,
       includeOutOfStock: true,
     });
 

@@ -234,7 +234,7 @@ describe('LaserEngravingsCatalogContent', () => {
     );
 
     const queryFn = vi.mocked(useQuery).mock.calls[0][0].queryFn;
-    queryFn?.({} as never);
+    if (typeof queryFn === 'function') queryFn({} as never);
     expect(getLaserEngravingsByQuery).toHaveBeenCalledWith({
       query: 'Fecha',
       page: 3,

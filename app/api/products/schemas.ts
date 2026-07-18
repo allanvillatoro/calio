@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { PRODUCT_CATEGORIES } from '@/lib/constants/product-categories';
+import { getProductStoreAvailabilityError } from '@/lib/product-store-availability';
 import {
   sellableItemBodyShape,
   sellableItemIdParamsSchema,
@@ -11,7 +12,8 @@ const categorySchema = z.enum(PRODUCT_CATEGORIES);
 const productBodyShape = {
   ...sellableItemBodyShape,
   category: categorySchema,
-  inStore: z.boolean().optional(),
+  inStoreSps: z.boolean().optional(),
+  inStorePro: z.boolean().optional(),
 };
 
 function validateDiscountByCategory(
@@ -39,9 +41,29 @@ function validateDiscountByCategory(
   }
 }
 
+function validateStoreAvailability(
+  value: z.infer<z.ZodObject<typeof productBodyShape>>,
+  ctx: z.RefinementCtx,
+) {
+  const message = getProductStoreAvailabilityError(value);
+
+  if (!message) return;
+
+  if (value.inStoreSps) {
+    ctx.addIssue({ code: 'custom', path: ['inStoreSps'], message });
+  }
+
+  if (value.inStorePro) {
+    ctx.addIssue({ code: 'custom', path: ['inStorePro'], message });
+  }
+}
+
 const productBodySchema = z
   .object(productBodyShape)
-  .superRefine(validateDiscountByCategory);
+  .superRefine((value, ctx) => {
+    validateDiscountByCategory(value, ctx);
+    validateStoreAvailability(value, ctx);
+  });
 
 export const productIdParamsSchema = sellableItemIdParamsSchema;
 
@@ -51,18 +73,21 @@ export const createProductBodySchema = productBodySchema.extend({
 
 export const updateProductBodySchema = productBodySchema;
 
+const booleanQueryParamSchema = z.preprocess((value) => {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value === 'string') {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+  }
+
+  return value;
+}, z.boolean().optional());
+
 export const productsQuerySchema = sellableItemsQuerySchema.extend({
   category: z.array(categorySchema).optional(),
-  instore: z.preprocess((value) => {
-    if (value === undefined) {
-      return undefined;
-    }
-
-    if (typeof value === 'string') {
-      if (value === 'true') return true;
-      if (value === 'false') return false;
-    }
-
-    return value;
-  }, z.boolean().optional()),
+  instoresps: booleanQueryParamSchema,
+  instorepro: booleanQueryParamSchema,
 });

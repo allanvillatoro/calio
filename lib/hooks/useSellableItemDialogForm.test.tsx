@@ -587,6 +587,7 @@ describe('useSellableItemDialogForm', () => {
       result.current.onSubmit(
         createSubmitValues({
           ...baseItem,
+          slug: baseItem.slug ?? undefined,
           category: 'rebajas',
           discount: 20,
         }),

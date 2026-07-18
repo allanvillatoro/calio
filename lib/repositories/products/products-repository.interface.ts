@@ -7,7 +7,8 @@ export type ProductChanges = Partial<
 export interface ProductFilters {
   categories?: string[];
   query?: string;
-  inStore?: boolean;
+  inStoreSps?: boolean;
+  inStorePro?: boolean;
   page?: number;
   limit?: number;
   includeOutOfStock?: boolean;

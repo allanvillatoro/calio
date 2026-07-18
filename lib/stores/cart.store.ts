@@ -56,7 +56,8 @@ function normalizeCartProduct(product: CartInputItem): CartProduct {
       quantity: product.quantity,
       images: product.images,
       category: product.category,
-      inStore: product.inStore,
+      inStoreSps: product.inStoreSps,
+      inStorePro: product.inStorePro,
     };
   }
 

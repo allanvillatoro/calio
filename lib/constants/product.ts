@@ -8,7 +8,8 @@ export const EMPTY_PRODUCT: Product = {
   discount: 0,
   priceWithDiscount: 100,
   quantity: 1,
-  inStore: false,
+  inStoreSps: false,
+  inStorePro: false,
   category: CATEGORIES[0],
   images: [],
 };

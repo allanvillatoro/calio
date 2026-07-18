@@ -27,7 +27,8 @@ const product: IProduct = {
   quantity: 5,
   images: ['collar-perla.jpg'],
   category: 'collares',
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: false,
   createdAt: new Date('2026-01-15T12:00:00.000Z'),
   updatedAt: new Date('2026-01-16T12:00:00.000Z'),
 };
@@ -63,7 +64,8 @@ const validProductBody = {
   quantity: product.quantity,
   images: product.images,
   category: product.category,
-  inStore: product.inStore,
+  inStoreSps: product.inStoreSps,
+  inStorePro: product.inStorePro,
 };
 
 function createGetRequest(queryString = '') {
@@ -93,7 +95,8 @@ describe('GET /api/products', () => {
     expect(productsRepository.findAll).toHaveBeenCalledWith({
       categories: [],
       query: undefined,
-      inStore: undefined,
+      inStoreSps: undefined,
+      inStorePro: undefined,
       page: 1,
       limit: 20,
       includeOutOfStock: false,
@@ -120,14 +123,15 @@ describe('GET /api/products', () => {
 
     await GET(
       createGetRequest(
-        '?category=anillos,collares&category=sets&query=oro&instore=false&page=3&limit=12',
+        '?category=anillos,collares&category=sets&query=oro&instoresps=false&instorepro=true&page=3&limit=12',
       ),
     );
 
     expect(productsRepository.findAll).toHaveBeenCalledWith({
       categories: ['anillos', 'collares', 'sets'],
       query: 'oro',
-      inStore: false,
+      inStoreSps: false,
+      inStorePro: true,
       page: 3,
       limit: 12,
       includeOutOfStock: false,

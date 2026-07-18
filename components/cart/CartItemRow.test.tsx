@@ -36,7 +36,8 @@ const item: CartItem = {
     quantity: 3,
     images: ['collar-perla.jpg'],
     category: 'collares',
-    inStore: true,
+    inStoreSps: true,
+    inStorePro: false,
   },
   quantity: 2,
 };

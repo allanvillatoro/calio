@@ -23,14 +23,16 @@ export async function GET(request: Request) {
         .map((category) => category.trim())
         .filter(Boolean),
       query: searchParams.get('query') ?? undefined,
-      instore: searchParams.get('instore') ?? undefined,
+      instoresps: searchParams.get('instoresps') ?? undefined,
+      instorepro: searchParams.get('instorepro') ?? undefined,
       page: searchParams.get('page') ?? undefined,
       limit: searchParams.get('limit') ?? undefined,
     });
     const products = await productsRepository.findAll({
       categories: parsedQuery.category,
       query: parsedQuery.query,
-      inStore: parsedQuery.instore,
+      inStoreSps: parsedQuery.instoresps,
+      inStorePro: parsedQuery.instorepro,
       page: parsedQuery.page,
       limit: parsedQuery.limit,
       includeOutOfStock: Boolean(authenticatedUser),

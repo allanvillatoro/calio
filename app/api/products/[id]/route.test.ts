@@ -23,7 +23,8 @@ const product: IProduct = {
   quantity: 5,
   images: ['collar-perla.jpg'],
   category: 'collares',
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: false,
   createdAt: new Date('2026-01-15T12:00:00.000Z'),
   updatedAt: new Date('2026-01-16T12:00:00.000Z'),
 };
@@ -42,7 +43,8 @@ const validProductBody = {
   quantity: product.quantity,
   images: product.images,
   category: product.category,
-  inStore: product.inStore,
+  inStoreSps: product.inStoreSps,
+  inStorePro: product.inStorePro,
 };
 
 function createRequest(body?: unknown) {

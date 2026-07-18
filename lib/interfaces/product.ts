@@ -2,7 +2,8 @@ import type { ISellableItem, Paging } from './sellable-item';
 
 export interface IProduct extends ISellableItem {
   category: string;
-  inStore: boolean;
+  inStoreSps: boolean;
+  inStorePro: boolean;
 }
 
 export interface ProductResponse {

@@ -44,7 +44,8 @@ const validProductInput = {
   price: 250,
   discount: 0,
   quantity: 5,
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: false,
   category: 'collares',
   images: ['collar-perla.jpg'],
 } satisfies Partial<Product>;
@@ -59,7 +60,8 @@ const persistedProduct: IProduct = {
   quantity: validProductInput.quantity,
   images: validProductInput.images,
   category: validProductInput.category,
-  inStore: validProductInput.inStore,
+  inStoreSps: validProductInput.inStoreSps,
+  inStorePro: validProductInput.inStorePro,
   createdAt: new Date('2026-01-15T12:00:00.000Z'),
   updatedAt: new Date('2026-01-16T12:00:00.000Z'),
 };

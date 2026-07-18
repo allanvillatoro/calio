@@ -136,7 +136,8 @@ const product: Product = {
   quantity: 5,
   images: ['collar-perla.jpg'],
   category: 'collares',
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: false,
 };
 
 const updateURL = vi.fn();
@@ -220,7 +221,7 @@ describe('CatalogContent', () => {
     );
 
     const queryFn = vi.mocked(useQuery).mock.calls[0][0].queryFn;
-    queryFn?.({} as never);
+    if (typeof queryFn === 'function') queryFn({} as never);
     expect(getProductsByQuery).toHaveBeenCalledWith({
       category: 'collares',
       query: 'Perla',

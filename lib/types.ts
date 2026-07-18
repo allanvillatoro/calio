@@ -18,7 +18,8 @@ export interface Product {
   quantity: number;
   images: string[];
   category: Category;
-  inStore?: boolean;
+  inStoreSps?: boolean;
+  inStorePro?: boolean;
 }
 
 export type CatalogItemKind = 'product' | 'laser-engraving';
@@ -36,5 +37,6 @@ export interface CatalogItem {
   quantity: number;
   images: string[];
   category?: Category;
-  inStore?: boolean;
+  inStoreSps?: boolean;
+  inStorePro?: boolean;
 }

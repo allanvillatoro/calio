@@ -65,7 +65,8 @@ const product: Product = {
   discount: 20,
   priceWithDiscount: 200,
   quantity: 5,
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: true,
   category: 'rebajas',
   images: ['collar-perla.jpg', 'collar-perla-2.jpg'],
 };
