@@ -7,7 +7,8 @@ interface GetProductsParams {
   query?: string;
   page?: number;
   limit?: number;
-  instore?: boolean;
+  instoresps?: boolean;
+  instorepro?: boolean;
 }
 
 export const getProductsByQuery = async (

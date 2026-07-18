@@ -90,11 +90,11 @@ This file is for coding-agent behavior. Use `README.md` for project overview, se
 
 ## Catalog And Cart Conventions
 
-- Public catalog URL params are Spanish: `categorias`, `pagina`, `entienda`, `modoprint`, `query`.
-- Internal product API query params are English: `category`, `page`, `instore`, `limit`, `query`.
+- Public catalog URL params are Spanish: `categorias`, `pagina`, `tiendasps`, `tiendapro`, `modoprint`, `query`.
+- Internal product API query params are English: `category`, `page`, `instoresps`, `instorepro`, `limit`, `query`.
 - `useCatalogFilters` owns catalog URL state; do not duplicate URL parsing.
 - `modoprint=true` hides admin/search UI for print-oriented catalog views.
-- `entienda=true` filters products available in the physical store.
+- `tiendasps=true` and `tiendapro=true` filter products available in each physical store.
 - Cart state persists under the `calio-cart` localStorage key.
 - WhatsApp order flow cannot auto-attach PDFs; do not imply that it can.
 
