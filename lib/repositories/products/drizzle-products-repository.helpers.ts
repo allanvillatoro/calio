@@ -1,4 +1,13 @@
-import { count, desc, eq, gte, ilike, inArray, type SQL } from 'drizzle-orm';
+import {
+  count,
+  desc,
+  eq,
+  gte,
+  ilike,
+  inArray,
+  or,
+  type SQL,
+} from 'drizzle-orm';
 import { products, type ProductRow } from '@/db/schema';
 import type { AppDb } from '@/db';
 import type {
@@ -94,6 +103,9 @@ export function normalizeFilters(
 export function buildProductsWhereClause(filters: ProductFilters) {
   return combineSqlConditions([
     filters.includeOutOfStock ? undefined : gte(products.quantity, 1),
+    filters.includeOutOfStock
+      ? undefined
+      : or(eq(products.inStorePro, false), gte(products.quantity, 2)),
     filters.categories
       ? inArray(products.category, filters.categories)
       : undefined,

@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { SQL } from 'drizzle-orm';
+import { PgDialect } from 'drizzle-orm/pg-core';
 import type { AppDb } from '@/db';
 import type { ProductRow } from '@/db/schema';
 import { PRODUCTS_PER_PAGE } from '@/lib/constants/product';
@@ -212,6 +213,20 @@ describe('buildProductsWhereClause', () => {
     });
 
     expect(whereClause).toBeDefined();
+  });
+
+  it('excludes the unit reserved for El Progreso from the public catalog', () => {
+    const whereClause = buildProductsWhereClause({
+      includeOutOfStock: false,
+    });
+
+    const query = new PgDialect().sqlToQuery(whereClause as SQL);
+
+    expect(query.sql).toContain('"products"."quantity" >= $1');
+    expect(query.sql).toContain(
+      '("products"."in_store_pro" = $2 or "products"."quantity" >= $3)',
+    );
+    expect(query.params).toEqual([1, false, 2]);
   });
 
   it('omits the where clause when authenticated requests have no filters', () => {

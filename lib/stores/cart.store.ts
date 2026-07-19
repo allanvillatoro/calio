@@ -18,6 +18,15 @@ export interface CartItem {
   quantity: number;
 }
 
+export function getWebAvailableQuantity(
+  product: Pick<CartProduct, 'inStorePro' | 'kind' | 'quantity'>,
+) {
+  const reservedQuantity =
+    product.kind === 'product' && product.inStorePro ? 1 : 0;
+
+  return Math.max(0, product.quantity - reservedQuantity);
+}
+
 interface CartStoreState {
   items: CartItem[];
   addItem: (product: CartInputItem) => boolean;
@@ -86,8 +95,9 @@ export const useCartStore = create<CartStoreState>()(
           (item) => item.product.cartId === product.cartId,
         );
         const currentQuantity = existingItem?.quantity ?? 0;
+        const availableQuantity = getWebAvailableQuantity(product);
 
-        if (product.quantity <= 0 || currentQuantity >= product.quantity) {
+        if (availableQuantity <= 0 || currentQuantity >= availableQuantity) {
           return false;
         }
 
