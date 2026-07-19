@@ -17,7 +17,7 @@ import {
   useSellableItemDialogForm,
 } from '@/lib/hooks/useSellableItemDialogForm';
 import { CATEGORIES, type Category } from '@/lib/types';
-import { getProductStoreAvailabilityError } from '@/lib/product-store-availability';
+import { getProductStoreAvailabilityError } from '@/lib/products/store-availability';
 import { cn, formatPrice, getImageUrl } from '@/lib/utils';
 
 interface SellableItemDialogConfig {

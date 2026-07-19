@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { CatalogItem, CatalogItemKind, Product } from '@/lib/types';
+import { getWebAvailableQuantity } from '@/lib/products/online-availability';
 
 export type CartProduct = Omit<Product, 'category'> & {
   cartId: string;
@@ -16,15 +17,6 @@ export type CartInputItem = Product | CatalogItem | CartProduct;
 export interface CartItem {
   product: CartProduct;
   quantity: number;
-}
-
-export function getWebAvailableQuantity(
-  product: Pick<CartProduct, 'inStorePro' | 'kind' | 'quantity'>,
-) {
-  const reservedQuantity =
-    product.kind === 'product' && product.inStorePro ? 1 : 0;
-
-  return Math.max(0, product.quantity - reservedQuantity);
 }
 
 interface CartStoreState {

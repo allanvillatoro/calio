@@ -259,6 +259,74 @@ describe('ProductDetailPage', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('renders products as sold out when their only unit is in El Progreso', async () => {
+    vi.mocked(productsRepository.findBySlug).mockResolvedValue({
+      ...product,
+      quantity: 1,
+      inStorePro: true,
+    });
+
+    render(
+      await ProductDetailPage({
+        params: Promise.resolve({ id: 'collar-perla' }),
+      }),
+    );
+
+    expect(screen.getByText('Agotado')).toBeVisible();
+    expect(
+      screen.queryByRole('button', {
+        name: ':product:12:Collar Perla',
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /Solicitar por WhatsApp/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /Solicitar por Instagram/ }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders El Progreso products when web inventory remains', async () => {
+    vi.mocked(productsRepository.findBySlug).mockResolvedValue({
+      ...product,
+      quantity: 2,
+      inStorePro: true,
+    });
+
+    render(
+      await ProductDetailPage({
+        params: Promise.resolve({ id: 'collar-perla' }),
+      }),
+    );
+
+    expect(screen.queryByText('Agotado')).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: ':product:12:Collar Perla',
+      }),
+    ).toBeVisible();
+  });
+
+  it('keeps single-unit laser engravings available online', async () => {
+    vi.mocked(laserEngravingsRepository.findBySlug).mockResolvedValue({
+      ...laserEngraving,
+      quantity: 1,
+    });
+
+    render(
+      await ProductDetailPage({
+        params: Promise.resolve({ id: 'grabado-nombre-fecha' }),
+      }),
+    );
+
+    expect(screen.queryByText('Agotado')).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: ':laser-engraving:8:Nombre y fecha',
+      }),
+    ).toBeVisible();
+  });
+
   it('calls notFound when no item matches', async () => {
     await expect(
       ProductDetailPage({

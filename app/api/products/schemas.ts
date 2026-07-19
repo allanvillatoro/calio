@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { PRODUCT_CATEGORIES } from '@/lib/constants/product-categories';
-import { getProductStoreAvailabilityError } from '@/lib/product-store-availability';
+import { getProductStoreAvailabilityError } from '@/lib/products/store-availability';
 import {
   sellableItemBodyShape,
   sellableItemIdParamsSchema,

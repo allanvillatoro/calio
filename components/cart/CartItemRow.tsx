@@ -1,10 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Minus, Plus, Trash2 } from 'lucide-react';
-import {
-  getWebAvailableQuantity,
-  type CartItem,
-} from '@/lib/stores/cart.store';
+import type { CartItem } from '@/lib/stores/cart.store';
+import { getWebAvailableQuantity } from '@/lib/products/online-availability';
 import { formatPrice, getImageUrl } from '@/lib/utils';
 
 interface CartItemRowProps {
