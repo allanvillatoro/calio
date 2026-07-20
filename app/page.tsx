@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function Home() {
   const phoneNumber = process.env.NEXT_PUBLIC_CONTACT_PHONE || '';
   const whatsappUrl = `https://wa.me/${phoneNumber}`;
-  const urlGrabados = `${whatsappUrl}?text=${encodeURIComponent(`Hola, quiero un grabado láser personalizado`)}`;
+  //const urlGrabados = `${whatsappUrl}?text=${encodeURIComponent(`Hola, quiero un grabado láser personalizado`)}`;
   const urlContactUs = `${whatsappUrl}?text=${encodeURIComponent(`Hola, quiero más información sobre sus joyas`)}`;
 
   return (
@@ -79,21 +79,12 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row">
-              {/*               <Link
+              <Link
                 href="/grabados"
                 aria-label="Ver muestras de grabado laser"
                 className="inline-block border border-white px-8 py-3 text-center font-semibold tracking-wide transition-all duration-300 hover:scale-105 hover:bg-white hover:text-black"
               >
-                Ver muestras de grabado
-              </Link> */}
-              <Link
-                href={urlGrabados}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Grabados laser personalizados"
-                className="inline-block bg-white text-black px-8 py-3 text-center font-semibold tracking-wide hover:scale-105 transition-all duration-300"
-              >
-                Quiero personalizar
+                Quiero personalizar un grabado
               </Link>
             </div>
           </div>
@@ -146,12 +137,18 @@ export default function Home() {
             {/* Visita nuestro punto de venta */}
             <div>
               <h3 className="serif-title text-2xl mb-4">
-                Visita nuestro punto de venta
+                Visita nuestros punto de venta
               </h3>
-              <p className="text-gray-600 mb-4">
-                Estamos dentro de By Love Floristería y Café, Edificio Galería
-                504, Bulevar UNAH-VS, San Pedro Sula, Honduras
-              </p>
+              <ul>
+                <li className="text-gray-600 mb-4">
+                  By Love Floristería y Café, Edificio Galería 504, Bulevar
+                  UNAH-VS, San Pedro Sula, Honduras
+                </li>
+                <li className="text-gray-600 mb-4">
+                  By Love Floristería, Barrio Las Delicias, 3 calle, 2 y 3 ave,
+                  El Progreso, Honduras
+                </li>
+              </ul>
               <div className="w-full aspect-video overflow-hidden rounded-lg">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.1495830232566!2d-88.03743942425511!3d15.530109853643753!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f665bf371a52a19%3A0xd5dfcfe3ff432c8c!2sBY%20LOVE%20FLORISTER%C3%8DA%20Y%20CAF%C3%89!5e0!3m2!1sen!2shn!4v1774822799813!5m2!1sen!2shn"
