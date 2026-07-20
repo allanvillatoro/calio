@@ -40,7 +40,8 @@ describe('useCatalogFilters', () => {
       selectedCategoriesParam: undefined,
       query: undefined,
       currentPage: 1,
-      inStore: undefined,
+      inStoreSps: undefined,
+      inStorePro: undefined,
       printView: false,
       isAllSelected: true,
     });
@@ -48,7 +49,7 @@ describe('useCatalogFilters', () => {
 
   it('reads supported public catalog params from the URL', () => {
     setSearchParams(
-      'categorias=anillos,collares&pagina=3&entienda=true&modoprint=true&query=oro',
+      'categorias=anillos,collares&pagina=3&tiendasps=true&tiendapro=false&modoprint=true&query=oro',
     );
 
     const { result } = renderHook(() => useCatalogFilters(CATEGORIES));
@@ -56,7 +57,8 @@ describe('useCatalogFilters', () => {
     expect(result.current.selectedCategories).toEqual(['anillos', 'collares']);
     expect(result.current.selectedCategoriesParam).toBe('anillos,collares');
     expect(result.current.currentPage).toBe(3);
-    expect(result.current.inStore).toBe(true);
+    expect(result.current.inStoreSps).toBe(true);
+    expect(result.current.inStorePro).toBe(false);
     expect(result.current.printView).toBe(true);
     expect(result.current.query).toBe('oro');
     expect(result.current.isAllSelected).toBe(false);
@@ -83,16 +85,17 @@ describe('useCatalogFilters', () => {
     expect(negativePage.result.current.currentPage).toBe(1);
   });
 
-  it('reads entienda=false as an explicit in-store filter', () => {
-    setSearchParams('entienda=false');
+  it('reads false as an explicit store filter', () => {
+    setSearchParams('tiendasps=false&tiendapro=false');
 
     const { result } = renderHook(() => useCatalogFilters(CATEGORIES));
 
-    expect(result.current.inStore).toBe(false);
+    expect(result.current.inStoreSps).toBe(false);
+    expect(result.current.inStorePro).toBe(false);
   });
 
   it('updates only requested URL params and preserves the rest', () => {
-    setSearchParams('categorias=anillos&pagina=2&entienda=true');
+    setSearchParams('categorias=anillos&pagina=2&tiendasps=true');
     const { result } = renderHook(() => useCatalogFilters(CATEGORIES));
 
     act(() => {
@@ -105,7 +108,7 @@ describe('useCatalogFilters', () => {
     const nextUrl = getLastReplacedUrl();
     expect(nextUrl.pathname).toBe('/catalogo');
     expect(nextUrl.searchParams.get('categorias')).toBe('anillos');
-    expect(nextUrl.searchParams.get('entienda')).toBe('true');
+    expect(nextUrl.searchParams.get('tiendasps')).toBe('true');
     expect(nextUrl.searchParams.get('query')).toBe('perla');
     expect(nextUrl.searchParams.has('pagina')).toBe(false);
     expect(replace).toHaveBeenCalledWith(expect.any(String), {
@@ -158,7 +161,7 @@ describe('useCatalogFilters', () => {
   });
 
   it('updates categories and clears page and query filters', () => {
-    setSearchParams('pagina=3&query=oro&entienda=true');
+    setSearchParams('pagina=3&query=oro&tiendapro=true');
     const categories: Category[] = ['aretes', 'collares'];
     const { result } = renderHook(() => useCatalogFilters(CATEGORIES));
 
@@ -168,7 +171,7 @@ describe('useCatalogFilters', () => {
 
     const nextUrl = getLastReplacedUrl();
     expect(nextUrl.searchParams.get('categorias')).toBe('aretes,collares');
-    expect(nextUrl.searchParams.get('entienda')).toBe('true');
+    expect(nextUrl.searchParams.get('tiendapro')).toBe('true');
     expect(nextUrl.searchParams.has('pagina')).toBe(false);
     expect(nextUrl.searchParams.has('query')).toBe(false);
   });

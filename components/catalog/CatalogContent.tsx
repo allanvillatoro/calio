@@ -22,7 +22,8 @@ export default function CatalogContent() {
     selectedCategoriesParam,
     query,
     currentPage,
-    inStore,
+    inStoreSps,
+    inStorePro,
     onPageChange,
     printView,
     updateURL,
@@ -42,7 +43,8 @@ export default function CatalogContent() {
       {
         category: selectedCategoriesParam ?? null,
         query: query?.toLowerCase() ?? null,
-        instore: inStore ?? null,
+        instoresps: inStoreSps ?? null,
+        instorepro: inStorePro ?? null,
         page: currentPage,
       },
     ],
@@ -50,7 +52,8 @@ export default function CatalogContent() {
       getProductsByQuery({
         category: selectedCategoriesParam ?? undefined,
         query,
-        instore: inStore,
+        instoresps: inStoreSps,
+        instorepro: inStorePro,
         page: currentPage,
       }),
     staleTime: 1000 * 60 * 15,
@@ -75,7 +78,11 @@ export default function CatalogContent() {
       return upperCategory === 'NEW IN' ? 'NUEVA COLECCIÓN' : upperCategory;
     }
     if (query) return `Resultados para "${query}"`;
-    if (inStore) return 'Productos en Tienda Física';
+    if (inStoreSps && inStorePro) {
+      return 'Productos en Tiendas SPS y El Progreso';
+    }
+    if (inStoreSps) return 'Productos en Tienda SPS';
+    if (inStorePro) return 'Productos en Tienda El Progreso';
     return 'Administrar joyería';
   };
 

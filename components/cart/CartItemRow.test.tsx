@@ -36,7 +36,8 @@ const item: CartItem = {
     quantity: 3,
     images: ['collar-perla.jpg'],
     category: 'collares',
-    inStore: true,
+    inStoreSps: true,
+    inStorePro: false,
   },
   quantity: 2,
 };
@@ -113,6 +114,44 @@ describe('CartItemRow', () => {
     fireEvent.click(incrementButton);
 
     expect(onIncrement).not.toHaveBeenCalled();
+  });
+
+  it('disables increment when the remaining unit is reserved for El Progreso', () => {
+    const { onIncrement } = renderCartItemRow({
+      product: {
+        ...item.product,
+        inStorePro: true,
+      },
+      quantity: 2,
+    });
+    const incrementButton = screen.getByRole('button', {
+      name: 'Aumentar cantidad de Collar Perla',
+    });
+
+    expect(incrementButton).toBeDisabled();
+    fireEvent.click(incrementButton);
+
+    expect(onIncrement).not.toHaveBeenCalled();
+  });
+
+  it('does not reserve physical-store units from laser engravings', () => {
+    const { onIncrement } = renderCartItemRow({
+      product: {
+        ...item.product,
+        cartId: 'laser-engraving:12',
+        kind: 'laser-engraving',
+        inStorePro: true,
+      },
+      quantity: 2,
+    });
+    const incrementButton = screen.getByRole('button', {
+      name: 'Aumentar cantidad de Collar Perla',
+    });
+
+    expect(incrementButton).toBeEnabled();
+    fireEvent.click(incrementButton);
+
+    expect(onIncrement).toHaveBeenCalledWith('laser-engraving:12');
   });
 
   it('increments when cart quantity is below available stock', () => {

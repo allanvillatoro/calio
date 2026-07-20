@@ -14,7 +14,8 @@ const validProductInput = {
   images: ['collar-perla.jpg'],
   category: 'collares',
   discount: 0,
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: true,
 };
 
 describe('product body schemas', () => {
@@ -42,7 +43,8 @@ describe('product body schemas', () => {
       quantity: validProductInput.quantity,
       images: validProductInput.images,
       category: validProductInput.category,
-      inStore: validProductInput.inStore,
+      inStoreSps: validProductInput.inStoreSps,
+      inStorePro: validProductInput.inStorePro,
     };
 
     const result = createProductBodySchema.safeParse(inputWithoutDiscount);
@@ -139,6 +141,49 @@ describe('product body schemas', () => {
 
     expect(result.success).toBe(false);
   });
+
+  it('rejects store availability when quantity is zero', () => {
+    const result = createProductBodySchema.safeParse({
+      ...validProductInput,
+      quantity: 0,
+      inStorePro: false,
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ path: ['inStoreSps'] }),
+        ]),
+      );
+    }
+  });
+
+  it('rejects both stores when quantity is one', () => {
+    const result = createProductBodySchema.safeParse({
+      ...validProductInput,
+      quantity: 1,
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ path: ['inStoreSps'] }),
+          expect.objectContaining({ path: ['inStorePro'] }),
+        ]),
+      );
+    }
+  });
+
+  it('accepts both stores when quantity is at least two', () => {
+    const result = createProductBodySchema.safeParse({
+      ...validProductInput,
+      quantity: 2,
+    });
+
+    expect(result.success).toBe(true);
+  });
 });
 
 describe('productIdParamsSchema', () => {
@@ -184,26 +229,26 @@ describe('productsQuerySchema', () => {
     }
   });
 
-  it('coerces instore from true and false strings', () => {
-    const trueResult = productsQuerySchema.safeParse({ instore: 'true' });
-    const falseResult = productsQuerySchema.safeParse({ instore: 'false' });
+  it('coerces store filters from true and false strings', () => {
+    const trueResult = productsQuerySchema.safeParse({ instoresps: 'true' });
+    const falseResult = productsQuerySchema.safeParse({ instorepro: 'false' });
 
     expect(trueResult.success).toBe(true);
     expect(falseResult.success).toBe(true);
     if (trueResult.success && falseResult.success) {
-      expect(trueResult.data.instore).toBe(true);
-      expect(falseResult.data.instore).toBe(false);
+      expect(trueResult.data.instoresps).toBe(true);
+      expect(falseResult.data.instorepro).toBe(false);
     }
   });
 
-  it('passes non-string instore values through to boolean validation', () => {
-    const result = productsQuerySchema.safeParse({ instore: 1 });
+  it('passes non-string store values through to boolean validation', () => {
+    const result = productsQuerySchema.safeParse({ instoresps: 1 });
 
     expect(result.success).toBe(false);
   });
 
-  it('rejects unsupported instore string values', () => {
-    const result = productsQuerySchema.safeParse({ instore: 'maybe' });
+  it('rejects unsupported store string values', () => {
+    const result = productsQuerySchema.safeParse({ instorepro: 'maybe' });
 
     expect(result.success).toBe(false);
   });

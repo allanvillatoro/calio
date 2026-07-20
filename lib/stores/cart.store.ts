@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { CatalogItem, CatalogItemKind, Product } from '@/lib/types';
+import { getWebAvailableQuantity } from '@/lib/products/online-availability';
 
 export type CartProduct = Omit<Product, 'category'> & {
   cartId: string;
@@ -56,7 +57,8 @@ function normalizeCartProduct(product: CartInputItem): CartProduct {
       quantity: product.quantity,
       images: product.images,
       category: product.category,
-      inStore: product.inStore,
+      inStoreSps: product.inStoreSps,
+      inStorePro: product.inStorePro,
     };
   }
 
@@ -85,8 +87,9 @@ export const useCartStore = create<CartStoreState>()(
           (item) => item.product.cartId === product.cartId,
         );
         const currentQuantity = existingItem?.quantity ?? 0;
+        const availableQuantity = getWebAvailableQuantity(product);
 
-        if (product.quantity <= 0 || currentQuantity >= product.quantity) {
+        if (availableQuantity <= 0 || currentQuantity >= availableQuantity) {
           return false;
         }
 

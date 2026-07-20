@@ -24,7 +24,8 @@ function createProductRow(overrides: Partial<ProductRow> = {}): ProductRow {
     images: ['anillo-aurora.jpg'],
     slug: 'anillo-aurora',
     category: 'anillos',
-    inStore: true,
+    inStoreSps: true,
+    inStorePro: false,
     createdAt,
     updatedAt,
     ...overrides,
@@ -40,7 +41,8 @@ const validInput: ProductChanges = {
   images: ['anillo-aurora.jpg'],
   slug: 'anillo-aurora',
   category: 'anillos',
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: false,
 };
 
 function createSelectOneDb(rows: ProductRow[]) {
@@ -96,7 +98,8 @@ describe('DrizzleProductsRepository.save', () => {
         quantity: validInput.quantity,
         images: validInput.images,
         category: validInput.category,
-        inStore: validInput.inStore,
+        inStoreSps: validInput.inStoreSps,
+        inStorePro: validInput.inStorePro,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       }),
@@ -108,7 +111,7 @@ describe('DrizzleProductsRepository.save', () => {
     });
   });
 
-  it('defaults discount and inStore values', async () => {
+  it('defaults discount and store availability values', async () => {
     const returning = vi.fn().mockResolvedValue([createProductRow()]);
     const values = vi.fn(() => ({
       returning,
@@ -123,13 +126,15 @@ describe('DrizzleProductsRepository.save', () => {
     await repository.save({
       ...validInput,
       discount: undefined,
-      inStore: undefined,
+      inStoreSps: undefined,
+      inStorePro: undefined,
     });
 
     expect(values).toHaveBeenCalledWith(
       expect.objectContaining({
         discount: 0,
-        inStore: false,
+        inStoreSps: false,
+        inStorePro: false,
       }),
     );
   });
@@ -272,7 +277,8 @@ describe('DrizzleProductsRepository.findAll', () => {
     const result = await repository.findAll({
       categories: ['anillos'],
       query: 'aurora',
-      inStore: true,
+      inStoreSps: true,
+      inStorePro: true,
       page: 2,
       limit: 5,
       includeOutOfStock: false,

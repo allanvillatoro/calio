@@ -5,6 +5,7 @@ import ImageCarousel from '@/components/product/ImageCarousel';
 import BackButton from '@/components/product/BackButton';
 import AddToCartButton from '@/components/product/AddToCartButton';
 import { SOCIAL_LINKS } from '@/lib/constants/social-links';
+import { getWebAvailableQuantity } from '@/lib/products/online-availability';
 import {
   getAbsoluteProductUrl,
   getCartItem,
@@ -76,6 +77,7 @@ export default async function ProductDetailPage({
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
   const hasDiscount = item.discount > 0;
   const cartProduct = getCartItem(detailItem);
+  const isAvailableOnline = getWebAvailableQuantity(cartProduct) > 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -122,7 +124,7 @@ export default async function ProductDetailPage({
             </div>
 
             <div className="pt-6">
-              {item.quantity > 0 ? (
+              {isAvailableOnline ? (
                 <div className="grid gap-3">
                   <a
                     href={whatsappUrl}

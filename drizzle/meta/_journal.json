@@ -22,6 +22,13 @@
       "when": 1783639195814,
       "tag": "0002_lumpy_guardian",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1784348150998,
+      "tag": "0003_fluffy_stranger",
+      "breakpoints": true
     }
   ]
 }

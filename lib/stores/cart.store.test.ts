@@ -15,7 +15,8 @@ function createCartProduct(overrides: Partial<CartProduct> = {}): CartProduct {
     quantity: 3,
     images: ['anillo-aurora.jpg'],
     category: 'anillos',
-    inStore: true,
+    inStoreSps: true,
+    inStorePro: false,
     ...overrides,
   };
 }
@@ -107,6 +108,49 @@ describe('useCartStore', () => {
 
     expect(incremented).toBe(false);
     expect(useCartStore.getState().items[0].quantity).toBe(1);
+  });
+
+  it('reserves one El Progreso unit from the web cart', () => {
+    const product = createCartProduct({
+      quantity: 2,
+      inStorePro: true,
+    });
+
+    const added = useCartStore.getState().addProduct(product);
+    const incremented = useCartStore.getState().incrementProduct(product.id);
+
+    expect(added).toBe(true);
+    expect(incremented).toBe(false);
+    expect(useCartStore.getState().items[0].quantity).toBe(1);
+  });
+
+  it('does not add a product when its only unit is reserved for El Progreso', () => {
+    const product = createCartProduct({
+      quantity: 1,
+      inStorePro: true,
+    });
+
+    const added = useCartStore.getState().addProduct(product);
+
+    expect(added).toBe(false);
+    expect(useCartStore.getState().items).toEqual([]);
+  });
+
+  it('does not reserve physical-store units from laser engravings', () => {
+    const laserEngraving = createCartProduct({
+      cartId: 'laser-engraving:1',
+      kind: 'laser-engraving',
+      quantity: 2,
+      inStorePro: true,
+    });
+
+    useCartStore.getState().addItem(laserEngraving);
+    const incremented = useCartStore
+      .getState()
+      .incrementItem(laserEngraving.cartId);
+
+    expect(incremented).toBe(true);
+    expect(useCartStore.getState().items[0].quantity).toBe(2);
   });
 
   it('returns false when incrementing a missing product', () => {
@@ -274,7 +318,8 @@ describe('useCartStore', () => {
       quantity: 2,
       images: ['anillo-luna.jpg'],
       category: 'anillos' as const,
-      inStore: false,
+      inStoreSps: false,
+      inStorePro: false,
     };
 
     const added = useCartStore.getState().addItem(product);
@@ -324,7 +369,8 @@ describe('useCartStore', () => {
       quantity: 2,
       images: ['pulsera.jpg'],
       category: 'pulseras',
-      inStore: false,
+      inStoreSps: false,
+      inStorePro: false,
     };
     window.localStorage.setItem(
       'calio-cart',
@@ -335,7 +381,7 @@ describe('useCartStore', () => {
               product: legacyProduct,
               quantity: 1,
             },
-          ] satisfies CartItem[],
+          ] as unknown as CartItem[],
         },
         version: 0,
       }),

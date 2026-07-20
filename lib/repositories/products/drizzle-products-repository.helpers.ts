@@ -1,4 +1,13 @@
-import { count, desc, eq, gte, ilike, inArray, type SQL } from 'drizzle-orm';
+import {
+  count,
+  desc,
+  eq,
+  gte,
+  ilike,
+  inArray,
+  or,
+  type SQL,
+} from 'drizzle-orm';
 import { products, type ProductRow } from '@/db/schema';
 import type { AppDb } from '@/db';
 import type {
@@ -36,7 +45,8 @@ export function mapRowToProduct(row: ProductRow): IProduct {
     images: row.images,
     slug: row.slug,
     category: row.category,
-    inStore: row.inStore,
+    inStoreSps: row.inStoreSps,
+    inStorePro: row.inStorePro,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   };
@@ -67,13 +77,16 @@ export function normalizeFilters(
         .flatMap((category) => category.split(','))
         .map((category) => category.trim()),
     );
-    const inStoreParam = filters.get('instore');
+    const inStoreSpsParam = filters.get('instoresps');
+    const inStoreProParam = filters.get('instorepro');
 
     return {
       ...sellableFilters,
       ...(categories ? { categories } : {}),
-      ...(inStoreParam === 'true' ? { inStore: true } : {}),
-      ...(inStoreParam === 'false' ? { inStore: false } : {}),
+      ...(inStoreSpsParam === 'true' ? { inStoreSps: true } : {}),
+      ...(inStoreSpsParam === 'false' ? { inStoreSps: false } : {}),
+      ...(inStoreProParam === 'true' ? { inStorePro: true } : {}),
+      ...(inStoreProParam === 'false' ? { inStorePro: false } : {}),
     };
   }
 
@@ -82,19 +95,26 @@ export function normalizeFilters(
   return {
     ...sellableFilters,
     categories: normalizeCategories(filters.categories),
-    inStore: filters.inStore,
+    inStoreSps: filters.inStoreSps,
+    inStorePro: filters.inStorePro,
   };
 }
 
 export function buildProductsWhereClause(filters: ProductFilters) {
   return combineSqlConditions([
     filters.includeOutOfStock ? undefined : gte(products.quantity, 1),
+    filters.includeOutOfStock
+      ? undefined
+      : or(eq(products.inStorePro, false), gte(products.quantity, 2)),
     filters.categories
       ? inArray(products.category, filters.categories)
       : undefined,
     filters.query ? ilike(products.name, `%${filters.query}%`) : undefined,
-    filters.inStore !== undefined
-      ? eq(products.inStore, filters.inStore)
+    filters.inStoreSps !== undefined
+      ? eq(products.inStoreSps, filters.inStoreSps)
+      : undefined,
+    filters.inStorePro !== undefined
+      ? eq(products.inStorePro, filters.inStorePro)
       : undefined,
   ]);
 }

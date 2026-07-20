@@ -25,7 +25,8 @@ const emptyItem: SellableItemFormItem = {
   discount: 0,
   priceWithDiscount: 0,
   quantity: 0,
-  inStore: false,
+  inStoreSps: false,
+  inStorePro: false,
   category: 'collares',
   images: [],
 };
@@ -39,7 +40,8 @@ const baseItem: SellableItemFormItem = {
   discount: 0,
   priceWithDiscount: 250,
   quantity: 5,
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: false,
   category: 'collares',
   images: ['collar-perla.jpg', 'collar-perla-2.jpg'],
 };
@@ -51,7 +53,8 @@ const formFields: Array<keyof SellableItemFormValues> = [
   'price',
   'discount',
   'quantity',
-  'inStore',
+  'inStoreSps',
+  'inStorePro',
   'category',
   'images',
 ];
@@ -157,7 +160,8 @@ function createSubmitValues(
     price: overrides.price ?? baseItem.price,
     discount: overrides.discount ?? baseItem.discount,
     quantity: overrides.quantity ?? baseItem.quantity,
-    inStore: overrides.inStore ?? baseItem.inStore ?? false,
+    inStoreSps: overrides.inStoreSps ?? baseItem.inStoreSps ?? false,
+    inStorePro: overrides.inStorePro ?? baseItem.inStorePro ?? false,
     category: overrides.category ?? baseItem.category,
     images: overrides.images ?? baseItem.images,
     files: overrides.files ?? [],
@@ -587,6 +591,7 @@ describe('useSellableItemDialogForm', () => {
       result.current.onSubmit(
         createSubmitValues({
           ...baseItem,
+          slug: baseItem.slug ?? undefined,
           category: 'rebajas',
           discount: 20,
         }),

@@ -35,7 +35,8 @@ function normalizeProduct(product: ProductSeed): ProductChanges {
     quantity: product.quantity,
     images: product.images,
     category: product.category.trim(),
-    inStore: product.inStore ?? false,
+    inStoreSps: product.inStoreSps ?? false,
+    inStorePro: product.inStorePro ?? false,
   };
 }
 

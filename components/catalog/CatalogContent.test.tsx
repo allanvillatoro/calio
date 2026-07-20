@@ -136,7 +136,8 @@ const product: Product = {
   quantity: 5,
   images: ['collar-perla.jpg'],
   category: 'collares',
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: false,
 };
 
 const updateURL = vi.fn();
@@ -150,7 +151,8 @@ function mockCatalogFilters(
     selectedCategoriesParam: undefined,
     query: undefined,
     currentPage: 1,
-    inStore: undefined,
+    inStoreSps: undefined,
+    inStorePro: undefined,
     printView: false,
     isAllSelected: true,
     onCategorySelectionChange: vi.fn(),
@@ -199,7 +201,8 @@ describe('CatalogContent', () => {
       selectedCategoriesParam: 'collares',
       query: 'Perla',
       currentPage: 3,
-      inStore: true,
+      inStoreSps: true,
+      inStorePro: false,
     });
 
     render(<CatalogContent />);
@@ -211,7 +214,8 @@ describe('CatalogContent', () => {
           {
             category: 'collares',
             query: 'perla',
-            instore: true,
+            instoresps: true,
+            instorepro: false,
             page: 3,
           },
         ],
@@ -220,11 +224,12 @@ describe('CatalogContent', () => {
     );
 
     const queryFn = vi.mocked(useQuery).mock.calls[0][0].queryFn;
-    queryFn?.({} as never);
+    if (typeof queryFn === 'function') queryFn({} as never);
     expect(getProductsByQuery).toHaveBeenCalledWith({
       category: 'collares',
       query: 'Perla',
-      instore: true,
+      instoresps: true,
+      instorepro: false,
       page: 3,
     });
     expect(screen.getByText('COLLARES')).toBeVisible();
@@ -316,14 +321,24 @@ describe('CatalogContent', () => {
     expect(screen.getByText('Resultados para "perla"')).toBeVisible();
   });
 
-  it('renders the in-store title when filtering physical store products', () => {
+  it('renders the SPS store title when filtering SPS products', () => {
     mockCatalogFilters({
-      inStore: true,
+      inStoreSps: true,
     });
 
     render(<CatalogContent />);
 
-    expect(screen.getByText('Productos en Tienda Física')).toBeVisible();
+    expect(screen.getByText('Productos en Tienda SPS')).toBeVisible();
+  });
+
+  it('renders the El Progreso title when filtering El Progreso products', () => {
+    mockCatalogFilters({
+      inStorePro: true,
+    });
+
+    render(<CatalogContent />);
+
+    expect(screen.getByText('Productos en Tienda El Progreso')).toBeVisible();
   });
 
   it('renders the complete catalog title by default', () => {

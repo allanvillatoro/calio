@@ -2,7 +2,8 @@ import { cache } from 'react';
 import { toNumber } from '@/lib/utils';
 import type { ILaserEngraving } from '@/lib/interfaces/laser-engraving';
 import type { IProduct } from '@/lib/interfaces/product';
-import type { CartInputItem } from '@/lib/stores/cart.store';
+import type { CartProduct } from '@/lib/stores/cart.store';
+import type { CatalogItem } from '@/lib/types';
 import { laserEngravingsRepository } from '@/lib/repositories/laser-engravings/drizzle-laser-engravings-repository';
 import { productsRepository } from '@/lib/repositories/products/drizzle-products-repository';
 
@@ -76,7 +77,9 @@ export function getAbsoluteProductUrl(detailItem: ProductDetailItem) {
   return `${siteUrl}${getItemPath(detailItem)}`;
 }
 
-export function getCartItem(detailItem: ProductDetailItem): CartInputItem {
+export function getCartItem(
+  detailItem: ProductDetailItem,
+): CartProduct | CatalogItem {
   if (detailItem.kind === 'product') {
     const { createdAt, updatedAt, ...productForCart } = detailItem.item;
     void createdAt;

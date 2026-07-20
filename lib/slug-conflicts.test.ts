@@ -36,7 +36,8 @@ describe('slug conflicts', () => {
       quantity: 1,
       images: ['placa.jpg'],
       category: 'collares',
-      inStore: false,
+      inStoreSps: false,
+      inStorePro: false,
       createdAt: new Date('2026-01-15T12:00:00.000Z'),
       updatedAt: new Date('2026-01-16T12:00:00.000Z'),
     });

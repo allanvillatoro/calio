@@ -6,7 +6,8 @@ interface UseCatalogFiltersReturn {
   selectedCategoriesParam: string | undefined;
   query: string | undefined;
   currentPage: number;
-  inStore: boolean | undefined;
+  inStoreSps: boolean | undefined;
+  inStorePro: boolean | undefined;
   printView: boolean;
   isAllSelected: boolean;
   onCategorySelectionChange: (categories: Category[]) => void;
@@ -17,7 +18,8 @@ interface UseCatalogFiltersReturn {
 type CatalogFilterKey =
   | 'categorias'
   | 'pagina'
-  | 'entienda'
+  | 'tiendasps'
+  | 'tiendapro'
   | 'modoprint'
   | 'query';
 
@@ -51,11 +53,18 @@ export function useCatalogFilters(
   const rawPage = Number.isNaN(parsedPage) ? 1 : Math.max(1, parsedPage);
   const query = searchParams.get('query')?.trim() || undefined;
 
-  const inStoreParam = searchParams.get('entienda');
-  const inStore =
-    inStoreParam === 'true'
+  const inStoreSpsParam = searchParams.get('tiendasps');
+  const inStoreSps =
+    inStoreSpsParam === 'true'
       ? true
-      : inStoreParam === 'false'
+      : inStoreSpsParam === 'false'
+        ? false
+        : undefined;
+  const inStoreProParam = searchParams.get('tiendapro');
+  const inStorePro =
+    inStoreProParam === 'true'
+      ? true
+      : inStoreProParam === 'false'
         ? false
         : undefined;
   const printView = searchParams.get('modoprint') === 'true';
@@ -68,7 +77,8 @@ export function useCatalogFilters(
     const keys: CatalogFilterKey[] = [
       'categorias',
       'pagina',
-      'entienda',
+      'tiendasps',
+      'tiendapro',
       'modoprint',
       'query',
     ];
@@ -108,7 +118,8 @@ export function useCatalogFilters(
       selectedCategories.length > 0 ? selectedCategories.join(',') : undefined,
     query,
     currentPage: rawPage,
-    inStore,
+    inStoreSps,
+    inStorePro,
     printView,
     isAllSelected,
     onCategorySelectionChange,

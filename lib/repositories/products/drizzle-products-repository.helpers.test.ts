@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { SQL } from 'drizzle-orm';
+import { PgDialect } from 'drizzle-orm/pg-core';
 import type { AppDb } from '@/db';
 import type { ProductRow } from '@/db/schema';
 import { PRODUCTS_PER_PAGE } from '@/lib/constants/product';
@@ -27,7 +28,8 @@ function createProductRow(overrides: Partial<ProductRow> = {}): ProductRow {
     images: ['anillo-aurora.jpg'],
     slug: null,
     category: 'anillos',
-    inStore: true,
+    inStoreSps: true,
+    inStorePro: false,
     createdAt,
     updatedAt,
     ...overrides,
@@ -49,7 +51,8 @@ describe('mapRowToProduct', () => {
       quantity: row.quantity,
       images: row.images,
       category: row.category,
-      inStore: row.inStore,
+      inStoreSps: row.inStoreSps,
+      inStorePro: row.inStorePro,
       createdAt,
       updatedAt,
     });
@@ -93,7 +96,8 @@ describe('normalizeFilters', () => {
     const filters = normalizeFilters({
       categories: [' anillos ', '', 'collares'],
       query: '  perla  ',
-      inStore: false,
+      inStoreSps: false,
+      inStorePro: true,
       page: 3,
       limit: 12,
       includeOutOfStock: true,
@@ -102,7 +106,8 @@ describe('normalizeFilters', () => {
     expect(filters).toEqual({
       categories: ['anillos', 'collares'],
       query: 'perla',
-      inStore: false,
+      inStoreSps: false,
+      inStorePro: true,
       page: 3,
       limit: 12,
       includeOutOfStock: true,
@@ -118,7 +123,8 @@ describe('normalizeFilters', () => {
     expect(filters).toEqual({
       categories: undefined,
       query: undefined,
-      inStore: undefined,
+      inStoreSps: undefined,
+      inStorePro: undefined,
       page: 1,
       limit: PRODUCTS_PER_PAGE,
       includeOutOfStock: false,
@@ -129,7 +135,8 @@ describe('normalizeFilters', () => {
     const params = new URLSearchParams({
       category: ' anillos, collares ',
       query: '  oro  ',
-      instore: 'true',
+      instoresps: 'true',
+      instorepro: 'false',
       page: '4',
       limit: '8',
       includeOutOfStock: 'true',
@@ -140,7 +147,8 @@ describe('normalizeFilters', () => {
     expect(filters).toEqual({
       categories: ['anillos', 'collares'],
       query: 'oro',
-      inStore: true,
+      inStoreSps: true,
+      inStorePro: false,
       page: 4,
       limit: 8,
       includeOutOfStock: true,
@@ -157,14 +165,16 @@ describe('normalizeFilters', () => {
     expect(filters.categories).toEqual(['aretes', 'pulseras', 'sets']);
   });
 
-  it('parses instore=false from URLSearchParams', () => {
+  it('parses both store filters from URLSearchParams', () => {
     const params = new URLSearchParams({
-      instore: 'false',
+      instoresps: 'false',
+      instorepro: 'true',
     });
 
     const filters = normalizeFilters(params);
 
-    expect(filters.inStore).toBe(false);
+    expect(filters.inStoreSps).toBe(false);
+    expect(filters.inStorePro).toBe(true);
   });
 });
 
@@ -205,6 +215,20 @@ describe('buildProductsWhereClause', () => {
     expect(whereClause).toBeDefined();
   });
 
+  it('excludes the unit reserved for El Progreso from the public catalog', () => {
+    const whereClause = buildProductsWhereClause({
+      includeOutOfStock: false,
+    });
+
+    const query = new PgDialect().sqlToQuery(whereClause as SQL);
+
+    expect(query.sql).toContain('"products"."quantity" >= $1');
+    expect(query.sql).toContain(
+      '("products"."in_store_pro" = $2 or "products"."quantity" >= $3)',
+    );
+    expect(query.params).toEqual([1, false, 2]);
+  });
+
   it('omits the where clause when authenticated requests have no filters', () => {
     const whereClause = buildProductsWhereClause({
       includeOutOfStock: true,
@@ -217,7 +241,8 @@ describe('buildProductsWhereClause', () => {
     const whereClause = buildProductsWhereClause({
       categories: ['anillos'],
       query: 'oro',
-      inStore: true,
+      inStoreSps: true,
+      inStorePro: true,
       includeOutOfStock: true,
     });
 

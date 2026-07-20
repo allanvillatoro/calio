@@ -61,7 +61,8 @@ function createCartItem(overrides: Partial<CartItem> = {}): CartItem {
       quantity: 5,
       images: ['collar-perla.jpg'],
       category: 'collares',
-      inStore: true,
+      inStoreSps: true,
+      inStorePro: false,
     },
     quantity: 2,
     ...overrides,
@@ -113,7 +114,7 @@ describe('order PDF image helpers', () => {
   });
 
   it('rejects when the canvas context cannot be created', async () => {
-    getContext.mockReturnValueOnce(null);
+    getContext.mockReturnValueOnce(null as never);
 
     await expect(
       loadImageAsPngDataUrl('https://cdn.test/no-context.jpg'),

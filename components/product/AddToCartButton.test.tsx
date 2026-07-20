@@ -24,7 +24,8 @@ const product: CartProduct = {
   quantity: 1,
   images: ['collar-perla.jpg'],
   category: 'collares',
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: false,
 };
 
 describe('AddToCartButton', () => {

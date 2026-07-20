@@ -73,7 +73,8 @@ const products: Product[] = [
     quantity: 5,
     images: ['collar-perla.jpg'],
     category: 'collares',
-    inStore: true,
+    inStoreSps: true,
+    inStorePro: false,
   },
   {
     id: 18,
@@ -85,7 +86,8 @@ const products: Product[] = [
     quantity: 3,
     images: ['anillo-luna.jpg'],
     category: 'anillos',
-    inStore: false,
+    inStoreSps: false,
+    inStorePro: true,
   },
 ];
 

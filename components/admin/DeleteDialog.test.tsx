@@ -52,7 +52,8 @@ const product: Product = {
   quantity: 5,
   images: ['collar-perla.jpg'],
   category: 'collares',
-  inStore: true,
+  inStoreSps: true,
+  inStorePro: false,
 };
 
 const invalidateQueries = vi.fn();
