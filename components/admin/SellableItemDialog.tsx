@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { ProductImage } from '@/components/ProductImage';
 import { ChevronLeft, ChevronRight, Upload, X } from 'lucide-react';
 import { Button } from '../ui/button';
 import {
@@ -368,7 +369,7 @@ export const SellableItemDialog = ({
                     {currentImages.map((image, index) => (
                       <div key={image} className="group relative">
                         <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
-                          <Image
+                          <ProductImage
                             src={getImageUrl(image)}
                             alt={config.imageAlt}
                             fill

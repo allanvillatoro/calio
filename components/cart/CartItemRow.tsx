@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { ProductImage } from '@/components/ProductImage';
 import Link from 'next/link';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import type { CartItem } from '@/lib/stores/cart.store';
@@ -29,7 +29,7 @@ export function CartItemRow({
         className="relative aspect-square w-full overflow-hidden rounded-lg bg-white"
         aria-label={`Ver ${product.name}`}
       >
-        <Image
+        <ProductImage
           src={getImageUrl(product.images[0])}
           alt={product.name}
           fill
