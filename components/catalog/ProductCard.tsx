@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import { ProductImage } from '@/components/ProductImage';
 import { Pencil, ShoppingCart, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { CatalogItem, Product } from '@/lib/types';
@@ -65,7 +65,7 @@ export default function ProductCard<TItem extends ProductCardItem = Product>({
     <div className={PRODUCT_CARD_STYLES}>
       <Link href={getProductHref(product)}>
         <div className="relative w-full aspect-square bg-white">
-          <Image
+          <ProductImage
             src={getImageUrl(mainImage)}
             alt={product.name}
             fill

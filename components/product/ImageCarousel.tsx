@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import { ProductImage } from '@/components/ProductImage';
 import { getImageUrl } from '@/lib/utils';
 
 interface ImageCarouselProps {
@@ -34,7 +34,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
     <div className="relative w-full">
       {/* Main Image Display */}
       <div className="relative w-full aspect-square bg-white rounded-lg overflow-hidden shadow-lg">
-        <Image
+        <ProductImage
           src={allImages[currentIndex]}
           alt={`Imagen ${currentIndex + 1}`}
           fill
@@ -102,7 +102,7 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
               }`}
               aria-label={`Ver imagen ${index + 1}`}
             >
-              <Image
+              <ProductImage
                 src={imageUrl}
                 alt={`Miniatura ${index + 1}`}
                 fill
